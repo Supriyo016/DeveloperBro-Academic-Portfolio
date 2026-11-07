@@ -88,6 +88,22 @@ strings because MDX runs with JavaScript blocked. `scripts/check-mdx.mjs` compil
 Figures in `public/images/blog`. The local build, 63 unit tests and 107 browser tests pass. Deployed on the owner's approval
 and checked live (see `docs/TESTING.md`).
 
+## Scope, animation and assistant update, 7 November 2026
+
+- Projects: Third Hand-Eye, Tour India and this portfolio only. Research Works: the M.Tech and B.Tech dissertations only.
+  Removed pages redirect (see `next.config.ts`).
+- Academic journey: degrees, research works and projects. Marks appear only on About Me. The CV PDF keeps its marks.
+- Continuous animation: `src/components/illustrations/base.tsx` (`Anim`, `Head`, `Robot`, `Laptop`, `Mug`, `Sparkle`),
+  `scenes-extra.tsx` (quantum and footer scenes), `AmbientBackground`, `MotionToggle` (pause switch), `MotionScheduler`
+  (pauses off-screen scenes). Seven home slides with staged entrances and a progress bar.
+- Chat assistant "Bro": `src/lib/assistant/*` and `src/components/assistant/ChatAssistant.tsx`. Rule-based, runs in the
+  browser, answers only from site content. 10 unit tests in `tests/unit/assistant.test.ts`.
+- Tests: 73 unit, 115 browser, all passing locally. `npm audit` 0.
+- Git: history restarted as one commit on `main`; the old history is kept locally on `backup/pre-github-history`.
+  Public repository: https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio (created, push waits on GitHub
+  sign-in). The CV builder moved to `private/scripts/` and audit notes to `docs/private/`, both git-ignored.
+- NOT yet done: push, Vercel Git connection, production deploy (blocked by a permission rule, needs the owner).
+
 ## Next exact steps
 
 1. Owner reads `docs/private/CONTENT_REVIEW.md`, including the blog section, and removes or edits any post.
