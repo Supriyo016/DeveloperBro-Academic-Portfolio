@@ -1,0 +1,9 @@
+docs/private
+docs
+private
+tests
+scripts
+test-results
+playwright-report
+.env
+.env.*

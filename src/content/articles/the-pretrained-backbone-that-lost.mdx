@@ -1,0 +1,89 @@
+---
+title: "The pretrained backbone that lost: EfficientNetB0 under skewed clients"
+description: "EfficientNetB0 has the best ImageNet score of my three backbones and finished last by 15 points. Four candidate explanations, what the evidence says about each, and the ablations that would separate them."
+date: "2026-04-27"
+category: "Deep Learning"
+tags: ["EfficientNet", "Transfer learning", "Non-IID data", "Results"]
+references:
+  - text: "Tan and Le. EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks. ICML, 2019."
+    url: "https://arxiv.org/abs/1905.11946"
+  - text: "Hsieh et al. The Non-IID Data Quagmire of Decentralized Machine Learning. ICML, 2020."
+    url: "https://arxiv.org/abs/1910.00189"
+  - text: "Raghu et al. Transfusion: Understanding Transfer Learning for Medical Imaging. NeurIPS, 2019."
+    url: "https://arxiv.org/abs/1902.07208"
+  - text: "Touvron et al. Fixing the train-test resolution discrepancy. NeurIPS, 2019."
+    url: "https://arxiv.org/abs/1906.06423"
+---
+
+EfficientNetB0 scores 77.1% on ImageNet, against 72.0% for MobileNetV2. In my dissertation, under the same federated protocol, it reached a macro F1 of 79.2% with FedAvg, against 92.8% for MobileNetV2 and 94.8% for the Custom CNN. Neither FedProx nor FedDyn helped. This post is about why.
+
+## The numbers
+
+<BarChart
+  title="Macro F1 on 8,800 test images, FedAvg"
+  caption="Final-round results of one federated run each."
+  data="Custom CNN=94.80;MobileNetV2=92.80;EfficientNetB0=79.16"
+  unit="%"
+  min="50"
+  max="100"
+  decimals="1"
+  highlight="EfficientNetB0"
+/>
+
+| Class | EfficientNetB0 F1 | Custom CNN F1 | Gap |
+| --- | --- | --- | --- |
+| Mild | 0.763 | 0.956 | 0.19 |
+| Moderate | 0.948 | 1.000 | 0.05 |
+| Non-demented | 0.775 | 0.931 | 0.16 |
+| Very mild | 0.680 | 0.905 | 0.23 |
+
+The gap is not concentrated in one class. EfficientNetB0 is worse everywhere, and worst on the hardest class.
+
+<Figure
+  src="/images/blog/confusion-efficientnet-fedavg.webp"
+  alt="Confusion matrix for EfficientNetB0 with FedAvg. The diagonal reads 1548, 1941, 2004 and 1455. The largest off-diagonal cell is 443 very mild cases predicted as non-demented."
+  caption="EfficientNetB0 with FedAvg. 443 very mild cases are called non-demented, and 332 non-demented cases are called very mild."
+  width="947"
+  height="791"
+/>
+
+<Figure
+  src="/images/blog/tsne-efficientnet-three-algorithms.webp"
+  alt="Three t-SNE scatter plots of EfficientNetB0 test embeddings under FedAvg, FedProx and FedDyn. Moderate cases form a separate cluster, while mild, non-demented and very mild points overlap heavily."
+  caption="t-SNE of EfficientNetB0's embeddings on the test set. Only the moderate class separates. The other three overlap under every algorithm."
+  width="1400"
+  height="500"
+/>
+
+## Four suspects
+
+### 1. Batch Normalisation under skewed clients
+
+EfficientNetB0 normalises with batch statistics in every block. Each client computes them on its own skewed data, and the parameter export averages the running statistics across clients. MobileNetV2 has the same exposure, though, and it reached 92.8%. So BatchNorm alone can't explain a 13-point gap between the two pretrained models.
+
+### 2. Resolution far below the design point
+
+EfficientNetB0 was designed and scaled for 224 × 224 input. At 64 × 64, every feature map is 3.5 times smaller on each side, so the network's receptive fields and its squeeze-and-excitation statistics operate on far less spatial detail than they were tuned for. Touvron and colleagues showed that even a modest change between training and test resolution costs accuracy. A change of this size, between pretraining and fine-tuning, plausibly costs more.
+
+### 3. Frozen layers that don't fit the domain
+
+To match the trainable budget, 1,479,532 of EfficientNetB0's 4,055,296 parameters stay frozen at their ImageNet values. Raghu and colleagues found that ImageNet features transfer less to medical images than is often assumed. Freezing a large share of a network that is already being used at the wrong resolution leaves less room to adapt.
+
+### 4. Optimisation budget
+
+The learning curve was still rising at round 30, by about 0.2 points per round. With a learning rate of $10^{-4}$ and 30 rounds, EfficientNetB0 may simply be slower, and a longer run would narrow the gap. It would be very unlikely to close 15 points, though.
+
+## What the evidence supports
+
+| Suspect | Consistent with results? | Ruled out? | What would test it |
+| --- | --- | --- | --- |
+| BatchNorm | Partly | No, but MobileNetV2 limits it | Swap BN for GroupNorm, or keep BN local (FedBN) |
+| Resolution | Yes | No | Rerun at 128 and 224 pixels |
+| Frozen layers | Yes | No | Unfreeze everything, accepting a larger payload |
+| Budget | Partly | No | Run 100 rounds |
+
+The honest answer is that my design can't tell these apart. Architecture, normalisation, pretraining, resolution and freezing all differ between EfficientNetB0 and the Custom CNN at once, and each configuration was run once.
+
+<Callout type="key" title="What I can say">
+Under this protocol, small images and skewed clients, ImageNet accuracy was a poor guide to federated performance. The more-tuned pretrained model was the one that transferred worst. That is worth reporting, as long as it is reported as an observation and not as a proof of one cause.
+</Callout>

@@ -1,0 +1,84 @@
+---
+title: "462 identical files: auditing a popular Alzheimer's MRI dataset for leakage"
+description: "I hashed every image in the 44,000-image dataset I used for my dissertation. 462 files are byte-for-byte copies of others, one appears 12 times, and an exact hash can only find the easy cases."
+date: "2026-10-23"
+category: "Research Methods"
+tags: ["Data leakage", "Datasets", "Reproducibility", "Medical AI"]
+references:
+  - text: "Wen et al. Convolutional neural networks for classification of Alzheimer's disease: Overview and reproducible evaluation. Medical Image Analysis, 2020."
+    url: "https://doi.org/10.1016/j.media.2020.101694"
+  - text: "Kapoor and Narayanan. Leakage and the reproducibility crisis in machine-learning-based science. Patterns, 2023."
+    url: "https://doi.org/10.1016/j.patter.2023.100804"
+  - text: "scikit-learn documentation. StratifiedGroupKFold."
+    url: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedGroupKFold.html"
+  - text: "Kaggle. Alzheimer's Multiclass Dataset (Equal and Augmented)."
+    url: "https://www.kaggle.com/datasets/aryansinghal10/alzheimers-multiclass-dataset-equal-and-augmented"
+---
+
+In June I flagged a worry: my dissertation's moderate class scored a perfect 100%, on a dataset balanced by augmentation, with an image-level split. This month I finally checked the simplest form of the problem, exact duplicate files.
+
+## The check
+
+Read every file, compute a SHA-256 hash of its bytes, and group files with the same hash. Files in one group are identical, so they must land in the same split.
+
+```python
+import hashlib
+
+def file_hash(path):
+    with open(path, "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+table["sha256"] = [file_hash(p) for p in table["path"]]
+table["group"] = table.groupby("sha256").ngroup()
+
+# identical files must share a label
+assert (table.groupby("group")["label"].nunique() == 1).all()
+```
+
+## What it found
+
+<Stats items="44,000=Image files;43,538=Unique contents;462=Exact duplicate files;12=Copies of the most duplicated image" />
+
+Every duplicate group has a single label, so these are repeated files, not conflicting ones. The effect on a test set depends on how the split treats them:
+
+| Split | What happens to a duplicate group |
+| --- | --- |
+| Random image-level split, 80/20 | Each copy is assigned independently. Any pair of copies ends up on opposite sides with probability $2 \times 0.8 \times 0.2 = 0.32$ |
+| Group-aware split | All copies go to the same side, always |
+
+So under my dissertation's split, roughly a third of duplicate pairs would be expected to straddle train and test. That puts something like 90 test images, about 1% of the 8,800, next to an identical training image. Even if every one of them would otherwise have been misclassified, the effect on headline accuracy is about one point, and realistically much less. Exact duplicates are not the main problem. They are the visible part of it.
+
+## The part a hash can't see
+
+The dataset's balance comes from augmentation: flips, rotations, shifts and colour changes applied to a smaller set of original slices. An augmented copy has different bytes from its original, so its hash is different. Nothing in the file names records which original a file came from. That means:
+
+- the 462 exact duplicates are a **lower bound** on near-copies
+- the number of genuinely independent images is unknown, and likely far below 44,000
+- the number of **people** behind the images is unknown, so a person-level split is impossible
+
+<Flow
+  title="Levels of independence, from weakest to strongest"
+  steps="Image-level split=Duplicates and augmented copies can cross;Hash-grouped split=Exact duplicates stay together;Near-duplicate grouping=Perceptual hashes or embeddings group altered copies;Subject-level split=All images of a person stay together, which needs subject IDs"
+/>
+
+## What I changed
+
+My current pipeline groups by hash and uses group-aware splitting everywhere: the locked test set, the public server set, the hospitals' data and the cross-validation folds.
+
+```python
+from sklearn.model_selection import StratifiedGroupKFold
+
+cv = StratifiedGroupKFold(n_splits=3, shuffle=True, random_state=42)
+for fold, (train_idx, val_idx) in enumerate(cv.split(X, y, groups=table["group"])):
+    ...
+```
+
+The code then checks that no group appears in two splits, and stops if one does.
+
+## Why this matters beyond my project
+
+Wen and colleagues reviewed CNN studies of Alzheimer's classification from MRI and reported that more than half of the papers they surveyed may have suffered from data leakage. Kapoor and Narayanan found leakage affecting results across many fields that use machine learning. Public slice datasets that are pre-augmented and carry no subject IDs make this easy to do by accident, which is how I did it.
+
+<Callout type="warn" title="What this means for my dissertation numbers">
+The dissertation's scores are what that split produced, and I still report them as such. But they should be read as an upper bound for this dataset, not as an estimate of how a model would do on new patients. I'm also testing on a dataset where subject-level splitting is possible, and the early difference is large.
+</Callout>

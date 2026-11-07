@@ -1,0 +1,94 @@
+---
+title: "Ten ways real hospitals misbehave, and how I simulate them"
+description: "Five fixed clients that always show up is the easy case. My new setup has eight hospitals that join, drop out, lose classes and shrink, all on a seeded schedule so that two methods face exactly the same mess."
+date: "2026-10-25"
+category: "Federated Learning"
+tags: ["Simulation", "Client participation", "Experimental design"]
+references:
+  - text: "Kairouz et al. Advances and Open Problems in Federated Learning. Foundations and Trends in Machine Learning, 2021."
+    url: "https://arxiv.org/abs/1912.04977"
+  - text: "Menon et al. Long-tail learning via logit adjustment. ICLR, 2021."
+    url: "https://arxiv.org/abs/2007.07314"
+  - text: "Wang et al. A Field Guide to Federated Optimization. 2021."
+    url: "https://arxiv.org/abs/2107.06917"
+---
+
+In my dissertation, five clients took part in every round, held the same data throughout and never failed. That made comparisons clean but unrealistic. Real hospitals go offline, join late, leave, and see different patients month to month. For my current work I've rebuilt the simulation around that.
+
+## The federation
+
+| Setting | Value |
+| --- | --- |
+| Hospital pool | 8 |
+| Active at the start | 5 |
+| Late joiners | 3, from round 4 onwards |
+| Permanent departure | 1 hospital |
+| Quorum | A round counts only if at least 2 valid updates arrive |
+| Base partition | Dirichlet, α = 0.5, fixed for the whole run |
+| Rounds | 50, with 5 local epochs each |
+
+## The ten scenarios
+
+Each round, a seeded random schedule applies one or more of these:
+
+1. **Non-IID class distribution.** The base Dirichlet skew, at a varying severity.
+2. **Partial class availability.** Some hospitals lose access to whole classes for the round.
+3. **Unequal local dataset sizes.** Some hospitals train on a fraction of their data.
+4. **Local class imbalance.** The class mix within a hospital is skewed further.
+5. **Limited-data clients.** A hospital has very little data at all.
+6. **Intermittent availability.** A hospital misses a round and returns later.
+7. **New client joining.** A hospital appears partway through training.
+8. **Permanent departure.** A hospital leaves and never comes back.
+9. **Variable participation.** The number of hospitals per round changes.
+10. **Different severities.** Each scenario can be mild, moderate or severe.
+
+Here is the plan the seed produced for the eight hospitals:
+
+| Hospital | Relative size | Missing classes | Limited data |
+| --- | --- | --- | --- |
+| 1 | 0.620 | Very mild | No |
+| 2 | 0.614 | Non-demented | No |
+| 3 | 0.875 | None | No |
+| 4 | 0.972 | None | No |
+| 5 | 0.550 | None | No |
+| 6 | 0.996 | Mild | No |
+| 7 | 0.201 | None | Yes |
+| 8 | 0.560 | Mild | No |
+
+And the first few rounds of the schedule:
+
+| Round | Hospitals | Scenario |
+| --- | --- | --- |
+| 1 | 1, 2, 4, 5 | Hospital 3 temporarily offline |
+| 2 | 1 to 5 | Severe local class imbalance |
+| 6 | 1, 2 | Only two hospitals, imbalanced |
+| 7 | 1 to 6 | Hospital 6 joins |
+| 10 | 1 to 7 | Hospital 7 joins, some lose the very mild class |
+| 11 | 4, 5, 7 | Low participation |
+
+## The rule that makes it a fair test
+
+The schedule is a function of the seed, not of the method. Two experiments with the same seed see the same hospitals, the same missing classes and the same shrunken datasets in every round. The code checks this: after both runs it compares the client lists and reported sample counts round by round, and fails if they differ.
+
+<Flow
+  title="How data is fixed and varied"
+  steps="Base partition=Every training image belongs to exactly one hospital for the whole run;Round schedule=The seed decides who takes part and which scenario applies;Local subset=Each hospital's training subset for the round is cut from its fixed partition;Same mess=Every method compared under the same seed faces identical rounds"
+/>
+
+## A loss that copes with missing classes
+
+When a hospital's round data lacks a class, or is dominated by one, plain cross-entropy pushes its model towards predicting only what it sees. I use **logit-adjusted cross-entropy** (Menon et al., 2021): the log of the class prior is added to the logits during training.
+
+$$
+\mathcal{L} = -\log \frac{\exp\big(z_y + \log \pi_y\big)}{\sum_j \exp\big(z_j + \log \pi_j\big)}
+$$
+
+Common classes get a head start inside the loss, so the model doesn't need to inflate their logits, and predictions at test time, without the adjustment, are less biased towards them. Each hospital computes $\pi$ from its own round data, so the prior never leaves the hospital.
+
+## Choosing a model without touching the test set
+
+The client data is split into three folds, grouped so that identical files stay together. In each fold, the federated model is scored on that fold's validation images after every round, and the round with the best balanced accuracy is kept. The locked test set, 20% of all images, is used once per finished model and never for selection.
+
+<Callout type="note">
+None of this makes the simulation real. All "hospitals" are still slices of one public dataset, on one machine. What it does is stop a method from looking good only because every client always showed up with all its classes.
+</Callout>

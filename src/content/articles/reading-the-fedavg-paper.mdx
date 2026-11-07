@@ -1,0 +1,82 @@
+---
+title: "Reading the FedAvg paper, slowly"
+description: "McMahan et al. (2017) is short and easy to skim. Read carefully, it has three knobs, one clever reframing and an honest open question that the field is still working on."
+date: "2024-12-16"
+category: "Federated Learning"
+tags: ["FedAvg", "Paper notes", "Optimisation"]
+references:
+  - text: "McMahan et al. Communication-Efficient Learning of Deep Networks from Decentralized Data. AISTATS, 2017."
+    url: "https://arxiv.org/abs/1602.05629"
+  - text: "Li et al. On the Convergence of FedAvg on Non-IID Data. ICLR, 2020."
+    url: "https://arxiv.org/abs/1907.02189"
+---
+
+"Communication-Efficient Learning of Deep Networks from Decentralized Data" is the paper that named federated learning. I first skimmed it for the averaging formula. This month I went back and read it properly, with a notebook beside me. These are those notes.
+
+## The baseline it improves on
+
+The obvious way to train across many devices is **FedSGD**: each round, every selected client computes one gradient on its data, the server averages the gradients and takes one step. It works, but each round of communication buys a single gradient step. When the network is the bottleneck, that is wasteful.
+
+## The reframing
+
+FedAvg asks clients to do more work before talking. Each client runs several epochs of SGD locally, then sends back its **weights**, and the server averages the weights. FedSGD becomes a special case: one local step on the full local batch.
+
+The paper controls this with three parameters.
+
+| Symbol | Meaning | Effect |
+| --- | --- | --- |
+| $C$ | Fraction of clients selected per round | More clients per round, less noisy updates |
+| $E$ | Local epochs per round | More local computation per message |
+| $B$ | Local minibatch size | Smaller batches, more local steps |
+
+The number of local updates a client with $n_k$ examples makes per round is
+
+$$
+u_k = E \cdot \frac{n_k}{B}
+$$
+
+FedSGD is $E = 1$ with $B = \infty$, so $u_k = 1$.
+
+## The algorithm in a few lines
+
+```python
+import numpy as np
+
+def fedavg_round(global_w, clients, fraction=0.1, epochs=5, batch=10, rng=np.random):
+    m = max(1, int(fraction * len(clients)))
+    chosen = rng.choice(len(clients), m, replace=False)
+    updates, sizes = [], []
+    for k in chosen:
+        w = global_w.copy()
+        for _ in range(epochs):
+            for xb, yb in clients[k].batches(batch):
+                w -= clients[k].lr * clients[k].grad(w, xb, yb)
+        updates.append(w)
+        sizes.append(clients[k].n)
+    sizes = np.array(sizes, dtype=float)
+    return sum(s * u for s, u in zip(sizes / sizes.sum(), updates))
+```
+
+The weighting by $n_k$ matters. A hospital with 10,000 scans should count for more than one with 500.
+
+## What the experiments showed
+
+The paper tests image classification on MNIST and CIFAR-10 and next-character prediction on Shakespeare text split by speaking role. Its headline result is that FedAvg reaches a target accuracy in **10 to 100 times fewer communication rounds** than FedSGD.
+
+The part I found most useful is how it builds a non-IID split for MNIST. The data is sorted by digit and cut into 200 shards of 300 images. Each of 100 clients receives two shards, so most clients see only two digits. FedAvg still trains under this split. That is a strong and, at first, surprising result.
+
+## Why averaging weights is not obviously safe
+
+Averaging the parameters of two separately trained networks usually gives a bad network, because networks that compute the same function can arrange their hidden units differently. The paper's answer is shared initialisation: every client starts each round from the same global model, so local models stay close enough that their average is still a good model.
+
+That condition is also where it can break. The longer clients train locally on very different data, the further they drift apart, and the less their average means.
+
+<Callout type="note" title="An honest open question">
+The paper is empirical. It shows FedAvg works on its non-IID splits, but it does not prove convergence for them. Later theory, such as Li et al. (2020), showed that with non-IID data and a fixed learning rate, FedAvg can converge to a point that is not the true optimum, and that the gap grows with the number of local steps.
+</Callout>
+
+## Three things I'm taking away
+
+1. **Local epochs are a trade.** More local work saves communication but increases drift on skewed data.
+2. **"Non-IID" needs a definition every time.** The shard split above is one extreme. Real hospitals sit somewhere else, and the choice of split shapes the result.
+3. **The server sees every weight.** FedAvg reduces communication. It says nothing about protecting the updates themselves, which is the topic I'll turn to next.

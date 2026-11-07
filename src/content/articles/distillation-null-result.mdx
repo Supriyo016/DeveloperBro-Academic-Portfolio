@@ -1,0 +1,96 @@
+---
+title: "My distillation experiment didn't work (yet): reading a null result honestly"
+description: "Accuracy rose in all three folds. Balanced accuracy rose by 0.13 points with an interval that includes zero. McNemar's test gave p = 10⁻¹⁸⁶. How to read numbers that disagree, from a preliminary run."
+date: "2026-10-31"
+category: "Research Methods"
+tags: ["Knowledge distillation", "Statistics", "Null results", "Federated learning"]
+references:
+  - text: "Nadeau and Bengio. Inference for the Generalization Error. Machine Learning, 2003."
+    url: "https://doi.org/10.1023/A:1024068626366"
+  - text: "Dietterich. Approximate Statistical Tests for Comparing Supervised Classification Learning Algorithms. Neural Computation, 1998."
+    url: "https://doi.org/10.1162/089976698300017197"
+  - text: "Kornblith et al. Similarity of Neural Network Representations Revisited (CKA). ICML, 2019."
+    url: "https://arxiv.org/abs/1905.00414"
+  - text: "Guo et al. On Calibration of Modern Neural Networks. ICML, 2017."
+    url: "https://arxiv.org/abs/1706.04599"
+---
+
+My current question is whether distillation from a frozen teacher improves a small CKKS-secured federated model when hospitals have skewed data. I fixed the main comparison in advance: **Experiment E** (federated, with distillation) against **Experiment D** (identical, without), paired by fold, on test balanced accuracy. This month a full run finished. The answer, so far, is no.
+
+<Callout type="warn" title="What these numbers are">
+This is a preliminary development run on the combined augmented and OASIS images, with three folds and a feature-based distillation design I have since changed. It is not a paper result. I'm writing it up because the way the statistics disagree is worth understanding on its own.
+</Callout>
+
+## The primary endpoint
+
+| Fold | D (no distillation) | E (distillation) | E − D |
+| --- | --- | --- | --- |
+| 1 | 0.4374 | 0.4397 | +0.0023 |
+| 2 | 0.5666 | 0.5998 | +0.0332 |
+| 3 | 0.5702 | 0.5387 | −0.0315 |
+| **Mean** | | | **+0.0013** |
+
+- E is higher in 2 of 3 folds
+- paired bootstrap 95% interval over test images: **[−0.0015, +0.0040]**, which includes zero
+- corrected resampled t-test (Nadeau and Bengio): $t = 0.045$, $p = 0.968$, with 2 degrees of freedom
+
+By the rule I set beforehand, this is a null result.
+
+## Three statistics that seem to disagree
+
+**Accuracy went up in every fold.** By 2.5, 5.7 and 3.3 points, a mean of +3.8, with $p = 0.13$.
+
+**Balanced accuracy didn't move.** As above.
+
+**McNemar's test was overwhelming.** In fold 2, E was right where D was wrong on 2,137 images, and the reverse on 642, giving $p \approx 3 \times 10^{-186}$.
+
+All three are correct. They answer different questions.
+
+## Reconciling them
+
+<BarChart
+  title="Recall by class, mean over folds"
+  caption="Distillation shifted predictions towards the majority class rather than improving all classes."
+  series="D: no distillation,E: distillation"
+  data="Non-demented=0.668|0.786;Moderate=0.563|0.631;Mild=0.314|0.380;Very mild=0.554|0.308"
+  max="1"
+  decimals="3"
+/>
+
+E predicts "non-demented" more often. On a test set where most images are non-demented, that alone raises accuracy. Very mild recall fell from 55% to 31%. Balanced accuracy weights every class equally, so the gains and losses cancel.
+
+McNemar's test asks whether two **specific, fixed models** disagree asymmetrically on **these test images**. With 26,169 test images, almost any systematic difference is "significant", including a difference in which class a model prefers. It says nothing about whether the method generalises to new training runs, which is what the fold-level test measures, with only three folds.
+
+| Statistic | Question it answers | Here |
+| --- | --- | --- |
+| Accuracy difference | Does E get more images right? | Yes, by favouring the majority class |
+| Balanced accuracy difference | Does E do better across classes? | No |
+| McNemar's test | Do these two models differ on this test set? | Yes, trivially, with this many images |
+| Corrected t-test over folds | Would the method win again with new training? | No evidence, with 3 folds |
+
+## Distillation did transfer something
+
+On the test set, E's student moved towards the teacher on every similarity measure:
+
+| Measure | D | E |
+| --- | --- | --- |
+| Prediction agreement with teacher | 0.597 | 0.643 |
+| Linear CKA with teacher's features | 0.492 | 0.595 |
+| Feature distillation loss | 1.027 | 0.679 |
+
+So the student learned to look more like the teacher. It just didn't become a better classifier. Part of the reason is visible in the gap: the centrally trained teacher's balanced accuracy was 0.825, and D's 0.525. Distillation closed 0.4% of that gap.
+
+## A second warning sign
+
+In a later run on the augmented dataset alone, with a soft-label and attention-map design, centrally trained distillation also looked like this. The distilled student matched the teacher more closely, with KL divergence down from 0.033 to 0.020 and attention-map cosine up from about 0.82 to 0.98, but its test balanced accuracy fell from 90.2% to 89.0%.
+
+## What I'm doing about it
+
+1. **Keep the null.** The endpoint was fixed in advance. Changing it now to "accuracy improved" would be exactly the kind of reporting I criticised in my own dissertation.
+2. **Separate the two effects.** The teacher was trained on the server's public data, which D never sees. E against D can't distinguish "distillation helps" from "public data helps". A D-plus-public-data baseline is needed.
+3. **Protect the test set.** The notebook records that the final distillation settings were fixed after earlier test results had been seen. Any confirmatory run needs a fresh locked split, used once.
+4. **More folds.** With three, the t-test has 2 degrees of freedom and very little power.
+
+<Callout type="key">
+A null result from a fair test is more useful than a positive result from a test that was adjusted until it passed. This one tells me the simple version of the idea doesn't work under these conditions, and roughly why.
+</Callout>

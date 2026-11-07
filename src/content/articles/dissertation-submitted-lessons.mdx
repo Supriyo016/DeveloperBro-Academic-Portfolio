@@ -1,0 +1,54 @@
+---
+title: "Dissertation submitted: five things I would do differently"
+description: "My M.Tech dissertation is in. Here is what it found, and an honest list of what the design could not show, written while it is still fresh."
+date: "2026-07-27"
+category: "Research Methods"
+tags: ["Dissertation", "Reflection", "Research methodology"]
+references:
+  - text: "Bouthillier et al. Accounting for Variance in Machine Learning Benchmarks. MLSys, 2021."
+    url: "https://arxiv.org/abs/2103.03098"
+  - text: "Wen et al. Convolutional neural networks for classification of Alzheimer's disease: Overview and reproducible evaluation. Medical Image Analysis, 2020."
+    url: "https://doi.org/10.1016/j.media.2020.101694"
+  - text: "Kapoor and Narayanan. Leakage and the reproducibility crisis in machine-learning-based science. Patterns, 2023."
+    url: "https://doi.org/10.1016/j.patter.2023.100804"
+---
+
+This month I submitted my M.Tech dissertation, "Privacy-Preserving Alzheimer's Disease Detection for Non-IID MRI Data: A Comparative Analysis of Federated Learning Algorithms under Homomorphic Encryption", at Kalyani Government Engineering College. The full case study is on the [research page](/research/federated-alzheimers-detection). It has been two semesters of reading, coding and waiting for GPU quota. Before the details fade, I want to write down what it showed and, more usefully, what it couldn't.
+
+## What it found
+
+<Stats items="94.59%=Test accuracy, Custom CNN + FedAvg;94.80%=Macro F1, same run;8,800=Held-out test images;9=Backbone and algorithm pairs" />
+
+- A compact CNN trained from scratch with Group Normalisation beat both ImageNet-pretrained backbones under a strongly non-IID five-client split.
+- The backbone mattered far more than the federated algorithm: 15.9 points between backbone averages, 0.9 between algorithm averages.
+- FedAvg was best for every backbone. FedProx and FedDyn, with coefficients of 0.01, gave no advantage.
+
+## Five things I would do differently
+
+### 1. Run every configuration more than once
+
+Each of the nine configurations was trained once, with seed 42. That makes them comparable, but it gives no estimate of run-to-run variation. Bouthillier and colleagues show that variance from seeds and data order alone can be larger than the differences many papers report. Several of my algorithm comparisons are under one point apart, and I can't say whether they would survive a second seed.
+
+### 2. Split by source image, not by slice
+
+The dataset was balanced by augmentation before I downloaded it, and my train-test split is at image level. Augmented copies of one original can land on both sides. The perfect score on the moderate class is consistent with that, though it doesn't prove it. Kapoor and Narayanan's survey of leakage across many fields makes uncomfortable reading on exactly this point.
+
+### 3. Put the whole update through encryption, and measure it
+
+CKKS was prototyped beside training: the pipeline encrypted and decrypted a sample of each update to check the round trip, while the weights the server averaged went in plaintext. That was the right first step for building the encryption code, but it means the dissertation shows that CKKS works with this setup, not what fully encrypted training costs or whether it changes accuracy. The next version has to encrypt the full update, keep the secret key away from the server, and measure ciphertext sizes and timing on every round.
+
+### 4. Add one ablation for the main claim
+
+My explanation for the Custom CNN's win is Group Normalisation. But the Custom CNN also differs from the pretrained models in being unpretrained, unfrozen and differently shaped. One extra run, the same Custom CNN with BatchNorm, would have tested the explanation directly. Without it, "GroupNorm is why" is a hypothesis that the results point to.
+
+### 5. Tune what I compare
+
+FedProx and FedDyn ran with a single coefficient each. A fair comparison gives every method a small tuning budget on validation data. Otherwise "FedAvg won" may just mean "the defaults were wrong for the others".
+
+## What I'd keep
+
+The fixed protocol. Holding the dataset, partition, test set, training budget and parameter count constant across all nine runs is what made the backbone result clear, even with one run each. The limitations above are about how much each comparison can claim, not about whether the comparison was set up fairly.
+
+<Callout type="key" title="Next">
+Two questions follow directly: what happens to these scores when the split respects duplicates, and what does fully encrypted aggregation really cost. I plan to spend the next few months on both, and on knowledge distillation as a way to make the client model smaller.
+</Callout>

@@ -1,0 +1,71 @@
+---
+title: "Choosing a dissertation question I can actually answer"
+description: "Every paper I read used a different dataset, backbone and privacy setup, so their results could not be compared. That gap became my M.Tech dissertation design: nine experiments, two factors, everything else fixed."
+date: "2025-07-28"
+category: "Research Methods"
+tags: ["Dissertation", "Experimental design", "Research gap"]
+references:
+  - text: "Li, Sahu, Talwalkar and Smith. Federated Learning: Challenges, Methods, and Future Directions. IEEE Signal Processing Magazine, 2020."
+    url: "https://arxiv.org/abs/1908.07873"
+  - text: "Truhn et al. Encrypted federated learning for secure decentralized collaboration in cancer image analysis. Medical Image Analysis, 2024."
+    url: "https://doi.org/10.1016/j.media.2023.103059"
+  - text: "Montgomery. Design and Analysis of Experiments. Wiley."
+    url: "https://www.wiley.com/en-us/Design+and+Analysis+of+Experiments%2C+10th+Edition-p-9781119722106"
+---
+
+The dissertation is the main work of the second year of my M.Tech, and the first step is a question. I spent the last few weeks turning a pile of papers into one. This is how that went.
+
+## What the literature looked like
+
+By now I've read a few dozen papers that combine some of: Alzheimer's or other medical imaging, federated learning, and homomorphic encryption. Sorted into a table, a pattern showed up.
+
+| Study type | Model | Privacy | Data split | Typical claim |
+| --- | --- | --- | --- | --- |
+| Centralised Alzheimer's CNNs | Many | None | Pooled | High accuracy |
+| Federated Alzheimer's studies | One CNN or transformer | Plain FedAvg | Multi-site or simulated | Close to centralised |
+| Encrypted federated imaging | One CNN or U-Net | HE or secure aggregation | Multi-site | Accuracy kept, cost rises |
+
+Each row is a reasonable study. But almost every paper changes several things at once: a different dataset, backbone, image size, client split and encryption setup. So when two papers disagree, there is no way to tell why. I couldn't find a study that held the data and privacy setup fixed and varied the model and the federated algorithm.
+
+## The question
+
+> When data is non-IID across clients, which CNN backbone and which federated algorithm should be preferred, once every other factor is held constant?
+
+It is narrower than "can we do private Alzheimer's detection?", which is the point. A narrow question can be answered by one person in two semesters.
+
+## Two factors, three levels each
+
+| Backbone ↓ / Algorithm → | FedAvg | FedProx | FedDyn |
+| --- | --- | --- | --- |
+| MobileNetV2 | Experiment 1 | Experiment 2 | Experiment 3 |
+| EfficientNetB0 | Experiment 4 | Experiment 5 | Experiment 6 |
+| Custom CNN | Experiment 7 | Experiment 8 | Experiment 9 |
+
+| Factor | Levels | Why these |
+| --- | --- | --- |
+| Backbone | MobileNetV2, EfficientNetB0, a Custom CNN | Two common pretrained efficient networks, and one designed for federated training |
+| Federated algorithm | FedAvg, FedProx, FedDyn | The standard baseline and two well-known corrections for client drift |
+
+A full factorial design also lets me ask whether the factors interact: does the best algorithm depend on the backbone?
+
+## What stays fixed
+
+The comparison is only fair if everything else is identical across all nine runs:
+
+- the dataset and the held-out test set
+- the non-IID partition across five clients, with the same seed
+- image size, optimiser, learning rate, batch size and local epochs
+- the number of communication rounds
+- the CKKS encryption parameters
+- the number of trainable parameters, as closely as I can match it
+
+The last item needs explaining. Encrypted communication cost grows with the number of parameters, so a backbone with twice the parameters would be twice as expensive to protect. Matching trainable parameters means the backbones differ in architecture, not in budget.
+
+<Flow
+  title="The planned workflow"
+  steps="Data=Split the dataset once, then partition the training part across five clients;Train=Run each of the nine configurations under the same budget;Protect=Use CKKS encryption alongside the federated rounds;Evaluate=Score every final model on the same held-out test set;Compare=By backbone, by algorithm, and both together"
+/>
+
+## What I'm worried about already
+
+Compute. Nine federated runs, each with five clients and many rounds, on whatever free GPU time I can get. That budget will decide how many repeats I can afford, and I'll have to be honest about it when I write up the results.

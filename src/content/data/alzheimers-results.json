@@ -1,0 +1,644 @@
+{
+ "source": "Final-round outputs of the saved dissertation notebooks. One federated run per configuration.",
+ "runs": [
+  {
+   "experiment": 1,
+   "backbone": "mobilenetv2",
+   "backboneLabel": "MobileNetV2",
+   "algorithm": "FedAvg",
+   "accuracy": 0.9263,
+   "testImages": 8800,
+   "macroPrecision": 0.9279,
+   "macroRecall": 0.9284,
+   "macroF1": 0.928,
+   "finalLoss": 0.27719,
+   "macroAuc": 0.99153,
+   "perClass": {
+    "MildDemented": {
+     "precision": 0.9192,
+     "recall": 0.9275,
+     "f1": 0.9233,
+     "support": 2000
+    },
+    "ModerateDemented": {
+     "precision": 0.9847,
+     "recall": 0.998,
+     "f1": 0.9913,
+     "support": 2000
+    },
+    "NonDemented": {
+     "precision": 0.9091,
+     "recall": 0.9219,
+     "f1": 0.9154,
+     "support": 2560
+    },
+    "VeryMildDemented": {
+     "precision": 0.8986,
+     "recall": 0.8661,
+     "f1": 0.882,
+     "support": 2240
+    }
+   },
+   "accuracyByRound": [
+    0.5834,
+    0.6654,
+    0.7037,
+    0.7247,
+    0.7498,
+    0.7769,
+    0.7991,
+    0.8161,
+    0.8249,
+    0.8414,
+    0.8546,
+    0.8616,
+    0.8677,
+    0.877,
+    0.8832,
+    0.886,
+    0.8944,
+    0.8999,
+    0.9051,
+    0.9036,
+    0.9097,
+    0.909,
+    0.9122,
+    0.9181,
+    0.9197,
+    0.9198,
+    0.9244,
+    0.9224,
+    0.9273,
+    0.9263
+   ]
+  },
+  {
+   "experiment": 2,
+   "backbone": "mobilenetv2",
+   "backboneLabel": "MobileNetV2",
+   "algorithm": "FedProx",
+   "accuracy": 0.9243,
+   "testImages": 8800,
+   "macroPrecision": 0.9257,
+   "macroRecall": 0.927,
+   "macroF1": 0.9263,
+   "finalLoss": 0.28022,
+   "macroAuc": 0.99023,
+   "perClass": {
+    "MildDemented": {
+     "precision": 0.9078,
+     "recall": 0.926,
+     "f1": 0.9168,
+     "support": 2000
+    },
+    "ModerateDemented": {
+     "precision": 0.9925,
+     "recall": 0.996,
+     "f1": 0.9943,
+     "support": 2000
+    },
+    "NonDemented": {
+     "precision": 0.9287,
+     "recall": 0.9051,
+     "f1": 0.9167,
+     "support": 2560
+    },
+    "VeryMildDemented": {
+     "precision": 0.8738,
+     "recall": 0.8808,
+     "f1": 0.8773,
+     "support": 2240
+    }
+   },
+   "accuracyByRound": [
+    0.5668,
+    0.656,
+    0.6901,
+    0.7234,
+    0.7492,
+    0.7675,
+    0.7872,
+    0.8027,
+    0.8131,
+    0.8318,
+    0.8425,
+    0.8517,
+    0.8607,
+    0.8682,
+    0.8785,
+    0.8853,
+    0.8843,
+    0.8889,
+    0.895,
+    0.9002,
+    0.8998,
+    0.9058,
+    0.9062,
+    0.9102,
+    0.9149,
+    0.9166,
+    0.9156,
+    0.9199,
+    0.9216,
+    0.9243
+   ]
+  },
+  {
+   "experiment": 3,
+   "backbone": "mobilenetv2",
+   "backboneLabel": "MobileNetV2",
+   "algorithm": "FedDyn",
+   "accuracy": 0.9245,
+   "testImages": 8800,
+   "macroPrecision": 0.9258,
+   "macroRecall": 0.9271,
+   "macroF1": 0.9264,
+   "finalLoss": 0.27537,
+   "macroAuc": null,
+   "perClass": {
+    "MildDemented": {
+     "precision": 0.907,
+     "recall": 0.922,
+     "f1": 0.9145,
+     "support": 2000
+    },
+    "ModerateDemented": {
+     "precision": 0.9906,
+     "recall": 0.9985,
+     "f1": 0.9945,
+     "support": 2000
+    },
+    "NonDemented": {
+     "precision": 0.9233,
+     "recall": 0.9074,
+     "f1": 0.9153,
+     "support": 2560
+    },
+    "VeryMildDemented": {
+     "precision": 0.8823,
+     "recall": 0.8804,
+     "f1": 0.8813,
+     "support": 2240
+    }
+   },
+   "accuracyByRound": [
+    0.591,
+    0.6574,
+    0.6935,
+    0.722,
+    0.7452,
+    0.7727,
+    0.7936,
+    0.8116,
+    0.8219,
+    0.8332,
+    0.8462,
+    0.8494,
+    0.8616,
+    0.8684,
+    0.878,
+    0.883,
+    0.8901,
+    0.8926,
+    0.8959,
+    0.9015,
+    0.9059,
+    0.9069,
+    0.9102,
+    0.9132,
+    0.9164,
+    0.9161,
+    0.9198,
+    0.9194,
+    0.9251,
+    0.9245
+   ]
+  },
+  {
+   "experiment": 4,
+   "backbone": "efficientnetb0",
+   "backboneLabel": "EfficientNetB0",
+   "algorithm": "FedAvg",
+   "accuracy": 0.7895,
+   "testImages": 8800,
+   "macroPrecision": 0.7902,
+   "macroRecall": 0.7942,
+   "macroF1": 0.7916,
+   "finalLoss": 0.54837,
+   "macroAuc": 0.94526,
+   "perClass": {
+    "MildDemented": {
+     "precision": 0.7518,
+     "recall": 0.774,
+     "f1": 0.7627,
+     "support": 2000
+    },
+    "ModerateDemented": {
+     "precision": 0.9265,
+     "recall": 0.9705,
+     "f1": 0.948,
+     "support": 2000
+    },
+    "NonDemented": {
+     "precision": 0.7681,
+     "recall": 0.7828,
+     "f1": 0.7754,
+     "support": 2560
+    },
+    "VeryMildDemented": {
+     "precision": 0.7143,
+     "recall": 0.6496,
+     "f1": 0.6804,
+     "support": 2240
+    }
+   },
+   "accuracyByRound": [
+    0.5074,
+    0.5595,
+    0.5933,
+    0.6178,
+    0.6294,
+    0.6468,
+    0.6593,
+    0.6724,
+    0.6806,
+    0.6939,
+    0.6978,
+    0.707,
+    0.7133,
+    0.7199,
+    0.7229,
+    0.7318,
+    0.7382,
+    0.7443,
+    0.7491,
+    0.7558,
+    0.761,
+    0.7656,
+    0.7694,
+    0.7739,
+    0.7789,
+    0.7781,
+    0.7832,
+    0.7863,
+    0.7889,
+    0.7895
+   ]
+  },
+  {
+   "experiment": 5,
+   "backbone": "efficientnetb0",
+   "backboneLabel": "EfficientNetB0",
+   "algorithm": "FedProx",
+   "accuracy": 0.7809,
+   "testImages": 8800,
+   "macroPrecision": 0.7814,
+   "macroRecall": 0.7869,
+   "macroF1": 0.7837,
+   "finalLoss": 0.57397,
+   "macroAuc": 0.93995,
+   "perClass": {
+    "MildDemented": {
+     "precision": 0.7346,
+     "recall": 0.7655,
+     "f1": 0.7498,
+     "support": 2000
+    },
+    "ModerateDemented": {
+     "precision": 0.9213,
+     "recall": 0.9715,
+     "f1": 0.9457,
+     "support": 2000
+    },
+    "NonDemented": {
+     "precision": 0.7884,
+     "recall": 0.7453,
+     "f1": 0.7663,
+     "support": 2560
+    },
+    "VeryMildDemented": {
+     "precision": 0.6813,
+     "recall": 0.6652,
+     "f1": 0.6731,
+     "support": 2240
+    }
+   },
+   "accuracyByRound": [
+    0.4989,
+    0.5576,
+    0.5909,
+    0.6143,
+    0.6277,
+    0.6389,
+    0.6515,
+    0.6624,
+    0.671,
+    0.6768,
+    0.6853,
+    0.6915,
+    0.6975,
+    0.7055,
+    0.7108,
+    0.7186,
+    0.7222,
+    0.7302,
+    0.7358,
+    0.7362,
+    0.7465,
+    0.7497,
+    0.7527,
+    0.7568,
+    0.7615,
+    0.766,
+    0.7682,
+    0.7735,
+    0.7756,
+    0.7809
+   ]
+  },
+  {
+   "experiment": 6,
+   "backbone": "efficientnetb0",
+   "backboneLabel": "EfficientNetB0",
+   "algorithm": "FedDyn",
+   "accuracy": 0.7738,
+   "testImages": 8800,
+   "macroPrecision": 0.7739,
+   "macroRecall": 0.7794,
+   "macroF1": 0.7763,
+   "finalLoss": 0.5818,
+   "macroAuc": null,
+   "perClass": {
+    "MildDemented": {
+     "precision": 0.725,
+     "recall": 0.7525,
+     "f1": 0.7385,
+     "support": 2000
+    },
+    "ModerateDemented": {
+     "precision": 0.9194,
+     "recall": 0.97,
+     "f1": 0.944,
+     "support": 2000
+    },
+    "NonDemented": {
+     "precision": 0.7768,
+     "recall": 0.7465,
+     "f1": 0.7614,
+     "support": 2560
+    },
+    "VeryMildDemented": {
+     "precision": 0.6746,
+     "recall": 0.6487,
+     "f1": 0.6614,
+     "support": 2240
+    }
+   },
+   "accuracyByRound": [
+    0.4981,
+    0.5553,
+    0.5852,
+    0.6031,
+    0.6189,
+    0.6324,
+    0.6442,
+    0.6585,
+    0.6664,
+    0.6773,
+    0.6842,
+    0.6931,
+    0.6983,
+    0.7039,
+    0.7079,
+    0.7111,
+    0.7161,
+    0.7258,
+    0.7309,
+    0.734,
+    0.7378,
+    0.7432,
+    0.7456,
+    0.7514,
+    0.7528,
+    0.7583,
+    0.7643,
+    0.7639,
+    0.7695,
+    0.7738
+   ]
+  },
+  {
+   "experiment": 7,
+   "backbone": "custom-cnn",
+   "backboneLabel": "Custom CNN",
+   "algorithm": "FedAvg",
+   "accuracy": 0.9459,
+   "testImages": 8800,
+   "macroPrecision": 0.947,
+   "macroRecall": 0.9497,
+   "macroF1": 0.948,
+   "finalLoss": 0.17252,
+   "macroAuc": 0.99504,
+   "perClass": {
+    "MildDemented": {
+     "precision": 0.9296,
+     "recall": 0.984,
+     "f1": 0.956,
+     "support": 2000
+    },
+    "ModerateDemented": {
+     "precision": 0.9995,
+     "recall": 1.0,
+     "f1": 0.9998,
+     "support": 2000
+    },
+    "NonDemented": {
+     "precision": 0.9544,
+     "recall": 0.9082,
+     "f1": 0.9307,
+     "support": 2560
+    },
+    "VeryMildDemented": {
+     "precision": 0.9043,
+     "recall": 0.9067,
+     "f1": 0.9055,
+     "support": 2240
+    }
+   },
+   "accuracyByRound": [
+    0.5394,
+    0.624,
+    0.6547,
+    0.6723,
+    0.681,
+    0.7132,
+    0.732,
+    0.7473,
+    0.7657,
+    0.7793,
+    0.7882,
+    0.8071,
+    0.827,
+    0.8368,
+    0.8489,
+    0.8686,
+    0.8793,
+    0.893,
+    0.8959,
+    0.9077,
+    0.9169,
+    0.9121,
+    0.9273,
+    0.9307,
+    0.9313,
+    0.9311,
+    0.9433,
+    0.9432,
+    0.9424,
+    0.9459
+   ]
+  },
+  {
+   "experiment": 8,
+   "backbone": "custom-cnn",
+   "backboneLabel": "Custom CNN",
+   "algorithm": "FedProx",
+   "accuracy": 0.9382,
+   "testImages": 8800,
+   "macroPrecision": 0.9419,
+   "macroRecall": 0.9412,
+   "macroF1": 0.9413,
+   "finalLoss": 0.19801,
+   "macroAuc": 0.99331,
+   "perClass": {
+    "MildDemented": {
+     "precision": 0.9677,
+     "recall": 0.944,
+     "f1": 0.9557,
+     "support": 2000
+    },
+    "ModerateDemented": {
+     "precision": 0.9985,
+     "recall": 1.0,
+     "f1": 0.9993,
+     "support": 2000
+    },
+    "NonDemented": {
+     "precision": 0.9364,
+     "recall": 0.9035,
+     "f1": 0.9197,
+     "support": 2560
+    },
+    "VeryMildDemented": {
+     "precision": 0.8649,
+     "recall": 0.9174,
+     "f1": 0.8904,
+     "support": 2240
+    }
+   },
+   "accuracyByRound": [
+    0.5112,
+    0.6275,
+    0.6472,
+    0.665,
+    0.6715,
+    0.6982,
+    0.7247,
+    0.7385,
+    0.7526,
+    0.751,
+    0.7798,
+    0.795,
+    0.7972,
+    0.8173,
+    0.8272,
+    0.8391,
+    0.8485,
+    0.8623,
+    0.8719,
+    0.8849,
+    0.8957,
+    0.8995,
+    0.9089,
+    0.9153,
+    0.9203,
+    0.9258,
+    0.9316,
+    0.9327,
+    0.9381,
+    0.9382
+   ]
+  },
+  {
+   "experiment": 9,
+   "backbone": "custom-cnn",
+   "backboneLabel": "Custom CNN",
+   "algorithm": "FedDyn",
+   "accuracy": 0.9348,
+   "testImages": 8800,
+   "macroPrecision": 0.9383,
+   "macroRecall": 0.9396,
+   "macroF1": 0.938,
+   "finalLoss": 0.21216,
+   "macroAuc": null,
+   "perClass": {
+    "MildDemented": {
+     "precision": 0.9455,
+     "recall": 0.9635,
+     "f1": 0.9544,
+     "support": 2000
+    },
+    "ModerateDemented": {
+     "precision": 0.9985,
+     "recall": 1.0,
+     "f1": 0.9993,
+     "support": 2000
+    },
+    "NonDemented": {
+     "precision": 0.9582,
+     "recall": 0.8691,
+     "f1": 0.9115,
+     "support": 2560
+    },
+    "VeryMildDemented": {
+     "precision": 0.851,
+     "recall": 0.9259,
+     "f1": 0.8869,
+     "support": 2240
+    }
+   },
+   "accuracyByRound": [
+    0.5259,
+    0.5939,
+    0.6421,
+    0.66,
+    0.6767,
+    0.6937,
+    0.7251,
+    0.7378,
+    0.7541,
+    0.7659,
+    0.7667,
+    0.7754,
+    0.7989,
+    0.8091,
+    0.8159,
+    0.8269,
+    0.8359,
+    0.8328,
+    0.8501,
+    0.865,
+    0.8822,
+    0.8751,
+    0.9031,
+    0.9015,
+    0.9163,
+    0.9083,
+    0.9245,
+    0.9273,
+    0.9294,
+    0.9348
+   ]
+  }
+ ]
+}

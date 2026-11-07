@@ -1,0 +1,96 @@
+---
+title: "From 1978 to CKKS: a short history of computing on encrypted data"
+description: "The idea of doing arithmetic on ciphertexts is older than most of computer science's other privacy tools. It took 31 years to make it fully work, and another eight to make it useful for machine learning."
+date: "2025-01-20"
+category: "Privacy"
+tags: ["Homomorphic encryption", "Paillier", "CKKS", "History"]
+references:
+  - text: "Rivest, Adleman and Dertouzos. On Data Banks and Privacy Homomorphisms. Foundations of Secure Computation, 1978."
+    url: "https://people.csail.mit.edu/rivest/pubs/RAD78.pdf"
+  - text: "Paillier. Public-Key Cryptosystems Based on Composite Degree Residuosity Classes. EUROCRYPT, 1999."
+    url: "https://doi.org/10.1007/3-540-48910-X_16"
+  - text: "Gentry. Fully Homomorphic Encryption Using Ideal Lattices. STOC, 2009."
+    url: "https://doi.org/10.1145/1536414.1536440"
+  - text: "Cheon, Kim, Kim and Song. Homomorphic Encryption for Arithmetic of Approximate Numbers. ASIACRYPT, 2017."
+    url: "https://doi.org/10.1007/978-3-319-70694-8_15"
+  - text: "Benaissa et al. TenSEAL: A Library for Encrypted Tensor Operations Using Homomorphic Encryption. 2021."
+    url: "https://arxiv.org/abs/2104.03152"
+---
+
+Last month I wrote that federated learning leaves model updates exposed to the server. One fix is to encrypt the updates in a way that still lets the server add them up. That is homomorphic encryption, and I spent the last few weeks reading its history from the original papers. The story is better than I expected.
+
+## The question, in 1978
+
+In 1978 Rivest, Adleman and Dertouzos asked a question in a short paper called "On Data Banks and Privacy Homomorphisms". A bank stores encrypted records with a service provider. Could the provider compute on the records, say a total, without decrypting them?
+
+They called an encryption scheme with this property a **privacy homomorphism**: an operation on ciphertexts corresponds to an operation on the plaintexts.
+
+$$
+\mathrm{Dec}\big(\mathrm{Enc}(a) \circledast \mathrm{Enc}(b)\big) = a \circ b
+$$
+
+The same year, two of the same authors published RSA. Textbook RSA already has the property for multiplication: $(a^e)(b^e) = (ab)^e \bmod N$. What nobody had was a scheme that supported both addition and multiplication, without limit.
+
+## Thirty years of partial answers
+
+| Year | Scheme | Supports | Note |
+| --- | --- | --- | --- |
+| 1978 | Textbook RSA | Multiplication | Deterministic, so not secure as used here |
+| 1982 | Goldwasser–Micali | XOR of bits | First probabilistic encryption |
+| 1999 | Paillier | Addition of integers | Practical, and still widely used |
+| 2005 | Boneh–Goh–Nissim | Many additions, one multiplication | A step past "one operation" |
+| 2009 | Gentry | Any computation | First fully homomorphic scheme, using bootstrapping |
+| 2011–2012 | BGV, BFV | Exact integer arithmetic | Much faster lattice schemes |
+| 2016 | TFHE | Fast operations on bits | Bootstrapping in milliseconds |
+| 2017 | CKKS | Approximate real numbers | Designed for numeric workloads |
+
+Gentry's 2009 thesis result is the turning point. Lattice ciphertexts carry noise that grows with each operation, and too much noise makes decryption fail. His idea, bootstrapping, evaluates the decryption circuit homomorphically to refresh a ciphertext and reset its noise. It was impractically slow at first, but it proved the 1978 question had a yes answer.
+
+## Paillier, by hand
+
+Paillier is the easiest scheme to try on paper, so I did. Multiplying two ciphertexts adds the plaintexts. This toy version uses tiny primes and is not secure, but the arithmetic is the real thing.
+
+```python
+import math
+import random
+
+p, q = 293, 433                      # toy primes; real keys use 2048-bit n
+n, n2, g = p * q, (p * q) ** 2, p * q + 1
+lam = math.lcm(p - 1, q - 1)
+mu = pow(lam, -1, n)                 # valid because g = n + 1
+
+def encrypt(m):
+    r = random.randrange(1, n)
+    while math.gcd(r, n) != 1:
+        r = random.randrange(1, n)
+    return pow(g, m, n2) * pow(r, n, n2) % n2
+
+def decrypt(c):
+    return (pow(c, lam, n2) - 1) // n * mu % n
+
+a, b = encrypt(17), encrypt(25)
+print(decrypt(a * b % n2))           # 42: multiplying ciphertexts adds plaintexts
+```
+
+That single property is enough for FedAvg's sum. The catch is the encoding. Paillier works on integers modulo $n$, one value per ciphertext. Model weights are floating point numbers, so they must be scaled to fixed point, and each of a model's millions of weights becomes its own ciphertext of about 4,096 bits.
+
+## Why CKKS fits machine learning
+
+CKKS, published by Cheon, Kim, Kim and Song in 2017, makes two choices that suit neural networks.
+
+1. **It is approximate on purpose.** Values are real numbers scaled by a factor such as $2^{40}$, and results carry a tiny error. Training already tolerates far larger noise from minibatches and float32 rounding.
+2. **It packs many values into one ciphertext.** With a polynomial degree of $N$, one ciphertext holds $N/2$ numbers, and additions and multiplications act on all of them at once.
+
+| | Paillier | CKKS |
+| --- | --- | --- |
+| Values per ciphertext | 1 | $N/2$, e.g. 4,096 |
+| Number type | Integers, exact | Real numbers, approximate |
+| Operations | Addition, plaintext scalar multiplication | Addition and a limited depth of multiplication |
+| Hardness assumption | Composite residuosity | Ring learning with errors |
+| Post-quantum candidate | No | Lattice-based, believed so |
+
+For averaging weights, packing is the decisive point. A model with 2.5 million parameters is about 2.5 million Paillier ciphertexts, but only 611 CKKS ciphertexts at 4,096 slots each.
+
+## Where I'll go from here
+
+Microsoft SEAL implements CKKS in C++, and TenSEAL wraps it for Python with a tensor-style interface. That is the toolkit I plan to try. The next things I want to understand are what the parameters mean, and what an encrypted update actually costs to send.

@@ -1,0 +1,82 @@
+---
+title: "Gradients leak: federated learning is not private by default"
+description: "For one linear layer, the shared gradient contains the private input exactly. A ten-line demo, the attacks that generalise it, and the defences that exist."
+date: "2025-03-24"
+category: "Privacy"
+tags: ["Gradient inversion", "Threat model", "Secure aggregation"]
+references:
+  - text: "Zhu, Liu and Han. Deep Leakage from Gradients. NeurIPS, 2019."
+    url: "https://arxiv.org/abs/1906.08935"
+  - text: "Geiping et al. Inverting Gradients: How Easy Is It to Break Privacy in Federated Learning? NeurIPS, 2020."
+    url: "https://arxiv.org/abs/2003.14053"
+  - text: "Phong et al. Privacy-Preserving Deep Learning via Additively Homomorphic Encryption. IEEE TIFS, 2018."
+    url: "https://doi.org/10.1109/TIFS.2017.2787987"
+  - text: "Bonawitz et al. Practical Secure Aggregation for Privacy-Preserving Machine Learning. ACM CCS, 2017."
+    url: "https://doi.org/10.1145/3133956.3133982"
+  - text: "Melis et al. Exploiting Unintended Feature Leakage in Collaborative Learning. IEEE S&P, 2019."
+    url: "https://arxiv.org/abs/1805.04049"
+---
+
+"The data never leaves the hospital" is the line every federated learning introduction uses, including mine. It is true and it is incomplete. What leaves the hospital is computed from the data, and sometimes it gives the data back.
+
+## The smallest possible example
+
+Take a single linear layer $z = Wx + b$ followed by softmax and cross-entropy. The gradient with respect to the weights is an outer product:
+
+$$
+\frac{\partial L}{\partial W} = \frac{\partial L}{\partial z}\, x^{\top},
+\qquad
+\frac{\partial L}{\partial b} = \frac{\partial L}{\partial z}
+$$
+
+Row $i$ of the weight gradient is the input $x$ scaled by the $i$-th entry of the bias gradient. Divide one by the other and the input comes out exactly.
+
+```python
+import numpy as np
+
+rng = np.random.default_rng(0)
+x = rng.normal(size=8)                 # a private input
+W, b = rng.normal(size=(4, 8)), np.zeros(4)
+
+z = W @ x + b
+p = np.exp(z) / np.exp(z).sum()
+dz = p - np.array([1.0, 0.0, 0.0, 0.0])  # softmax + cross-entropy gradient
+
+dW, db = np.outer(dz, x), dz           # what a client would share
+i = np.argmax(np.abs(db))
+print(np.allclose(dW[i] / db[i], x))   # True
+```
+
+With a batch of one image, a fully connected first layer hands the server the image. Phong and colleagues pointed this out in 2017, as motivation for encrypting gradients.
+
+## The general attack
+
+Real networks are deeper and clients send averaged updates over batches, so the trick above does not apply directly. Gradient inversion attacks handle that case by optimisation: start from random noise, compute the gradient it would produce, and adjust the noise until that gradient matches the shared one.
+
+$$
+x^{*} = \arg\min_{x'} \big\lVert \nabla_W L(x', y') - \nabla_W L(x, y) \big\rVert^2
+$$
+
+- **Deep Leakage from Gradients** (Zhu, Liu and Han, 2019) recovered images and labels from shared gradients, close to pixel level on small benchmarks.
+- **Inverting Gradients** (Geiping et al., 2020) used a cosine-similarity loss and an image prior, and reconstructed recognisable ImageNet-sized images, including from updates computed over several local steps, which is what FedAvg sends.
+- **Property inference** (Melis et al., 2019) showed that even when full images are out of reach, updates can reveal properties of the training data that the model was never meant to learn.
+
+Reconstruction gets harder with larger batches and more local steps, but "harder" is not a guarantee, and medical images are exactly the kind of data where a partial reconstruction still matters.
+
+## Who is the adversary?
+
+A defence only means something against a stated threat. The usual model for aggregation is an **honest-but-curious server**: it follows the protocol, but reads everything it receives.
+
+| Defence | Protects updates from the server? | Cost | Main limitation |
+| --- | --- | --- | --- |
+| Plain FedAvg | No | None | The server sees each update |
+| Secure aggregation (masking) | Yes, sees only the sum | Extra rounds of key agreement | Needs coordination, dropout handling |
+| Differential privacy | Limits what any update reveals | Accuracy loss from added noise | Strong guarantees need large noise |
+| Homomorphic encryption | Yes, sees only ciphertexts | Larger messages, more compute | Key management, approximation error |
+| Trusted hardware | Yes, if the enclave is trusted | Special hardware | Trust moves to the chip vendor |
+
+These are not mutually exclusive. Encryption hides individual updates but not the final model, which can still leak through membership inference. Differential privacy bounds what the final model reveals but does not hide updates in transit.
+
+<Callout type="key" title="What I'm taking from this">
+For a few hospitals and a central server, homomorphic encryption has an appealing shape: FedAvg needs only addition, the clients are few and stable, and the server never needs to read anything. The cost is in message size and computation, and I want to measure that rather than guess it.
+</Callout>

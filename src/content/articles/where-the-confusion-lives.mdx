@@ -1,0 +1,64 @@
+---
+title: "Very mild or healthy? Where my best model still gets confused"
+description: "94.6% accuracy leaves 476 mistakes. Six in ten of them are the same mistake. And one class scoring a perfect 100% is not good news."
+date: "2026-06-22"
+category: "Medical Imaging"
+tags: ["Error analysis", "Confusion matrix", "Results"]
+references:
+  - text: "Morris. The Clinical Dementia Rating (CDR): current version and scoring rules. Neurology, 1993."
+    url: "https://doi.org/10.1212/WNL.43.11.2412-a"
+  - text: "Wen et al. Convolutional neural networks for classification of Alzheimer's disease: Overview and reproducible evaluation. Medical Image Analysis, 2020."
+    url: "https://doi.org/10.1016/j.media.2020.101694"
+---
+
+My best configuration, the Custom CNN with FedAvg, classified 8,324 of 8,800 test images correctly. I'm writing up the results chapter this month, and the 476 it got wrong turned out to be more interesting than the ones it got right.
+
+<Figure
+  src="/images/research/confusion-matrix-custom-cnn.webp"
+  alt="Confusion matrix for the Custom CNN with FedAvg. Diagonal values are 1968, 2000, 2325 and 2031. The largest errors are 188 non-demented predicted as very mild, 106 very mild predicted as non-demented and 102 very mild predicted as mild."
+  caption="Custom CNN with FedAvg on 8,800 test images. Rows are true classes."
+  width="947"
+  height="791"
+/>
+
+## Where the 476 errors go
+
+| Confusion (true → predicted) | Count | Share of all errors |
+| --- | --- | --- |
+| Non-demented → Very mild | 188 | 39% |
+| Very mild → Non-demented | 106 | 22% |
+| Very mild → Mild | 102 | 21% |
+| Non-demented → Mild | 47 | 10% |
+| Mild → Very mild | 27 | 6% |
+| Others | 6 | 1% |
+
+**62% of all errors are between very mild and non-demented.** That matches the clinical picture. CDR 0.5, "very mild" or "questionable" dementia, is the boundary category, and the anatomical changes at that stage overlap with normal ageing. If anything, the surprise is that a 64 × 64 slice separates them as well as it does.
+
+The direction is mostly the cautious one: 188 healthy scans flagged as very mild, against 106 very mild scans called healthy. For screening, a false alarm that leads to a follow-up is cheaper than a missed early case.
+
+## The pattern holds across all nine runs
+
+<BarChart
+  title="F1 by class, best and worst configuration"
+  caption="The class ordering is the same in every one of the nine runs: moderate easiest, very mild hardest."
+  series="Custom CNN + FedAvg,EfficientNetB0 + FedDyn"
+  data="Moderate=1.000|0.944;Mild=0.956|0.739;Non-demented=0.931|0.761;Very mild=0.905|0.661"
+  max="1"
+  decimals="3"
+/>
+
+## The class that is too good
+
+Moderate dementia scores an F1 of 0.991 to 1.000 in all six MobileNetV2 and Custom CNN runs, and still 0.944 to 0.948 with EfficientNetB0, which struggles on every other class. The Custom CNN with FedAvg gets all 2,000 moderate test images right, and its one-versus-rest AUC for the class is 100.0%.
+
+Moderate cases do show more atrophy, so some advantage is expected. But perfect separation on 2D slices of a clinical category should make anyone suspicious, especially in a dataset that was balanced by augmentation. Moderate dementia is rare in real cohorts. To reach 10,000 moderate images, the dataset authors must have generated many augmented copies from a small number of originals. If copies of the same original slice are in both my training and test sets, then "recognising moderate dementia" may partly be "recognising images it has nearly seen before".
+
+<Callout type="warn" title="What I can and can't check">
+My split is stratified by class at the image level. The dataset's file names don't say which original image or which person each slice came from, so I can't group copies together, and I can't rule this leakage out. It goes into the limitations section, and it is the first thing I want to investigate after submission.
+</Callout>
+
+## What this changes in the write-up
+
+1. The headline metric stays macro F1, with the per-class table always beside it.
+2. The very mild versus non-demented confusion gets its own discussion, because it's the clinically meaningful one.
+3. The moderate class result is reported, but flagged as likely inflated by the dataset's construction, rather than presented as a strength.
