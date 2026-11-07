@@ -100,9 +100,11 @@ and checked live (see `docs/TESTING.md`).
   browser, answers only from site content. 10 unit tests in `tests/unit/assistant.test.ts`.
 - Tests: 73 unit, 115 browser, all passing locally. `npm audit` 0.
 - Git: history restarted as one commit on `main`; the old history is kept locally on `backup/pre-github-history`.
-  Public repository: https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio (created, push waits on GitHub
-  sign-in). The CV builder moved to `private/scripts/` and audit notes to `docs/private/`, both git-ignored.
-- NOT yet done: push, Vercel Git connection, production deploy (blocked by a permission rule, needs the owner).
+  Public repository: https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio, pushed. The CV builder moved to
+  `private/scripts/` and audit notes to `docs/private/`, both git-ignored.
+- Deployed to production as `developerbro-oi861ymfo-supriyo016.vercel.app`, and the Vercel project is now connected to
+  the repository: pushes to `main` deploy automatically. Checked live: pages, marks, redirects, assistant, pause switch;
+  the 8 new feature tests and the CSP, carousel and axe tests passed on the live site (one retry after a connection reset).
 
 ## Next exact steps
 

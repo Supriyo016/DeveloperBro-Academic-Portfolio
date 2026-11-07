@@ -7,7 +7,11 @@ cannot host it.
 
 Live at https://developerbro.vercel.app, in Vercel project `developerbro` under team `supriyo016`.
 
-Deployed from this folder with the Vercel CLI, with no Git connection, so a push does not redeploy. To publish a change:
+Connected to the public GitHub repository https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio since
+7 November 2026. A push to `main` deploys to production, and other branches get preview deployments. The Vercel GitHub
+app has access to this one repository only.
+
+A manual deploy from this folder still works:
 
 ```bash
 npx vercel@latest deploy --prod --scope supriyo016
@@ -21,10 +25,10 @@ If a deploy stops with `fetch failed`, the network may be offering an IPv6 route
 
 To set a variable from PowerShell, use `--value` rather than a pipe. A pipe adds invisible characters that break the build.
 
-## Connecting GitHub (optional)
+## Keeping the repository public-safe
 
-For automatic deploys, push this repository to GitHub, confirm `docs/private/` and `private/` are absent from the
-remote, and connect it in the Vercel project settings.
+`docs/private/` and `private/` are git-ignored and must stay that way. They hold the original CV, the CV builder script
+and the content audit notes. Check `git status` before every push.
 
 ## Environment variables
 
