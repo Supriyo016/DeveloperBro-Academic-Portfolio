@@ -100,5 +100,5 @@ audit. It comes from per-request rendering for the nonce CSP.
 Local production build. Type check, lint and MDX check pass. 73 of 73 unit tests. Browser tests: 46 of 46 site,
 79 of 79 quality and feature tests after fixing three failures found on the first run (a 22 px "Show all" button,
 contrast on the active MRI class tab and inactive model cards, and the 375 px overflow test exceeding its timeout
-across 23 routes; its timeout is now 150 s). `npm audit --omit=dev` reports 0 vulnerabilities. Not yet run on the
-live site.
+across 23 routes; its timeout is now 150 s). `npm audit --omit=dev` reports 0 vulnerabilities. Deployed by pushing
+commit 48a6cc6; on the live site the 14 feature tests pass, new pages return 200 and the old distillation URL redirects (308).
