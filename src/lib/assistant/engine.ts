@@ -109,7 +109,7 @@ const topics: Topic[] = [
     keys: ["research", "research work", "works", "dissertation", "dissertations", "thesis", "studies", "papers", "study"],
     answer: (kb, ctx) => ({
       text: [
-        ctx.pick(["There are two research works on the site.", "Two research works, one from each degree."]),
+        ctx.pick(["There are three research works on the site: two dissertations and one ongoing study.", "Three research works: one from each degree, and one in progress."]),
         ...kb.studies.map((study) => `• ${study.title} (${study.kind}, ${study.period}).`),
         "Which one would you like to hear about?",
       ],

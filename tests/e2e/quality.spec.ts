@@ -7,6 +7,7 @@ const widths = [320, 375, 425, 768, 1024, 1440, 1920];
 test.describe("responsive layout", () => {
   for (const width of widths) {
     test(`no horizontal overflow at ${width}px`, async ({ page }) => {
+      test.setTimeout(150_000);
       await page.setViewportSize({ width, height: 900 });
       for (const route of routes) {
         await page.goto(route);

@@ -154,7 +154,7 @@
    "macroRecall": 0.9271,
    "macroF1": 0.9264,
    "finalLoss": 0.27537,
-   "macroAuc": null,
+   "macroAuc": 0.99057,
    "perClass": {
     "MildDemented": {
      "precision": 0.907,
@@ -212,7 +212,8 @@
     0.9194,
     0.9251,
     0.9245
-   ]
+   ],
+   "aucSource": "roc-figure"
   },
   {
    "experiment": 4,
@@ -367,7 +368,7 @@
    "macroRecall": 0.7794,
    "macroF1": 0.7763,
    "finalLoss": 0.5818,
-   "macroAuc": null,
+   "macroAuc": 0.9376,
    "perClass": {
     "MildDemented": {
      "precision": 0.725,
@@ -425,7 +426,8 @@
     0.7639,
     0.7695,
     0.7738
-   ]
+   ],
+   "aucSource": "roc-figure"
   },
   {
    "experiment": 7,
@@ -580,7 +582,7 @@
    "macroRecall": 0.9396,
    "macroF1": 0.938,
    "finalLoss": 0.21216,
-   "macroAuc": null,
+   "macroAuc": 0.99243,
    "perClass": {
     "MildDemented": {
      "precision": 0.9455,
@@ -638,7 +640,8 @@
     0.9273,
     0.9294,
     0.9348
-   ]
+   ],
+   "aucSource": "roc-figure"
   }
  ]
 }

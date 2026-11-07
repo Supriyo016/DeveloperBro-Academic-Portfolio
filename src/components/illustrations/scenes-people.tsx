@@ -1,4 +1,4 @@
-import { Anim, Books, il, Plant, Scene, Sparkle } from "./base";
+import { Anim, Books, Head, il, Plant, Scene, Sparkle, toon } from "./base";
 
 export function ReadingScene() {
   return (
@@ -16,24 +16,14 @@ export function ReadingScene() {
       <rect x="146" y="278" width="184" height="26" rx="5" fill={il.cyan} />
       <path d="M170 320h100M172 352h120" stroke={il.paper} strokeWidth="3" strokeLinecap="round" opacity="0.6" />
       <Anim kind="il-breathe" origin="250 278">
-        <path d="M196 278c-6-58 8-108 50-112 40-4 56 34 58 112Z" fill={il.lavender} />
+        <path d="M196 278c-6-58 8-108 50-112 40-4 56 34 58 112Z" fill={toon.lavender} />
       </Anim>
-      <path d="M210 276c40-16 90-12 138 8 10 4 12 18 2 22l-58 4c-40 2-80-10-82-34Z" fill={il.coat} />
+      <path d="M210 276c40-16 90-12 138 8 10 4 12 18 2 22l-58 4c-40 2-80-10-82-34Z" fill={toon.coat} />
       <path d="M322 296l36 4c10 2 12 14 2 16l-40 2Z" fill={il.hair} />
-      <path d="M240 142h34v34c-10 10-24 10-34 0Z" fill={il.skinShade} />
-      <Anim kind="il-nod" origin="258 160">
-        <circle cx="258" cy="116" r="38" fill={il.skin} />
-        <path d="M216 118c-6-40 26-62 56-54 24 4 34 28 30 44-8-14-22-20-36-18-14 4-22 8-28 26-2 20-6 44-12 60-14-14-12-40-10-58Z" fill={il.hair} />
-        <path d="M210 166c-6 18-8 30-6 46 8-2 16-14 20-30Z" fill={il.hair} />
-        <path d="M266 108c4-3 10-3 14 0" fill="none" stroke={il.hair} strokeWidth="2.4" strokeLinecap="round" />
-        <Anim kind="il-blink" origin="274 118">
-          <circle cx="274" cy="118" r="3" fill={il.hair} />
-        </Anim>
-        <circle cx="284" cy="130" r="5" fill={il.amber} opacity="0.18" />
-        <path d="M266 136c6 4 12 4 16 0" fill="none" stroke={il.skinShade} strokeWidth="2.5" strokeLinecap="round" />
-      </Anim>
-      <path d="M252 192c30 8 56 26 66 44l-14 12c-16-14-40-26-62-30Z" fill={il.lavender} />
-      <path d="M300 226l54-26 4 8c-14 12-32 26-52 36Z" fill={il.skin} />
+      <path d="M240 142h34v34c-10 10-24 10-34 0Z" fill={toon.skinShade} />
+      <Head x={258} y={118} scale={1.18} hair="long" delay={1} />
+      <path d="M252 192c30 8 56 26 66 44l-14 12c-16-14-40-26-62-30Z" fill={toon.lavender} />
+      <path d="M300 226l54-26 4 8c-14 12-32 26-52 36Z" fill={toon.skin} />
       <Anim kind="il-bob">
         <g transform="rotate(-18 330 206)">
           <path d="M284 196c18-8 34-8 46 0v48c-12-8-28-8-46 0Z" fill={il.paper} stroke={il.line} />
@@ -63,32 +53,27 @@ export function GraduationScene() {
         {[92, 136, 180, 224, 268, 312].map((x) => (
           <rect key={x} x={x - 7} y="194" width="14" height="150" fill={il.paper2} />
         ))}
-        <rect x="64" y="344" width="282" height="26" fill={il.lavender} />
-        <rect x="186" y="270" width="38" height="74" rx="19" fill={il.coat} />
+        <rect x="64" y="344" width="282" height="26" fill={toon.lavender} />
+        <rect x="186" y="270" width="38" height="74" rx="19" fill={toon.coat} />
       </g>
       <Plant x={402} y={338} scale={0.9} />
       <Anim kind="il-breathe" origin="358 372">
-        <path d="M300 372c0-90 12-160 52-176 44 14 60 90 64 176Z" fill={il.coat} />
-        <path d="M340 198h28l-14 34Z" fill={il.shirt} />
+        <path d="M300 372c0-90 12-160 52-176 44 14 60 90 64 176Z" fill={toon.coat} />
+        <path d="M340 198h28l-14 34Z" fill={toon.shirt} />
       </Anim>
-      <path d="M338 170h32v28c-8 10-24 10-32 0Z" fill={il.skinShade} />
-      <Anim kind="il-nod" origin="354 182">
-        <circle cx="354" cy="146" r="34" fill={il.skinShade} />
-        <path d="M322 150c-2-14 4-28 14-32 10 6 42 6 52 0 8 8 10 22 6 34-4-10-12-14-30-14-22 0-36 2-42 12Z" fill={il.hair} />
-        <Anim kind="il-blink" origin="354 150">
-          <circle cx="342" cy="150" r="3" fill={il.hair} />
-          <circle cx="366" cy="150" r="3" fill={il.hair} />
-        </Anim>
-        <path d="M344 164c6 6 14 6 20 0" fill="none" stroke={il.hair} strokeWidth="2.5" strokeLinecap="round" />
-        <path d="M354 92l56 22-56 22-56-22Z" fill={il.hair} />
-        <Anim kind="il-sway" origin="408 114">
-          <path d="M408 114v30" stroke={il.amber} strokeWidth="3" />
-          <circle cx="408" cy="148" r="5" fill={il.amber} />
+      <path d="M338 170h32v28c-8 10-24 10-32 0Z" fill={toon.skinShade} />
+      <Head x={354} y={148} scale={1.08} skin={il.skinShade} />
+      <Anim kind="il-nod" origin="354 191">
+        <path d="M354 96l58 22-58 22-58-22Z" fill={toon.hair} />
+        <path d="M330 124h48v10c-14 6-34 6-48 0Z" fill={toon.hair} />
+        <Anim kind="il-sway" origin="410 118">
+          <path d="M410 118v30" stroke={il.amber} strokeWidth="3" />
+          <circle cx="410" cy="152" r="5" fill={il.amber} />
         </Anim>
       </Anim>
       <Anim kind="il-wave" origin="398 224">
-        <path d="M396 226c20-14 34-36 40-60l-14-6c-10 20-24 34-44 44Z" fill={il.coat2} />
-        <circle cx="430" cy="156" r="11" fill={il.skinShade} />
+        <path d="M396 226c20-14 34-36 40-60l-14-6c-10 20-24 34-44 44Z" fill={toon.coat2} />
+        <circle cx="430" cy="156" r="11" fill={toon.skinShade} />
         <g transform="rotate(-24 430 140)">
           <rect x="396" y="130" width="70" height="20" rx="10" fill={il.paper} stroke={il.line} />
           <rect x="425" y="128" width="10" height="24" fill={il.amber} />
@@ -107,12 +92,12 @@ export function LabScene() {
       <ellipse cx="240" cy="372" rx="190" ry="11" fill={il.ground} />
       <rect x="40" y="290" width="330" height="14" rx="5" fill={il.wood} />
       <path d="M66 304h14l-4 66h-8ZM330 304h14l-2 66h-8Z" fill={il.wood} opacity="0.75" />
-      <rect x="62" y="130" width="176" height="124" rx="10" fill={il.coat} />
+      <rect x="62" y="130" width="176" height="124" rx="10" fill={toon.coat} />
       <rect x="72" y="140" width="156" height="104" rx="5" fill={il.paper} />
       <path d="M84 230h132M84 150v80" stroke={il.line} strokeWidth="1.5" />
       <path d="M84 222c26-46 44-58 68-62 22-4 42-6 64-6" fill="none" stroke={il.primary} strokeWidth="3" strokeLinecap="round" pathLength={1} className="il-draw" />
       <path d="M84 226c28-24 46-36 68-40s42-6 64-6" fill="none" stroke={il.cyan} strokeWidth="3" strokeLinecap="round" pathLength={1} className="il-draw" style={{ animationDelay: "0.8s" }} />
-      <path d="M138 254h24l6 36h-36Z" fill={il.coat2} />
+      <path d="M138 254h24l6 36h-36Z" fill={toon.coat2} />
       <g transform="translate(290 240)">
         <circle r="42" fill="none" stroke={il.primary} strokeWidth="2.5" />
         <ellipse rx="42" ry="14" fill="none" stroke={il.primary} strokeWidth="1.5" />
@@ -122,7 +107,7 @@ export function LabScene() {
         </Anim>
         <path d="M0-42V42" stroke={il.line} strokeWidth="1.5" />
         <path d="M-14 50h28l4 0" stroke={il.ink} strokeWidth="0" />
-        <rect x="-16" y="42" width="32" height="8" rx="3" fill={il.coat2} />
+        <rect x="-16" y="42" width="32" height="8" rx="3" fill={toon.coat2} />
       </g>
       <g transform="translate(36 214)">
         <path d="M14 0h16v26l18 42a7 7 0 0 1-6 10H2a7 7 0 0 1-6-10l18-42Z" fill={il.paper} stroke={il.line} />
@@ -137,20 +122,11 @@ export function LabScene() {
         <path d="M368 372c-6-70-2-136 32-168 34 6 54 60 48 168Z" fill={il.paper} stroke={il.line} />
         <path d="M392 208l14 40 16-42Z" fill={il.primary} />
       </Anim>
-      <path d="M392 178h30v30c-8 8-22 8-30 0Z" fill={il.skinShade} />
-      <Anim kind="il-nod" origin="406 186">
-        <circle cx="406" cy="152" r="32" fill={il.skin} />
-        <path d="M374 150c-4-26 16-44 38-40 18 2 28 18 26 34-8-10-16-14-26-14-14 2-26 6-38 20Z" fill={il.hair} />
-        <Anim kind="il-blink" origin="406 156">
-          <circle cx="396" cy="156" r="3" fill={il.hair} />
-          <circle cx="416" cy="156" r="3" fill={il.hair} />
-        </Anim>
-        <path d="M388 146h16v12h-16ZM408 146h16v12h-16Z" fill="none" stroke={il.ink} strokeWidth="2" />
-        <path d="M396 170c5 4 10 4 14 0" fill="none" stroke={il.skinShade} strokeWidth="2.5" strokeLinecap="round" />
-      </Anim>
+      <path d="M392 178h30v30c-8 8-22 8-30 0Z" fill={toon.skinShade} />
+      <Head x={406} y={152} glasses />
       <Anim kind="il-point" origin="382 224">
         <path d="M380 222c-16 8-28 22-36 40l14 8c10-14 20-24 34-30Z" fill={il.paper} stroke={il.line} />
-        <circle cx="346" cy="268" r="9" fill={il.skin} />
+        <circle cx="346" cy="268" r="9" fill={toon.skin} />
       </Anim>
       <Sparkle x={250} y={96} size={8} color={il.cyan} delay={0.6} />
     </Scene>
@@ -176,18 +152,12 @@ export function LostScene() {
       <path d="M232 114l60 22" stroke={il.line} strokeWidth="2" className="il-dash" />
       <circle cx="396" cy="92" r="14" fill={il.amber} className="il-float" />
       <Anim kind="il-breathe" origin="310 336">
-        <path d="M272 336c-4-64 2-106 34-124 34 10 46 56 42 124Z" fill={il.coat} />
+        <path d="M272 336c-4-64 2-106 34-124 34 10 46 56 42 124Z" fill={toon.coat} />
       </Anim>
-      <path d="M294 186h26v24c-6 8-20 8-26 0Z" fill={il.skinShade} />
-      <Anim kind="il-nod" origin="307 196">
-        <circle cx="307" cy="164" r="30" fill={il.skinShade} />
-        <path d="M277 162c-2-22 14-38 34-36 16 2 26 14 26 30-8-8-18-12-30-10-10 2-22 6-30 16Z" fill={il.hair} />
-        <Anim kind="il-blink" origin="318 166">
-          <circle cx="318" cy="166" r="3" fill={il.hair} />
-        </Anim>
-      </Anim>
+      <path d="M294 186h26v24c-6 8-20 8-26 0Z" fill={toon.skinShade} />
+      <Head x={307} y={164} skin={il.skinShade} hair="curly" delay={1} />
       <Anim kind="il-point" origin="340 232">
-        <path d="M340 232c16-12 28-28 36-50l-14-6c-8 16-20 28-34 38Z" fill={il.coat2} />
+        <path d="M340 232c16-12 28-28 36-50l-14-6c-8 16-20 28-34 38Z" fill={toon.coat2} />
         <circle cx="376" cy="160" r="22" fill={il.paper} stroke={il.primary} strokeWidth="5" opacity="0.9" />
         <path d="M368 152c4-4 10-4 14 0" fill="none" stroke={il.primary} strokeWidth="2" strokeLinecap="round" opacity="0.6" />
         <path d="M364 176l-12 14" stroke={il.primary} strokeWidth="6" strokeLinecap="round" />

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LabScene } from "@/components/illustrations/scenes-people";
+import { ResearcherStory } from "@/components/illustrations/ResearcherStory";
 import { InterestExplorer } from "@/components/research/InterestExplorer";
 import { ResearchExplorer, type ExplorerItem } from "@/components/research/ResearchExplorer";
 import { ResearchMap } from "@/components/research/ResearchMap";
@@ -37,7 +37,7 @@ function explorerItems(): ExplorerItem[] {
     technologies: [],
     statuses: [],
   }));
-  // Research Works lists only the two dissertations. Research notes are included as reading, not as works.
+  // Research works are the two dissertations and the ongoing study. Research notes are included as reading.
   return [...fromStudies, ...fromArticles];
 }
 
@@ -50,21 +50,29 @@ export default function ResearchPage() {
         eyebrow="Research works"
         title="Learning from data that cannot be pooled"
         intro="My work asks what changes when training is spread across institutions that cannot share their data, and how much privacy really costs. Each area below says plainly how much evidence stands behind it."
-        illustration={<LabScene />}
+        illustration={<ResearcherStory />}
       />
 
       <section className="container-page" aria-labelledby="studies-title">
         <SectionHeading id="studies-title" eyebrow="Case studies" title="Research works" />
-        <ul className="mt-6 divide-y divide-line border-y border-line">
-          {studies.map((study) => (
-            <Reveal as="li" key={study.slug}>
-              <Link href={`/research/${study.slug}`} className="group grid gap-2 py-5 sm:grid-cols-[9rem_1fr_auto] sm:items-baseline sm:gap-6">
+        <ul className="mt-6 grid gap-4">
+          {studies.map((study, index) => (
+            <Reveal as="li" key={study.slug} delay={index * 80}>
+              <Link
+                href={`/research/${study.slug}`}
+                className="case-card group card card-lift relative grid gap-3 overflow-hidden p-5 sm:grid-cols-[8.5rem_1fr_auto] sm:items-start sm:gap-6 sm:p-6"
+                data-status={study.status === "In progress" ? "ongoing" : "done"}
+              >
                 <span className="font-mono text-sm text-muted">{study.period}</span>
                 <span>
-                  <span className="block font-serif text-2xl leading-snug transition-colors group-hover:text-primary">{study.shortTitle}</span>
-                  <span className="mt-1 block text-sm text-ink-2">{study.kind}</span>
+                  <span className="block text-sm font-medium text-accent">{study.kind}</span>
+                  <span className="mt-1 block font-serif text-xl leading-snug transition-colors group-hover:text-primary sm:text-2xl">{study.title}</span>
+                  <span className="mt-2 line-clamp-2 text-[0.95rem] text-ink-2">{study.abstract}</span>
                 </span>
-                <Badge tone={study.status === "In progress" ? "accent" : "ok"} className="w-fit">{study.status}</Badge>
+                <Badge tone={study.status === "In progress" ? "accent" : "ok"} className="w-fit">
+                  {study.status === "In progress" && <span className="mr-1.5 inline-block size-1.5 animate-pulse rounded-full bg-current align-middle" aria-hidden />}
+                  {study.status === "In progress" ? "Ongoing" : study.status}
+                </Badge>
               </Link>
             </Reveal>
           ))}

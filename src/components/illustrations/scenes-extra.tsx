@@ -1,4 +1,4 @@
-import { Anim, Head, il, Laptop, Mug, Plant, Robot, Scene, Sparkle } from "./base";
+import { Anim, Head, il, Laptop, Mug, Plant, Robot, Scene, Sparkle, toon } from "./base";
 
 const orbit = (rx: number, ry: number) => `M${-rx} 0a${rx} ${ry} 0 1 0 ${rx * 2} 0a${rx} ${ry} 0 1 0 ${-rx * 2} 0`;
 
@@ -58,14 +58,14 @@ export function QuantumScene() {
       <rect x="40" y="318" width="250" height="12" rx="5" fill={il.wood} />
       <path d="M62 330h12l-4 44h-6ZM256 330h12l-2 44h-6Z" fill={il.wood} opacity="0.75" />
       <Anim kind="il-breathe" origin="346 374">
-        <path d="M300 374c-4-62 6-100 44-118 40 12 54 50 50 118Z" fill={il.coat} />
-        <path d="M330 258l14 28 14-28Z" fill={il.shirt} />
+        <path d="M300 374c-4-62 6-100 44-118 40 12 54 50 50 118Z" fill={toon.coat} />
+        <path d="M330 258l14 28 14-28Z" fill={toon.shirt} />
       </Anim>
       <Head x={346} y={214} skin={il.skinShade} glasses delay={1} />
       <Laptop x={176} y={318} width={120} />
       <Anim kind="il-type" origin="316 284">
-        <path d="M314 282c-22 10-50 22-74 30l4 12c26-6 54-16 76-28Z" fill={il.coat2} />
-        <ellipse cx="240" cy="316" rx="10" ry="6" fill={il.skinShade} />
+        <path d="M314 282c-22 10-50 22-74 30l4 12c26-6 54-16 76-28Z" fill={toon.coat2} />
+        <ellipse cx="240" cy="316" rx="10" ry="6" fill={toon.skinShade} />
       </Anim>
       <Mug x={60} y={318} />
       <Sparkle x={292} y={70} size={8} delay={0.2} />
@@ -111,13 +111,13 @@ export function FooterScene() {
       <Mug x={244} y={160} />
       <Plant x={300} y={160} scale={0.55} />
       <Anim kind="il-breathe" origin="140 206">
-        <path d="M100 206c-2-36 6-58 40-70 34 12 42 34 40 70Z" fill={il.coat} />
-        <path d="M128 138l12 22 12-22Z" fill={il.shirt} />
+        <path d="M100 206c-2-36 6-58 40-70 34 12 42 34 40 70Z" fill={toon.coat} />
+        <path d="M128 138l12 22 12-22Z" fill={toon.shirt} />
       </Anim>
       <Head x={140} y={106} scale={0.78} />
       <Anim kind="il-type" origin="160 150">
-        <path d="M156 146c10 4 18 8 26 12l-4 8c-10-2-20-6-28-12Z" fill={il.coat2} />
-        <ellipse cx="182" cy="160" rx="7" ry="4" fill={il.skin} />
+        <path d="M156 146c10 4 18 8 26 12l-4 8c-10-2-20-6-28-12Z" fill={toon.coat2} />
+        <ellipse cx="182" cy="160" rx="7" ry="4" fill={toon.skin} />
       </Anim>
 
       {/* Federated hospitals and the locked aggregator */}

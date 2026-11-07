@@ -6,7 +6,9 @@ Research portfolio built with Next.js, TypeScript and Tailwind CSS. Content live
 so research, projects and articles can change without touching components.
 
 - Research case studies generated from notebook logs, and 29 research notes with maths, code, charts and diagrams
-- Animated SVG illustrations and a moving background, with a pause control and reduced-motion support
+- Research case studies with model-by-model results, the full Custom CNN architecture and figures exported from the thesis notebooks
+- Cartoon SVG characters, an animated researcher story and a moving background, with a pause control and reduced-motion support
+- A cookie notice with a real choice: no analytics or advertising, and preference storage only if allowed
 - Bro, a chat assistant that runs entirely in the browser and answers only from the site's own content
 - Strict per-request Content Security Policy, and unit, security and browser tests including WCAG 2.2 AA scans
 

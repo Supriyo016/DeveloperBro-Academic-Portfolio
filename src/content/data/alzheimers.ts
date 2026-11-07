@@ -21,6 +21,8 @@ export interface ExperimentRun {
   macroF1: number;
   finalLoss: number;
   macroAuc: number | null;
+  /** Set when AUC is the mean of the per-class AUCs shown on the notebook's ROC figure */
+  aucSource?: "roc-figure";
   perClass: Record<ClassName, ClassMetrics>;
   accuracyByRound: number[];
 }

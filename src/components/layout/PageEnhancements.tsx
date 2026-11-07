@@ -10,7 +10,12 @@ const MAGNET_RANGE = 8;
 export function PageEnhancements() {
   const [showTop, setShowTop] = useState(false);
 
-  useScrollFrame(() => setShowTop(window.scrollY > 700));
+  useScrollFrame(() => {
+    setShowTop(window.scrollY > 700);
+    // Drives the progress ring on the back-to-top button, and the top progress bar where scroll timelines are missing.
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    document.documentElement.style.setProperty("--scroll", max > 0 ? (window.scrollY / max).toFixed(4) : "0");
+  });
 
   useEffect(() => {
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -56,11 +61,13 @@ export function PageEnhancements() {
         document.getElementById("main")?.focus({ preventScroll: true });
       }}
       className={cn(
-        "no-print fixed right-4 bottom-[5.5rem] z-30 sm:right-5 grid size-11 place-items-center rounded-full border border-line-strong bg-surface text-ink-2 shadow-md transition-all duration-300 hover:text-primary",
+        "top-ring no-print fixed right-4 bottom-[5.5rem] z-30 sm:right-5 grid size-12 place-items-center rounded-full p-[3px] text-ink-2 shadow-lg transition-all duration-300 hover:text-primary",
         showTop ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0",
       )}
     >
-      <ArrowUp className="size-4" aria-hidden />
+      <span className="grid size-full place-items-center rounded-full bg-surface">
+        <ArrowUp className="size-4" aria-hidden />
+      </span>
     </button>
   );
 }

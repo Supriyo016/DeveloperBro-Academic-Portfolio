@@ -3,7 +3,9 @@ import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import { ChatAssistant } from "@/components/assistant/ChatAssistant";
+import { ToonDefs } from "@/components/illustrations/base";
 import { AmbientBackground } from "@/components/layout/AmbientBackground";
+import { CookieNotice } from "@/components/layout/CookieNotice";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { MotionScheduler } from "@/components/layout/MotionScheduler";
@@ -56,6 +58,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         >
           Skip to content
         </a>
+        <ToonDefs />
+        <span className="scroll-progress" aria-hidden="true" />
         <AmbientBackground />
         <div className="site-layer flex min-h-dvh flex-col">
           <Header />
@@ -68,6 +72,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <PageEnhancements />
         <MotionScheduler />
         <ChatAssistant knowledge={buildKnowledge(getArticleMetas())} />
+        <CookieNotice />
       </body>
     </html>
   );

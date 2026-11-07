@@ -6,6 +6,7 @@ import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from 
 import { initialState, respond, welcome, type BotReply, type ChatState } from "@/lib/assistant/engine";
 import type { Knowledge } from "@/lib/assistant/knowledge";
 import { cn } from "@/lib/utils";
+import { canRemember } from "@/lib/consent";
 
 interface Message extends BotReply {
   id: number;
@@ -89,7 +90,7 @@ export function ChatAssistant({ knowledge }: { knowledge: Knowledge }) {
   }, [open]);
 
   useEffect(() => {
-    if (!messages.length) return;
+    if (!messages.length || !canRemember()) return;
     try {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ messages: messages.slice(-40), state }));
     } catch {
