@@ -5,6 +5,8 @@ export const routes = [
   "/research/federated-alzheimers-detection",
   "/projects/developerbro-academic-portfolio",
   "/research/quantum-gate-assessment",
+  "/research/knowledge-distillation-ckks-federated-learning",
+  "/cookies",
   "/publications",
   "/projects",
   "/projects/third-hand-eye",

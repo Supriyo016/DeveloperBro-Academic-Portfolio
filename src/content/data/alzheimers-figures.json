@@ -1,0 +1,481 @@
+{
+ "runs": {
+  "custom-cnn-fedavg": {
+   "curves": {
+    "src": "/images/research/mtech/custom-cnn-fedavg-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "roc": {
+    "src": "/images/research/mtech/custom-cnn-fedavg-roc.webp",
+    "width": 884,
+    "height": 685
+   },
+   "tsne": {
+    "src": "/images/research/mtech/custom-cnn-fedavg-tsne.webp",
+    "width": 991,
+    "height": 791
+   },
+   "features": {
+    "src": "/images/research/mtech/custom-cnn-fedavg-features.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "confusion": {
+    "src": "/images/research/mtech/custom-cnn-fedavg-confusion.webp",
+    "width": 947,
+    "height": 791
+   },
+   "predictions": {
+    "src": "/images/research/mtech/custom-cnn-fedavg-predictions.webp",
+    "width": 1400,
+    "height": 771
+   }
+  },
+  "custom-cnn-fedprox": {
+   "curves": {
+    "src": "/images/research/mtech/custom-cnn-fedprox-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "roc": {
+    "src": "/images/research/mtech/custom-cnn-fedprox-roc.webp",
+    "width": 884,
+    "height": 685
+   },
+   "tsne": {
+    "src": "/images/research/mtech/custom-cnn-fedprox-tsne.webp",
+    "width": 991,
+    "height": 791
+   },
+   "features": {
+    "src": "/images/research/mtech/custom-cnn-fedprox-features.webp",
+    "width": 1400,
+    "height": 414
+   }
+  },
+  "custom-cnn-feddyn": {
+   "curves": {
+    "src": "/images/research/mtech/custom-cnn-feddyn-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "roc": {
+    "src": "/images/research/mtech/custom-cnn-feddyn-roc.webp",
+    "width": 884,
+    "height": 685
+   },
+   "tsne": {
+    "src": "/images/research/mtech/custom-cnn-feddyn-tsne.webp",
+    "width": 991,
+    "height": 791
+   },
+   "features": {
+    "src": "/images/research/mtech/custom-cnn-feddyn-features.webp",
+    "width": 1400,
+    "height": 414
+   }
+  },
+  "mobilenetv2-fedavg": {
+   "curves": {
+    "src": "/images/research/mtech/mobilenetv2-fedavg-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "roc": {
+    "src": "/images/research/mtech/mobilenetv2-fedavg-roc.webp",
+    "width": 884,
+    "height": 685
+   },
+   "tsne": {
+    "src": "/images/research/mtech/mobilenetv2-fedavg-tsne.webp",
+    "width": 991,
+    "height": 791
+   },
+   "features": {
+    "src": "/images/research/mtech/mobilenetv2-fedavg-features.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "confusion": {
+    "src": "/images/research/mtech/mobilenetv2-fedavg-confusion.webp",
+    "width": 947,
+    "height": 791
+   },
+   "predictions": {
+    "src": "/images/research/mtech/mobilenetv2-fedavg-predictions.webp",
+    "width": 1400,
+    "height": 771
+   }
+  },
+  "mobilenetv2-fedprox": {
+   "curves": {
+    "src": "/images/research/mtech/mobilenetv2-fedprox-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "roc": {
+    "src": "/images/research/mtech/mobilenetv2-fedprox-roc.webp",
+    "width": 884,
+    "height": 685
+   },
+   "tsne": {
+    "src": "/images/research/mtech/mobilenetv2-fedprox-tsne.webp",
+    "width": 991,
+    "height": 791
+   },
+   "features": {
+    "src": "/images/research/mtech/mobilenetv2-fedprox-features.webp",
+    "width": 1400,
+    "height": 414
+   }
+  },
+  "mobilenetv2-feddyn": {
+   "curves": {
+    "src": "/images/research/mtech/mobilenetv2-feddyn-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "roc": {
+    "src": "/images/research/mtech/mobilenetv2-feddyn-roc.webp",
+    "width": 884,
+    "height": 685
+   },
+   "tsne": {
+    "src": "/images/research/mtech/mobilenetv2-feddyn-tsne.webp",
+    "width": 991,
+    "height": 791
+   },
+   "features": {
+    "src": "/images/research/mtech/mobilenetv2-feddyn-features.webp",
+    "width": 1400,
+    "height": 414
+   }
+  },
+  "efficientnetb0-fedavg": {
+   "curves": {
+    "src": "/images/research/mtech/efficientnetb0-fedavg-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "roc": {
+    "src": "/images/research/mtech/efficientnetb0-fedavg-roc.webp",
+    "width": 884,
+    "height": 685
+   },
+   "tsne": {
+    "src": "/images/research/mtech/efficientnetb0-fedavg-tsne.webp",
+    "width": 991,
+    "height": 791
+   },
+   "features": {
+    "src": "/images/research/mtech/efficientnetb0-fedavg-features.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "confusion": {
+    "src": "/images/research/mtech/efficientnetb0-fedavg-confusion.webp",
+    "width": 947,
+    "height": 791
+   },
+   "predictions": {
+    "src": "/images/research/mtech/efficientnetb0-fedavg-predictions.webp",
+    "width": 1400,
+    "height": 771
+   }
+  },
+  "efficientnetb0-fedprox": {
+   "curves": {
+    "src": "/images/research/mtech/efficientnetb0-fedprox-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "roc": {
+    "src": "/images/research/mtech/efficientnetb0-fedprox-roc.webp",
+    "width": 884,
+    "height": 685
+   },
+   "tsne": {
+    "src": "/images/research/mtech/efficientnetb0-fedprox-tsne.webp",
+    "width": 991,
+    "height": 791
+   },
+   "features": {
+    "src": "/images/research/mtech/efficientnetb0-fedprox-features.webp",
+    "width": 1400,
+    "height": 414
+   }
+  },
+  "efficientnetb0-feddyn": {
+   "curves": {
+    "src": "/images/research/mtech/efficientnetb0-feddyn-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "roc": {
+    "src": "/images/research/mtech/efficientnetb0-feddyn-roc.webp",
+    "width": 884,
+    "height": 685
+   },
+   "tsne": {
+    "src": "/images/research/mtech/efficientnetb0-feddyn-tsne.webp",
+    "width": 991,
+    "height": 791
+   },
+   "features": {
+    "src": "/images/research/mtech/efficientnetb0-feddyn-features.webp",
+    "width": 1400,
+    "height": 414
+   }
+  }
+ },
+ "backbones": {
+  "custom-cnn": {
+   "cv": {
+    "src": "/images/research/mtech/custom-cnn-cv.webp",
+    "width": 991,
+    "height": 591
+   },
+   "compare-f1": {
+    "src": "/images/research/mtech/custom-cnn-compare-f1.webp",
+    "width": 1391,
+    "height": 691
+   },
+   "compare-curves": {
+    "src": "/images/research/mtech/custom-cnn-compare-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "compare-roc": {
+    "src": "/images/research/mtech/custom-cnn-compare-roc.webp",
+    "width": 1400,
+    "height": 495
+   },
+   "compare-tsne": {
+    "src": "/images/research/mtech/custom-cnn-compare-tsne.webp",
+    "width": 1400,
+    "height": 500
+   }
+  },
+  "mobilenetv2": {
+   "cv": {
+    "src": "/images/research/mtech/mobilenetv2-cv.webp",
+    "width": 991,
+    "height": 591
+   },
+   "compare-f1": {
+    "src": "/images/research/mtech/mobilenetv2-compare-f1.webp",
+    "width": 1391,
+    "height": 691
+   },
+   "compare-curves": {
+    "src": "/images/research/mtech/mobilenetv2-compare-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "compare-roc": {
+    "src": "/images/research/mtech/mobilenetv2-compare-roc.webp",
+    "width": 1400,
+    "height": 495
+   },
+   "compare-tsne": {
+    "src": "/images/research/mtech/mobilenetv2-compare-tsne.webp",
+    "width": 1400,
+    "height": 500
+   }
+  },
+  "efficientnetb0": {
+   "cv": {
+    "src": "/images/research/mtech/efficientnetb0-cv.webp",
+    "width": 991,
+    "height": 591
+   },
+   "compare-f1": {
+    "src": "/images/research/mtech/efficientnetb0-compare-f1.webp",
+    "width": 1391,
+    "height": 691
+   },
+   "compare-curves": {
+    "src": "/images/research/mtech/efficientnetb0-compare-curves.webp",
+    "width": 1400,
+    "height": 414
+   },
+   "compare-roc": {
+    "src": "/images/research/mtech/efficientnetb0-compare-roc.webp",
+    "width": 1400,
+    "height": 495
+   },
+   "compare-tsne": {
+    "src": "/images/research/mtech/efficientnetb0-compare-tsne.webp",
+    "width": 1400,
+    "height": 500
+   }
+  }
+ },
+ "shared": {
+  "class-split": {
+   "src": "/images/research/mtech/class-split.webp",
+   "width": 991,
+   "height": 591
+  },
+  "clients": {
+   "src": "/images/research/mtech/clients.webp",
+   "width": 991,
+   "height": 591
+  }
+ },
+ "samples": {
+  "MildDemented": [
+   {
+    "src": "/images/research/mtech/mri-milddemented-custom-cnn-train.webp",
+    "width": 212,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-milddemented-custom-cnn-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   },
+   {
+    "src": "/images/research/mtech/mri-milddemented-mobilenetv2-train.webp",
+    "width": 201,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-milddemented-mobilenetv2-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   },
+   {
+    "src": "/images/research/mtech/mri-milddemented-efficientnetb0-train.webp",
+    "width": 212,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-milddemented-efficientnetb0-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   }
+  ],
+  "ModerateDemented": [
+   {
+    "src": "/images/research/mtech/mri-moderatedemented-custom-cnn-train.webp",
+    "width": 212,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-moderatedemented-custom-cnn-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   },
+   {
+    "src": "/images/research/mtech/mri-moderatedemented-mobilenetv2-train.webp",
+    "width": 212,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-moderatedemented-mobilenetv2-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   },
+   {
+    "src": "/images/research/mtech/mri-moderatedemented-efficientnetb0-train.webp",
+    "width": 212,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-moderatedemented-efficientnetb0-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   }
+  ],
+  "NonDemented": [
+   {
+    "src": "/images/research/mtech/mri-nondemented-custom-cnn-train.webp",
+    "width": 212,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-nondemented-custom-cnn-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   },
+   {
+    "src": "/images/research/mtech/mri-nondemented-mobilenetv2-train.webp",
+    "width": 212,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-nondemented-mobilenetv2-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   },
+   {
+    "src": "/images/research/mtech/mri-nondemented-efficientnetb0-train.webp",
+    "width": 212,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-nondemented-efficientnetb0-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   }
+  ],
+  "VeryMildDemented": [
+   {
+    "src": "/images/research/mtech/mri-verymilddemented-custom-cnn-train.webp",
+    "width": 170,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-verymilddemented-custom-cnn-test.webp",
+    "width": 170,
+    "height": 201,
+    "split": "test"
+   },
+   {
+    "src": "/images/research/mtech/mri-verymilddemented-mobilenetv2-train.webp",
+    "width": 201,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-verymilddemented-mobilenetv2-test.webp",
+    "width": 170,
+    "height": 201,
+    "split": "test"
+   },
+   {
+    "src": "/images/research/mtech/mri-verymilddemented-efficientnetb0-train.webp",
+    "width": 212,
+    "height": 201,
+    "split": "train"
+   },
+   {
+    "src": "/images/research/mtech/mri-verymilddemented-efficientnetb0-test.webp",
+    "width": 212,
+    "height": 201,
+    "split": "test"
+   }
+  ]
+ }
+}

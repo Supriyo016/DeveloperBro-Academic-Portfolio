@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { TerminalLauncher } from "@/components/fun/Terminal";
 import { FooterScene } from "@/components/illustrations/scenes-extra";
+import { CookieSettingsButton } from "@/components/layout/CookieNotice";
 import { MotionToggle } from "@/components/layout/MotionToggle";
 import { SocialLinks } from "@/components/shared/SocialLinks";
 import { LogoMark, Wordmark } from "@/components/ui/Logo";
@@ -41,9 +42,13 @@ export function Footer() {
       </div>
       <div className="border-t border-line">
         <div className="container-page flex flex-wrap items-center justify-between gap-2 py-4 pr-20 text-sm text-muted">
-          <p>© {new Date().getFullYear()} {profile.name}</p>
+          <p>
+            © {new Date().getFullYear()} {profile.name} ·{" "}
+            <Link href="/cookies" className="hover:text-primary">Cookie policy</Link>
+          </p>
           <div className="flex flex-wrap items-center gap-2">
             <MotionToggle />
+            <CookieSettingsButton />
             <TerminalLauncher />
           </div>
         </div>

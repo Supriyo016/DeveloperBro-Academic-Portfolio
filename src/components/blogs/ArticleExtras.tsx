@@ -4,10 +4,14 @@ import { Bookmark, BookmarkCheck, Glasses, Share2 } from "lucide-react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { CopyButton } from "@/components/shared/CopyButton";
 import { useScrollFrame } from "@/hooks/useScrollFrame";
+import { canRemember } from "@/lib/consent";
 
 const BOOKMARKS_KEY = "bookmarked-articles";
+// With "essential only" cookies, bookmarks live in memory for this page view instead of in storage.
+let memoryBookmarks: string[] = [];
 
 function readBookmarks(): string[] {
+  if (!canRemember()) return memoryBookmarks;
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem(BOOKMARKS_KEY) ?? "[]");
     return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
@@ -35,6 +39,11 @@ export function useBookmarks(): string[] {
 function toggleBookmark(slug: string) {
   const current = readBookmarks();
   const next = current.includes(slug) ? current.filter((item) => item !== slug) : [...current, slug];
+  if (!canRemember()) {
+    memoryBookmarks = next;
+    window.dispatchEvent(new Event("bookmarkchange"));
+    return;
+  }
   try {
     localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(next));
   } catch {

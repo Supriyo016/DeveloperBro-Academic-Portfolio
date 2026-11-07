@@ -101,7 +101,7 @@ test.describe("interactive research features", () => {
     await page.getByRole("button", { name: /MobileNetV2 with FedProx/ }).click();
     await expect(page.getByText("Experiment 2", { exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Macro AUC" }).click();
-    await expect(page.getByRole("button", { name: /Custom CNN with FedDyn: not recorded/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Custom CNN with FedDyn: 99\.24%/ })).toBeVisible();
     await page.getByRole("button", { name: "Next" }).click();
     await expect(page.getByText("10 epochs on each client's own images")).toBeVisible();
     await page.getByRole("button", { name: "Follow-up design" }).click();
@@ -110,8 +110,8 @@ test.describe("interactive research features", () => {
 
   test("thesis figures load with reserved space", async ({ page }) => {
     await page.goto("/research/federated-alzheimers-detection");
-    const figures = page.locator("figure img");
-    await expect(figures).toHaveCount(3);
+    const figures = page.locator("#results figure img");
+    await expect(figures).toHaveCount(2);
     for (const image of await figures.all()) {
       await image.scrollIntoViewIfNeeded();
       await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBeGreaterThan(0);
@@ -268,6 +268,7 @@ test.describe("research depth", () => {
 
   test("research explorer filters by status, and proposed work is labelled", async ({ page }) => {
     await page.goto("/research");
+    await page.getByRole("button", { name: "More filters" }).click();
     await page.getByLabel("Status").selectOption("Completed");
     await expect(page.getByText("2 results", { exact: true })).toBeVisible();
     await expect(page.locator("#proposed").getByText("Proposed", { exact: true }).first()).toBeVisible();

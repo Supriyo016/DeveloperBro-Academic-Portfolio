@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       { source: "/blog", destination: "/blogs", permanent: true },
       { source: "/blog/:slug", destination: "/blogs/:slug", permanent: true },
       // Pages removed when Projects and Research Works were narrowed
-      { source: "/research/federated-knowledge-distillation", destination: "/blogs/distillation-null-result", permanent: true },
+      { source: "/research/federated-knowledge-distillation", destination: "/research/knowledge-distillation-ckks-federated-learning", permanent: true },
       { source: "/projects/federated-alzheimers-benchmark", destination: "/research/federated-alzheimers-detection", permanent: true },
       { source: "/projects/ibmq-gate-assessment", destination: "/research/quantum-gate-assessment", permanent: true },
       { source: "/projects/developerbro-portfolio", destination: "/projects/developerbro-academic-portfolio", permanent: true },

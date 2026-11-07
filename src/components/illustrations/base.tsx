@@ -45,13 +45,150 @@ export function Anim({ kind, origin, delay, children }: { kind: string; origin?:
   );
 }
 
-/** A detailed head that blinks and gently nods. (x, y) is the centre of the face. */
+/**
+ * Cartoon fills: soft gradients that give skin, hair and clothes a lit, rounded look. Each falls back to the flat
+ * colour if the shared gradient definitions are missing. The gradients are defined once per page by <ToonDefs />.
+ */
+export const toon = {
+  skin: "url(#toon-skin) var(--il-skin)",
+  skinShade: "url(#toon-skin-shade) var(--il-skin-shade)",
+  hair: "url(#toon-hair) var(--il-hair)",
+  coat: "url(#toon-coat) var(--il-coat)",
+  coat2: "url(#toon-coat-2) var(--il-coat-2)",
+  lavender: "url(#toon-lavender) var(--il-lavender)",
+  shirt: "url(#toon-shirt) var(--il-shirt)",
+  paper: "url(#toon-paper) var(--il-paper)",
+  cheek: "url(#toon-cheek) transparent",
+  iris: "url(#toon-iris) #4b3427",
+} as const;
+
+function Shade({ id, top, bottom, light = 0.28 }: { id: string; top: string; bottom: string; light?: number }) {
+  return (
+    <linearGradient id={id} x1="0.15" y1="0" x2="0.85" y2="1">
+      <stop offset="0" style={{ stopColor: `color-mix(in srgb, ${top} ${Math.round((1 - light) * 100)}%, #fff)` }} />
+      <stop offset="0.55" style={{ stopColor: top }} />
+      <stop offset="1" style={{ stopColor: bottom }} />
+    </linearGradient>
+  );
+}
+
+/** Shared gradients for every illustration on the page. Rendered once in the root layout. */
+export function ToonDefs() {
+  return (
+    <svg aria-hidden="true" focusable="false" width="0" height="0" style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }}>
+      <defs>
+        <Shade id="toon-skin" top="var(--il-skin)" bottom="var(--il-skin-shade)" light={0.22} />
+        <Shade id="toon-skin-shade" top="var(--il-skin-shade)" bottom="color-mix(in srgb, var(--il-skin-shade) 80%, #000)" light={0.2} />
+        <Shade id="toon-hair" top="var(--il-hair)" bottom="color-mix(in srgb, var(--il-hair) 70%, #000)" light={0.12} />
+        <Shade id="toon-coat" top="var(--il-coat)" bottom="color-mix(in srgb, var(--il-coat) 72%, #000)" />
+        <Shade id="toon-coat-2" top="var(--il-coat-2)" bottom="color-mix(in srgb, var(--il-coat-2) 72%, #000)" />
+        <Shade id="toon-lavender" top="var(--il-lavender)" bottom="color-mix(in srgb, var(--il-lavender) 75%, var(--il-primary))" />
+        <Shade id="toon-shirt" top="var(--il-shirt)" bottom="color-mix(in srgb, var(--il-shirt) 82%, var(--il-paper-2))" light={0.1} />
+        <Shade id="toon-paper" top="var(--il-paper)" bottom="var(--il-paper-2)" light={0.05} />
+        <radialGradient id="toon-cheek">
+          <stop offset="0" stopColor="#ff7a8a" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#ff7a8a" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="toon-iris" cx="0.4" cy="0.35" r="0.75">
+          <stop offset="0" stopColor="#9a6b45" />
+          <stop offset="0.6" stopColor="#5a3a24" />
+          <stop offset="1" stopColor="#2b1a10" />
+        </radialGradient>
+      </defs>
+    </svg>
+  );
+}
+
+export type HairStyle = "short" | "long" | "curly" | "bun";
+
+/** Big glossy cartoon eyes. They blink, and the irises glance around. Centred on (0, 3) of the face. */
+export function ToonEyes({ late = false, look }: { late?: boolean; look?: string }) {
+  return (
+    <Anim kind={late ? "il-blink-late" : "il-blink"} origin="0 3">
+      <ellipse cx="-11" cy="3" rx="7.2" ry="8.4" fill="#fff" />
+      <ellipse cx="11" cy="3" rx="7.2" ry="8.4" fill="#fff" />
+      <Anim kind={look ?? (late ? "il-look-late" : "il-look")}>
+        <circle cx="-10.5" cy="4" r="5.2" fill={toon.iris} />
+        <circle cx="11.5" cy="4" r="5.2" fill={toon.iris} />
+        <circle cx="-10.5" cy="4.3" r="2.7" fill="#140d08" />
+        <circle cx="11.5" cy="4.3" r="2.7" fill="#140d08" />
+        <circle cx="-8.6" cy="1.6" r="1.8" fill="#fff" />
+        <circle cx="13.4" cy="1.6" r="1.8" fill="#fff" />
+        <circle cx="-11.8" cy="6.2" r="0.8" fill="#fff" opacity="0.85" />
+        <circle cx="10.2" cy="6.2" r="0.8" fill="#fff" opacity="0.85" />
+      </Anim>
+      <path d="M-18.5 0.5c3-5.5 11-6.5 15-1.5M3.5-1c4-5 12-4 15 1.5" fill="none" stroke={il.hair} strokeWidth="2.2" strokeLinecap="round" />
+    </Anim>
+  );
+}
+
+/** The face shape, ears, hair, nose and cheeks, without eyes, brows or mouth. */
+export function ToonFace({ skin, hair = "short", beard = false }: { skin?: string; hair?: HairStyle; beard?: boolean }) {
+  const face = skin === il.skinShade ? toon.skinShade : toon.skin;
+  return (
+    <g>
+      {hair === "long" && <path d="M-36-8c-9 30-7 54 3 70 15-8 15-34 11-64ZM36-8c9 30 7 54-3 70-15-8-15-34-11-64Z" fill={toon.hair} />}
+      {hair === "bun" && <circle cy="-40" r="13" fill={toon.hair} />}
+      <ellipse cx="-31" cy="6" rx="6" ry="8.5" fill={face} />
+      <ellipse cx="31" cy="6" rx="6" ry="8.5" fill={face} />
+      <path d="M-32 3c2 2 2 5 0 7M32 3c-2 2-2 5 0 7" fill="none" stroke={il.skinShade} strokeWidth="1.6" strokeLinecap="round" opacity="0.7" />
+      <path d="M-31 2c0-22 13-34 31-34s31 12 31 34c0 16-6 26-14 32-5 3-11 5-17 5s-12-2-17-5c-8-6-14-16-14-32Z" fill={face} />
+      <ellipse cx="0" cy="26" rx="17" ry="7" fill="#000" opacity="0.06" />
+      {beard && <path d="M-27 12c2 14 12 26 27 26s25-12 27-26c-4 6-9 9-14 9-4-4-22-4-26 0-5 0-10-3-14-9Z" fill={toon.hair} />}
+      {hair === "curly" ? (
+        <g fill={toon.hair}>
+          {[-26, -15, -3, 9, 21].map((cx, index) => (
+            <circle key={cx} cx={cx} cy={-22 - (index % 2) * 6} r="11" />
+          ))}
+          <path d="M-32 0c-2-12 2-20 8-24l6 10c-6 2-10 8-14 14ZM32 0c2-12-2-20-8-24l-6 10c6 2 10 8 14 14Z" />
+        </g>
+      ) : (
+        <path d="M-33 4c-6-26 12-42 34-41 20 1 32 15 31 35-6-10-13-15-23-16-4 6-14 9-26 8-6 2-12 7-16 14Z" fill={toon.hair} />
+      )}
+      <path d="M-14-30c8-5 20-5 28 1" fill="none" stroke="#fff" strokeOpacity="0.35" strokeWidth="3" strokeLinecap="round" />
+      <path d="M14-27c4 0 8 2 10 4" fill="none" stroke="#fff" strokeOpacity="0.25" strokeWidth="2" strokeLinecap="round" />
+      <path d="M-1 8c-3 4-4 7-1 8.5 2 1 4 0.5 5-0.5" fill="none" stroke={il.skinShade} strokeWidth="2" strokeLinecap="round" />
+      <circle cx="0.5" cy="11" r="1.2" fill="#fff" opacity="0.35" />
+      <ellipse cx="-19" cy="14" rx="7" ry="4.5" fill={toon.cheek} />
+      <ellipse cx="19" cy="14" rx="7" ry="4.5" fill={toon.cheek} />
+    </g>
+  );
+}
+
+export function ToonGlasses() {
+  return (
+    <g fill="none" stroke={il.ink} strokeWidth="2" strokeLinejoin="round">
+      <circle cx="-11" cy="3" r="10" fill="#bfe3ff" fillOpacity="0.14" />
+      <circle cx="11" cy="3" r="10" fill="#bfe3ff" fillOpacity="0.14" />
+      <path d="M-1 2c0.7-1 1.3-1 2 0M-21 1l-9-3M21 1l9-3" />
+      <path d="M-16-2l4-3" stroke="#fff" strokeOpacity="0.6" strokeWidth="1.5" />
+    </g>
+  );
+}
+
+/** An open smile that talks now and then. */
+export function ToonMouth({ kind = "il-talk" }: { kind?: string }) {
+  return (
+    <Anim kind={kind} origin="0 19">
+      <path d="M-8 18c2 6 14 6 16 0Z" fill="#7a2638" />
+      <path d="M-4 21.5c2 1.6 6 1.6 8 0-1-1.5-7-1.5-8 0Z" fill="#ff8f9c" />
+      <path d="M-7 18h14" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
+    </Anim>
+  );
+}
+
+/**
+ * A cartoon head in the style of an animated film: big glossy eyes that blink and glance around, brows that lift,
+ * a mouth that smiles and talks, blushing cheeks and lit hair. (x, y) is the centre of the face.
+ */
 export function Head({
   x,
   y,
-  skin = il.skin,
+  skin,
   long = false,
   glasses = false,
+  beard = false,
+  hair,
   delay = 0,
   scale = 1,
 }: {
@@ -60,33 +197,24 @@ export function Head({
   skin?: string;
   long?: boolean;
   glasses?: boolean;
+  beard?: boolean;
+  hair?: HairStyle;
   delay?: number;
   scale?: number;
 }) {
+  const late = delay % 2 === 1;
   return (
     <g transform={`translate(${x} ${y}) scale(${scale})`}>
-      <path d="M-14 24h28v22c-8 8-20 8-28 0Z" fill={il.skinShade} />
+      <path d="M-13 22h26v24c-8 7-18 7-26 0Z" fill={toon.skinShade} />
+      <path d="M-13 30c8 4 18 4 26 0" fill="none" stroke="#000" strokeOpacity="0.12" strokeWidth="3" />
       <Anim kind="il-nod" origin="0 40" delay={delay}>
-        {long && <path d="M-35-6c-7 28-5 50 4 64 13-10 13-32 9-60ZM35-6c7 28 5 50-4 64-13-10-13-32-9-60Z" fill={il.hair} />}
-        <ellipse cx="-30" cy="6" rx="5.5" ry="8" fill={skin} />
-        <ellipse cx="30" cy="6" rx="5.5" ry="8" fill={skin} />
-        <ellipse cx="-30" cy="6" rx="2.5" ry="4" fill={il.skinShade} opacity="0.6" />
-        <ellipse cx="30" cy="6" rx="2.5" ry="4" fill={il.skinShade} opacity="0.6" />
-        <circle r="31" fill={skin} />
-        <path d="M-32 2c-5-24 13-40 34-38 18 2 29 16 28 32-8-10-16-13-26-13C-10-16-24-12-32 2Z" fill={il.hair} />
-        <path d="M-12-30c8-4 18-4 26 2" fill="none" stroke={il.paper} strokeWidth="2" strokeLinecap="round" opacity="0.25" />
-        <path d="M-17-5c4-3 9-3 13 0M5-5c4-3 9-3 13 0" fill="none" stroke={il.hair} strokeWidth="2.4" strokeLinecap="round" />
-        <Anim kind={delay % 2 ? "il-blink-late" : "il-blink"} origin="0 4">
-          <ellipse cx="-10" cy="4" rx="2.9" ry="3.4" fill={il.hair} />
-          <ellipse cx="11" cy="4" rx="2.9" ry="3.4" fill={il.hair} />
-          <circle cx="-9" cy="2.8" r="0.9" fill={il.paper} />
-          <circle cx="12" cy="2.8" r="0.9" fill={il.paper} />
+        <ToonFace skin={skin} hair={hair ?? (long ? "long" : "short")} beard={beard} />
+        <Anim kind={late ? "il-brow-late" : "il-brow"}>
+          <path d="M-19-9c4-4 10-4 14-1M5-10c4-3 10-3 14 1" fill="none" stroke={il.hair} strokeWidth="2.8" strokeLinecap="round" />
         </Anim>
-        {glasses && <path d="M-19-2h16v12h-16ZM3-2h16v12H3ZM-3 3h6" fill="none" stroke={il.ink} strokeWidth="1.8" strokeLinejoin="round" />}
-        <path d="M0 6v6l-2.5 1.5" fill="none" stroke={il.skinShade} strokeWidth="2" strokeLinecap="round" />
-        <circle cx="-17" cy="13" r="4.5" fill={il.amber} opacity="0.18" />
-        <circle cx="18" cy="13" r="4.5" fill={il.amber} opacity="0.18" />
-        <path d="M-6 17c4 4 9 4 13 0" fill="none" stroke={il.skinShade} strokeWidth="2.5" strokeLinecap="round" />
+        <ToonEyes late={late} />
+        {glasses && <ToonGlasses />}
+        <ToonMouth kind={late ? "il-talk-late" : "il-talk"} />
       </Anim>
     </g>
   );

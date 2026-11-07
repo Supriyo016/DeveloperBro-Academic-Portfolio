@@ -1,4 +1,4 @@
-import { Anim, Books, il, Mug, Plant, Scene, Sparkle } from "./base";
+import { Anim, Books, Head, il, Mug, Plant, Scene, Sparkle, toon } from "./base";
 
 const server = { x: 320, y: 96 };
 
@@ -79,33 +79,16 @@ export function HeroScene() {
         </text>
       </g>
 
-      <path d="M268 484h44l-4 74h-34ZM328 484h44l-6 74h-34Z" fill={il.coat2} />
+      <path d="M268 484h44l-4 74h-34ZM328 484h44l-6 74h-34Z" fill={toon.coat2} />
       <path d="M262 566c0-8 8-10 18-10h28v10ZM332 566v-10h28c10 0 18 2 18 10Z" fill={il.hair} />
 
       <Anim kind="il-breathe" origin="320 470">
-        <path d="M212 470c6-62 34-92 74-100h68c40 8 68 38 74 100Z" fill={il.coat} />
-        <path d="M296 370l24 62 24-62-24 12Z" fill={il.shirt} />
+        <path d="M212 470c6-62 34-92 74-100h68c40 8 68 38 74 100Z" fill={toon.coat} />
+        <path d="M296 370l24 62 24-62-24 12Z" fill={toon.shirt} />
         <path d="M313 380h14l-3 12 6 40-10 12-10-12 6-40Z" fill={il.primary} />
-        <path d="M296 370l-14 22 26 42 12-2ZM344 370l14 22-26 42-12-2Z" fill={il.coat2} />
-        <path d="M302 330h36v44c-10 12-26 12-36 0Z" fill={il.skinShade} />
-        <Anim kind="il-nod" origin="320 344">
-        <ellipse cx="277" cy="288" rx="8" ry="13" fill={il.skinShade} />
-        <ellipse cx="363" cy="288" rx="8" ry="13" fill={il.skinShade} />
-        <path d="M278 268c0-30 18-46 42-46s42 16 42 46v26c0 34-22 56-42 56s-42-22-42-56Z" fill={il.skin} />
-        <path d="M278 292c4 8 8 12 16 14 6-6 46-6 52 0 8-2 12-6 16-14v12c0 30-20 50-42 50s-42-20-42-50Z" fill={il.hair} />
-        <path d="M308 318h24c-2 8-22 8-24 0Z" fill={il.skin} />
-        <path d="M274 276c-8-34 8-66 46-68 22-8 48 8 50 34 2 14-2 26-6 34-2-14-8-24-16-30-20 6-46 6-60 2-8 8-12 18-14 28Z" fill={il.hair} />
-        <Anim kind="il-blink" origin="320 280">
-          <ellipse cx="303" cy="280" rx="3.4" ry="4" fill={il.hair} />
-          <ellipse cx="337" cy="280" rx="3.4" ry="4" fill={il.hair} />
-          <circle cx="304.4" cy="278.4" r="1.1" fill={il.paper} />
-          <circle cx="338.4" cy="278.4" r="1.1" fill={il.paper} />
-        </Anim>
-        <path d="M295 268c5-3 12-3 16 0M329 268c4-3 11-3 16 0" fill="none" stroke={il.hair} strokeWidth="3" strokeLinecap="round" />
-        <path d="M320 284v14" stroke={il.skinShade} strokeWidth="2.5" strokeLinecap="round" />
-        <circle cx="292" cy="300" r="6" fill={il.amber} opacity="0.16" />
-        <circle cx="348" cy="300" r="6" fill={il.amber} opacity="0.16" />
-        </Anim>
+        <path d="M296 370l-14 22 26 42 12-2ZM344 370l14 22-26 42-12-2Z" fill={toon.coat2} />
+        <path d="M302 330h36v44c-10 12-26 12-36 0Z" fill={toon.skinShade} />
+        <Head x={320} y={284} scale={1.4} beard />
       </Anim>
 
       <rect x="124" y="470" width="392" height="14" rx="5" fill={il.wood} />
@@ -126,11 +109,11 @@ export function HeroScene() {
           </g>
         </g>
         <Anim kind="il-type" origin="286 466">
-          <path d="M266 470c4-10 14-14 26-12l6 10c-10 4-22 6-32 2Z" fill={il.skin} />
+          <path d="M266 470c4-10 14-14 26-12l6 10c-10 4-22 6-32 2Z" fill={toon.skin} />
           <path d="M276 462l4 6M284 460l3 7M292 460l2 7" stroke={il.skinShade} strokeWidth="1.5" strokeLinecap="round" />
         </Anim>
         <Anim kind="il-type-late" origin="354 466">
-          <path d="M374 470c-4-10-14-14-26-12l-6 10c10 4 22 6 32 2Z" fill={il.skin} />
+          <path d="M374 470c-4-10-14-14-26-12l-6 10c10 4 22 6 32 2Z" fill={toon.skin} />
           <path d="M364 462l-4 6M356 460l-3 7M348 460l-2 7" stroke={il.skinShade} strokeWidth="1.5" strokeLinecap="round" />
         </Anim>
       </g>

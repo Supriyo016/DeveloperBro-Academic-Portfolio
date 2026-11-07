@@ -30,9 +30,13 @@ describe("site assistant", () => {
     expect(all("who supervised the dissertation")).toContain("Mandal");
   });
 
-  it("lists exactly the two research works and three projects", () => {
+  it("lists exactly the three research works and three projects", () => {
     const research = ask("what research has been done").reply;
-    expect(research.links?.map((link) => link.href)).toEqual(["/research/federated-alzheimers-detection", "/research/quantum-gate-assessment"]);
+    expect(research.links?.map((link) => link.href)).toEqual([
+      "/research/federated-alzheimers-detection",
+      "/research/knowledge-distillation-ckks-federated-learning",
+      "/research/quantum-gate-assessment",
+    ]);
     expect(kb.projects.map((project) => project.slug)).toEqual(["third-hand-eye", "tour-india", "developerbro-academic-portfolio"]);
   });
 

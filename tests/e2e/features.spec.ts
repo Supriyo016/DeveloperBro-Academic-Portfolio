@@ -74,12 +74,16 @@ test.describe("content scope", () => {
 
     await page.goto("/research");
     const studies = [...new Set(await page.locator('main a[href^="/research/"]').evaluateAll((links) => links.map((link) => link.getAttribute("href"))))];
-    expect(studies.sort()).toEqual(["/research/federated-alzheimers-detection", "/research/quantum-gate-assessment"]);
+    expect(studies.sort()).toEqual([
+      "/research/federated-alzheimers-detection",
+      "/research/knowledge-distillation-ckks-federated-learning",
+      "/research/quantum-gate-assessment",
+    ]);
   });
 
   test("removed pages redirect to their closest replacement", async ({ page }) => {
     await page.goto("/research/federated-knowledge-distillation");
-    await expect(page).toHaveURL(/\/blogs\/distillation-null-result$/);
+    await expect(page).toHaveURL(/\/research\/knowledge-distillation-ckks-federated-learning$/);
     await page.goto("/projects/ibmq-gate-assessment");
     await expect(page).toHaveURL(/\/research\/quantum-gate-assessment$/);
   });
@@ -102,5 +106,86 @@ test.describe("content scope", () => {
     await expect(page.locator("main")).not.toContainText(/PGET|Rank 43|Milestone/);
     await expect(page.locator("main")).toContainText("Bachelor of Technology, Computer Science and Engineering");
     await expect(page.locator("main")).toContainText("Third Hand-Eye");
+  });
+});
+
+test.describe("cookie notice", () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
+  test("asks once, and essential only stops preferences being stored", async ({ page, context }) => {
+    await page.goto("/");
+    const notice = page.getByRole("region", { name: "Cookie notice" });
+    await expect(notice).toBeVisible();
+    await notice.getByRole("button", { name: "Details" }).click();
+    await expect(notice).toContainText("Analytics and advertising");
+    await notice.getByRole("button", { name: "Essential only" }).click();
+    await expect(notice).toBeHidden();
+    const cookie = (await context.cookies()).find((item) => item.name === "dbro_consent");
+    expect(cookie?.value).toBe("essential");
+
+    await page.getByRole("button", { name: "Pause animations" }).click();
+    expect(await page.evaluate(() => localStorage.getItem("motion"))).toBeNull();
+
+    await page.reload();
+    await expect(page.getByRole("region", { name: "Cookie notice" })).toBeHidden();
+    await page.getByRole("button", { name: "Cookie settings" }).click();
+    await page.getByRole("region", { name: "Cookie notice" }).getByRole("button", { name: "Allow preferences" }).click();
+    expect((await context.cookies()).find((item) => item.name === "dbro_consent")?.value).toBe("all");
+  });
+
+  test("the policy lists every stored item", async ({ page }) => {
+    await page.goto("/cookies");
+    for (const name of ["dbro_consent", "theme", "motion", "bookmarked-articles", "assistant-chat-v1"]) {
+      await expect(page.getByRole("rowheader", { name, exact: true })).toBeVisible();
+    }
+  });
+});
+
+test.describe("new research features", () => {
+  test("the header shows the visitor's live time", async ({ page }) => {
+    await page.goto("/");
+    const clock = page.getByRole("timer");
+    await expect(clock).toHaveAttribute("aria-label", /Your local date and time: .+\d{2}:\d{2}:\d{2}/);
+    const first = await clock.getAttribute("aria-label");
+    await expect.poll(() => clock.getAttribute("aria-label"), { timeout: 4000 }).not.toBe(first);
+  });
+
+  test("case studies use full titles and include the ongoing work", async ({ page }) => {
+    await page.goto("/research");
+    const list = page.locator("#studies-title").locator("xpath=ancestor::section[1]");
+    await expect(list).toContainText("Privacy-Preserving Alzheimer's Disease Detection for Non-IID MRI Data: A Comparative Analysis of Federated Learning Algorithms under Homomorphic Encryption");
+    await expect(list).toContainText("Knowledge Distillation for CKKS-Secured Federated Learning");
+    await expect(list).toContainText("Ongoing");
+    await expect(page.getByRole("img", { name: /animated researcher/ })).toBeVisible();
+  });
+
+  test("the explorer starts short and grows on request", async ({ page }) => {
+    await page.goto("/research");
+    const explorer = page.locator("#explorer-title").locator("xpath=ancestor::section[1]");
+    await expect(explorer.locator("ul li a")).toHaveCount(4);
+    await explorer.getByRole("button", { name: /Show 4 more/ }).click();
+    await expect(explorer.locator("ul li a")).toHaveCount(8);
+    await explorer.getByRole("button", { name: /Show all/ }).click();
+    expect(await explorer.locator("ul li a").count()).toBeGreaterThan(20);
+    await explorer.getByRole("button", { name: "Federated Learning" }).click();
+    await expect(explorer.getByRole("button", { name: "Federated Learning" })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("model results switch by backbone and algorithm", async ({ page }) => {
+    await page.goto("/research/federated-alzheimers-detection");
+    const results = page.locator("#results");
+    await results.getByRole("button", { name: /MobileNetV2/ }).first().click();
+    await results.getByRole("group", { name: "Federated algorithm" }).getByRole("button", { name: "FedDyn" }).click();
+    await expect(results.getByText("Experiment 3", { exact: true })).toBeVisible();
+    await expect(results).toContainText("92.45%");
+    await results.getByRole("button", { name: "Feature maps" }).click();
+    await expect(results.locator('img[src*="mobilenetv2-feddyn-features"]')).toBeVisible();
+
+    await page.getByRole("tab", { name: /Very mild/ }).click();
+    await expect(page.getByRole("tabpanel", { name: /Very mild samples/ }).locator("img")).toHaveCount(6);
+    await expect(page.getByRole("heading", { name: "Conclusions", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Inside the Custom CNN" })).toBeVisible();
+    await page.getByRole("button", { name: "Show all layers" }).click();
+    await expect(page.getByRole("cell", { name: "2,575,764" }).first()).toBeVisible();
   });
 });

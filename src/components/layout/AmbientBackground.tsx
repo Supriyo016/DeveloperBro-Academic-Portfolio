@@ -7,6 +7,20 @@ const blobs = [
   { top: "70%", left: "-5%", color: "var(--primary-soft)", delay: "-17s" },
 ];
 
+const orbs = [
+  { left: "8%", size: 70, color: "var(--primary)", duration: 34, delay: 0, sway: "40px" },
+  { left: "26%", size: 38, color: "var(--accent)", duration: 26, delay: -9, sway: "-30px" },
+  { left: "48%", size: 90, color: "var(--pink)", duration: 40, delay: -20, sway: "50px" },
+  { left: "70%", size: 46, color: "var(--series-5)", duration: 30, delay: -4, sway: "-40px" },
+  { left: "88%", size: 60, color: "var(--accent)", duration: 36, delay: -15, sway: "30px" },
+];
+
+const comets = [
+  { top: "12%", left: "92%", delay: "0s" },
+  { top: "38%", left: "105%", delay: "-6s" },
+  { top: "6%", left: "60%", delay: "-10s" },
+];
+
 const glyphs = ["Σ", "∇", "θ", "|ψ⟩", "λ", "∫", "π", "⊕", "σ", "∂", "α", "ℏ"];
 
 const nodes = [
@@ -19,6 +33,8 @@ const edges = [
 export function AmbientBackground() {
   return (
     <div className="ambient" aria-hidden="true">
+      <span className="ambient-aurora" />
+      <span className="ambient-grid" />
       {blobs.map((blob) => (
         <span key={blob.top} className="ambient-blob" style={{ top: blob.top, left: blob.left, animationDelay: blob.delay, ["--blob" as string]: blob.color }} />
       ))}
@@ -41,6 +57,16 @@ export function AmbientBackground() {
           <circle key={index} cx={x} cy={y} r="0.6" fill="var(--accent)" className="il-twinkle" style={{ animationDelay: `${index * 0.33}s`, animationDuration: "2.4s" }} />
         ))}
       </svg>
+      {orbs.map((orb) => (
+        <span
+          key={orb.left}
+          className="ambient-orb"
+          style={{ left: orb.left, width: orb.size, height: orb.size, animationDuration: `${orb.duration}s`, animationDelay: `${orb.delay}s`, ["--orb" as string]: orb.color, ["--sway" as string]: orb.sway }}
+        />
+      ))}
+      {comets.map((comet) => (
+        <span key={comet.delay} className="ambient-comet" style={{ top: comet.top, left: comet.left, animationDelay: comet.delay }} />
+      ))}
       {glyphs.map((glyph, index) => (
         <span
           key={glyph}

@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { LiveClock } from "@/components/layout/LiveClock";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { LogoMark, Wordmark } from "@/components/ui/Logo";
@@ -68,7 +69,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
+    <header className="site-header sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-md">
       <div className="container-page flex h-16 items-center justify-between gap-4">
         <Link href="/" className="group flex items-center gap-2.5" aria-label="DeveloperBro, home">
           <LogoMark className="size-8 transition-transform duration-200 group-hover:-rotate-3" />
@@ -84,6 +85,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <LiveClock className="hidden min-[400px]:flex" />
           <GlobalSearch />
           <div className="hidden lg:block"><ThemeToggle /></div>
           <button type="button" onClick={() => setMenuOpen(true)} aria-label="Open menu" aria-expanded={menuOpen} className="grid size-10 place-items-center rounded-full border border-line lg:hidden">

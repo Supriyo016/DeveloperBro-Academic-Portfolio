@@ -100,7 +100,7 @@ export function PageHeader({ eyebrow, title, intro, illustration }: { eyebrow: s
     <header className="container-page grid items-center gap-8 pt-12 pb-10 sm:pt-16 md:grid-cols-[1.25fr_1fr]">
       <div>
         <p className="eyebrow">{eyebrow}</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl">{title}</h1>
+        <h1 className="headline mt-3 text-4xl sm:text-5xl">{title}</h1>
         <div className="mt-4 max-w-xl text-lg text-ink-2">{intro}</div>
       </div>
       {illustration && <div className="mx-auto w-full max-w-sm">{illustration}</div>}

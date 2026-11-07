@@ -45,7 +45,9 @@ export interface ResearchStudy {
   slug: string;
   title: string;
   shortTitle: string;
-  kind: "M.Tech dissertation" | "B.Tech dissertation";
+  kind: "M.Tech dissertation" | "B.Tech dissertation" | "Ongoing research";
+  /** Art shown beside the title on the study page */
+  hero?: "mri" | "quantum" | "distill";
   status: ResearchStatus;
   period: string;
   institution?: string;
@@ -77,6 +79,7 @@ export interface ResearchStudy {
   limitations?: string[];
   future?: string[];
   figures?: FigureAsset[];
+  conclusions?: string[];
   note?: { title: string; body: string };
   links?: { label: string; href: string }[];
 }

@@ -97,7 +97,7 @@ export function ResultsExplorer() {
           </table>
         </div>
         <p className="mt-3 text-sm text-muted">
-          Final-round values on 8,800 held-out images, one federated run per configuration. Stronger colour means a higher score within this metric. Global AUC was not logged for the FedDyn runs.
+          Final-round values on 8,800 held-out images, one federated run per configuration. Stronger colour means a higher score within this metric. FedDyn AUC is the mean of the per-class AUCs on its ROC figure.
         </p>
 
         <div className="mt-6 border-t border-line pt-5" aria-live="polite">

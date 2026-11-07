@@ -106,6 +106,24 @@ and checked live (see `docs/TESTING.md`).
   the repository: pushes to `main` deploy automatically. Checked live: pages, marks, redirects, assistant, pause switch;
   the 8 new feature tests and the CSP, carousel and axe tests passed on the live site (one retry after a connection reset).
 
+## Research depth, cartoons and cookies, 8 November 2026
+
+- Case studies list full titles and the ongoing study "Knowledge Distillation for CKKS-Secured Federated Learning"
+  (`/research/knowledge-distillation-ckks-federated-learning`; the old slug redirects there).
+- M.Tech page: hero with real MRI scans, colour architecture map (`FederatedArchitecture`), full Custom CNN layer
+  table and backbone comparison (`CnnArchitecture`, data in `src/content/data/cnn-architecture.ts`), MRI samples for
+  all four classes and feature maps (`MriGallery`), a per-model results explorer (`ModelResults`), podium, grouped
+  F1 chart and per-class heatmap (`ComparisonCharts`), and Conclusions. Figures come from the notebook outputs via
+  `private/scripts/export_thesis_figures.mjs`. FedDyn AUC now comes from its ROC legends. No Grad-CAM exists.
+- Characters: one cartoon `Head` in `illustrations/base.tsx` (glossy eyes that glance, lifting brows, talking
+  mouth, blush, lit hair) and shaded fills (`toon.*`, gradients from `<ToonDefs />` in the layout) in every scene.
+  `ResearcherStory` on Research Works is a 28-second CSS story (keyframes under "Researcher story" in globals.css).
+- Brighter cool light theme, gradient headlines, gradient scroll bar, top scroll progress bar, progress ring on
+  back to top, aurora, orbs and comets in the background.
+- Live local clock in the header (`LiveClock`). Cookie notice (`CookieNotice`, `src/lib/consent.ts`) with a
+  `dbro_consent` cookie; "Essential only" stops and clears preference storage. Policy at `/cookies`.
+- Explorer shows four results and topic chips first, with "Show more", "Show all" and a collapsible filter panel.
+
 ## Next exact steps
 
 1. Owner reads `docs/private/CONTENT_REVIEW.md`, including the blog section, and removes or edits any post.

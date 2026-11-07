@@ -1,3 +1,5 @@
+import { canRemember } from "@/lib/consent";
+
 export type ThemePreference = "light" | "dark" | "system";
 
 export const THEME_STORAGE_KEY = "theme";
@@ -21,7 +23,7 @@ export function applyPreference(preference: ThemePreference) {
 
 export function savePreference(preference: ThemePreference) {
   try {
-    if (preference === "system") localStorage.removeItem(THEME_STORAGE_KEY);
+    if (preference === "system" || !canRemember()) localStorage.removeItem(THEME_STORAGE_KEY);
     else localStorage.setItem(THEME_STORAGE_KEY, preference);
   } catch {
     // Storage can be blocked. The choice still applies for this page view.

@@ -32,8 +32,13 @@ describe("research results data", () => {
     expect(stats).toContain("99.50%");
   });
 
-  it("leaves AUC empty where no global AUC was logged", () => {
-    for (const run of experimentRuns.filter((item) => item.algorithm === "FedDyn")) expect(run.macroAuc).toBeNull();
+  it("takes FedDyn AUC from the per-class AUCs on its ROC figure, as the cells printed no global value", () => {
+    const expected: Record<string, number> = { "custom-cnn": 0.99243, mobilenetv2: 0.99057, efficientnetb0: 0.9376 };
+    for (const run of experimentRuns.filter((item) => item.algorithm === "FedDyn")) {
+      expect(run.aucSource).toBe("roc-figure");
+      expect(run.macroAuc).toBeCloseTo(expected[run.backbone] ?? 0, 4);
+    }
+    for (const run of experimentRuns.filter((item) => item.algorithm !== "FedDyn")) expect(run.aucSource).toBeUndefined();
   });
 
   it("supports the finding that very mild is the hardest class in all nine runs", () => {

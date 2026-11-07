@@ -94,3 +94,11 @@ audit. It comes from per-request rendering for the nonce CSP.
 | Screen reader use | axe checks structure, not real assistive technology use |
 | OWASP ZAP scan | ZAP is not installed |
 | Rate limiting across serverless instances | Per-instance by design. See SECURITY.md |
+
+## 8 November 2026: research depth, cartoons and cookies
+
+Local production build. Type check, lint and MDX check pass. 73 of 73 unit tests. Browser tests: 46 of 46 site,
+79 of 79 quality and feature tests after fixing three failures found on the first run (a 22 px "Show all" button,
+contrast on the active MRI class tab and inactive model cards, and the 375 px overflow test exceeding its timeout
+across 23 routes; its timeout is now 150 s). `npm audit --omit=dev` reports 0 vulnerabilities. Not yet run on the
+live site.

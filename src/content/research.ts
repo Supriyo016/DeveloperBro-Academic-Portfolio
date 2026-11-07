@@ -7,6 +7,7 @@ export const studies: ResearchStudy[] = [
       "Privacy-Preserving Alzheimer's Disease Detection for Non-IID MRI Data: A Comparative Analysis of Federated Learning Algorithms under Homomorphic Encryption",
     shortTitle: "Federated Alzheimer's detection from MRI",
     kind: "M.Tech dissertation",
+    hero: "mri",
     status: "Completed",
     period: "2024 – 2026",
     institution: "Kalyani Government Engineering College (MAKAUT, WB)",
@@ -117,6 +118,14 @@ export const studies: ResearchStudy[] = [
       "A compact network trained from scratch beat two pretrained backbones. EfficientNetB0, usually strong on centralised benchmarks, was the weakest here.",
       "Very Mild Demented was the hardest class in all nine runs, with the lowest per-class F1 every time. Early-stage disease is also where detection matters most.",
     ],
+    conclusions: [
+      "The backbone decided the outcome far more than the federated algorithm. Across the three algorithms, mean macro F1 was 94.24% for the Custom CNN, 92.69% for MobileNetV2 and 78.39% for EfficientNetB0, a spread of almost 16 points. The three algorithms on one backbone never differed by more than 1.6 points of F1.",
+      "The best configuration was the Custom CNN with FedAvg: 94.59% accuracy, 94.80% macro F1, 99.50% macro AUC and the lowest test loss, 0.1725. It also reached 90% accuracy first among the Custom CNN runs.",
+      "FedAvg was enough. FedProx and FedDyn, built for heterogeneous clients, did not beat plain averaging on any backbone in these runs.",
+      "A compact network trained from scratch beat two ImageNet-pretrained backbones of the same trainable size. My explanation is Group Normalisation, which does not depend on batch statistics that differ between skewed clients. That remains a hypothesis until a Batch Normalisation ablation of the Custom CNN is run.",
+      "Very Mild Demented, the earliest stage, was the hardest class in all nine runs, and Moderate Demented the easiest. Better early-stage detection is where the next gains matter clinically.",
+      "These are single runs on a pre-augmented dataset split per image, so the absolute scores are probably optimistic. The ranking of backbones is the more robust result. The privacy cost of full encrypted aggregation still has to be measured, and that is the subject of my ongoing work.",
+    ],
     contributions: [
       "A controlled comparison of nine backbone and algorithm combinations under one data split, partition and training budget.",
       "Trainable parameter counts matched across backbones, so capacity is not the obvious explanation for differences.",
@@ -188,10 +197,48 @@ export const studies: ResearchStudy[] = [
     },
   },
   {
+    slug: "knowledge-distillation-ckks-federated-learning",
+    title: "Knowledge Distillation for CKKS-Secured Federated Learning",
+    shortTitle: "Distillation for encrypted federated learning",
+    kind: "Ongoing research",
+    hero: "distill",
+    status: "In progress",
+    period: "2026 – present",
+    abstract:
+      "Can a small model trained across hospitals learn more when it has a stronger teacher to learn from, without any raw data leaving a hospital? This ongoing work studies knowledge distillation inside a federated system whose aggregation runs on CKKS ciphertexts, with a ResNet18 teacher and a lightweight CNN student on four-class Alzheimer's MRI. No results are reported here until the experiments are complete.",
+    domains: ["Knowledge Distillation", "Federated Learning", "Homomorphic Encryption", "Medical Image Analysis"],
+    methods: ["Soft-label distillation", "Attention transfer", "CKKS secure aggregation", "Group-safe cross-validation"],
+    technologies: ["Python", "PyTorch", "Flower", "TenSEAL"],
+    motivation: [
+      "My dissertation left two open problems: full encrypted aggregation had not been measured, and a pre-augmented dataset made evaluation harder to trust. This work takes on both, and asks whether a compact student model can stay competitive with far fewer parameters.",
+    ],
+    problem:
+      "Does distillation from a teacher improve a small federated model when clients have skewed labels and the server only ever sees ciphertexts?",
+    methodology: [
+      {
+        title: "Encrypted aggregation",
+        body: "Clients upload encrypted, sample-weighted models. The server combines ciphertexts while holding only a public context, with no secret key, and the code checks that it has none.",
+      },
+      {
+        title: "Teacher and student",
+        body: "A ResNet18 teacher guides a lightweight custom CNN student during local training at each client, through softened predictions and attention maps.",
+      },
+      {
+        title: "Safer evaluation",
+        body: "Splits are grouped so identical files cannot fall on both sides of a split, which removes one route for test data to leak into training.",
+      },
+      {
+        title: "Measured cost",
+        body: "Ciphertext size and CKKS approximation error are logged every round, so the price of privacy is measured rather than estimated.",
+      },
+    ],
+  },
+  {
     slug: "quantum-gate-assessment",
     title: "Quantum Gate Performance Assessment in the Presence of Superposition State using IBMQ Server",
     shortTitle: "Quantum gate performance on IBMQ",
     kind: "B.Tech dissertation",
+    hero: "quantum",
     status: "Completed",
     period: "2024",
     institution: "Regent Education & Research Foundation (MAKAUT, WB)",
@@ -225,5 +272,7 @@ export const proposedResearch: { title: string; body: string }[] = [
     body: "Moving from simulation to real sites, where latency, client dropout and governance all matter.",
   },
 ];
+
+export const dissertations = studies.filter((study) => study.kind.endsWith("dissertation"));
 
 export const getStudy = (slug: string) => studies.find((study) => study.slug === slug);

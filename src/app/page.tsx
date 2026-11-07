@@ -15,7 +15,7 @@ import { timeline } from "@/content/education";
 import { heroSlides } from "@/content/home";
 import { profile } from "@/content/profile";
 import { projects } from "@/content/projects";
-import { studies } from "@/content/research";
+import { dissertations } from "@/content/research";
 import { evidenceLabels, researchAreas } from "@/content/research-areas";
 import { getArticleMetas } from "@/lib/articles";
 import { siteUrl } from "@/lib/site";
@@ -108,7 +108,7 @@ export default function HomePage() {
             <ArrowLink href="/research">All research works</ArrowLink>
           </div>
           <ul className="mt-8 grid gap-4 lg:grid-cols-2">
-            {studies.map((study, index) => (
+            {dissertations.map((study, index) => (
               <Reveal as="li" key={study.slug} delay={index * 80}>
                 <Link href={`/research/${study.slug}`} className="card spotlight glow-border flex h-full flex-col p-6">
                   <div className="flex flex-wrap gap-2">

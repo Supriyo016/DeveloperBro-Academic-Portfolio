@@ -1,12 +1,16 @@
 import { Info } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { JsonLd } from "@/components/layout/JsonLd";
 import { ClientDistribution } from "@/components/research/ClientDistribution";
-import { CnnViewer } from "@/components/research/CnnViewer";
+import { CnnArchitecture } from "@/components/research/CnnArchitecture";
+import { ClassHeatmap, GroupedF1, Podium } from "@/components/research/ComparisonCharts";
+import { FederatedArchitecture } from "@/components/research/FederatedArchitecture";
+import { ModelResults } from "@/components/research/ModelResults";
+import { MriGallery } from "@/components/research/MriGallery";
+import { StudyHero } from "@/components/research/StudyHero";
 import { PipelineViewer } from "@/components/research/PipelineViewer";
 import { ResultsExplorer } from "@/components/research/ResultsExplorer";
 import { ComparisonTable } from "@/components/research/ComparisonTable";
@@ -62,10 +66,12 @@ export default async function StudyPage({ params }: Props) {
     study.dataset && ["dataset", "Dataset"],
     study.models && ["models", "Models and algorithms"],
     interactive && ["architecture", "System architecture"],
+    interactive && ["samples", "MRI samples and feature maps"],
     study.setup && ["setup", "Experimental setup"],
     study.metrics && ["metrics", "Evaluation metrics"],
     interactive && ["results", "Results"],
     interactive && ["comparison", "Comparative analysis"],
+    study.conclusions && ["conclusions", "Conclusions"],
     study.contributions && ["contributions", "Contributions"],
     study.limitations && ["limitations", "Limitations"],
     study.future && ["future", "Future directions"],
@@ -90,24 +96,27 @@ export default async function StudyPage({ params }: Props) {
         <Link href="/research" className="hover:text-primary">Research</Link> / <span>{study.shortTitle}</span>
       </nav>
 
-      <header className="mt-5 max-w-4xl">
-        <div className="flex flex-wrap gap-2">
-          <Badge tone="primary">{study.kind}</Badge>
-          <Badge tone={study.status === "In progress" ? "accent" : "ok"}>{study.status}</Badge>
-          <Badge>{study.period}</Badge>
-        </div>
-        <h1 className="mt-4 text-3xl leading-tight sm:text-[2.6rem]">{study.title}</h1>
-        {study.institution && <p className="mt-3 text-ink-2">{study.institution}</p>}
-        {study.supervisors && (
-          <div className="mt-3 text-[0.95rem] text-ink-2">
-            <p className="text-muted">Supervised by</p>
-            <ul>
-              {study.supervisors.map((name) => (
-                <li key={name}>{name}</li>
-              ))}
-            </ul>
+      <header className="mt-5 grid items-center gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+        <div className="max-w-4xl">
+          <div className="flex flex-wrap gap-2">
+            <Badge tone="primary">{study.kind}</Badge>
+            <Badge tone={study.status === "In progress" ? "accent" : "ok"}>{study.status}</Badge>
+            <Badge>{study.period}</Badge>
           </div>
-        )}
+          <h1 className="headline mt-4 text-3xl leading-tight sm:text-[2.6rem]">{study.title}</h1>
+          {study.institution && <p className="mt-3 text-ink-2">{study.institution}</p>}
+          {study.supervisors && (
+            <div className="mt-3 text-[0.95rem] text-ink-2">
+              <p className="text-muted">Supervised by</p>
+              <ul>
+                {study.supervisors.map((name) => (
+                  <li key={name}>{name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        <StudyHero study={study} />
       </header>
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_13rem]">
@@ -243,9 +252,16 @@ export default async function StudyPage({ params }: Props) {
 
           {interactive && (
             <Block id="architecture" title="System architecture">
-              <p>Step through what happens in each round, and what the server can read at each point.</p>
+              <p>Five simulated hospitals train locally and share only model weights. The map below is one round; the stepper after it walks through each stage and what the server can read.</p>
+              <FederatedArchitecture />
               <PipelineViewer />
-              <CnnViewer />
+              <CnnArchitecture />
+            </Block>
+          )}
+
+          {interactive && (
+            <Block id="samples" title="MRI samples and feature maps">
+              <MriGallery />
             </Block>
           )}
 
@@ -270,7 +286,8 @@ export default async function StudyPage({ params }: Props) {
 
           {interactive && (
             <Block id="results" title="Results">
-              <ResultsExplorer />
+              <p>Choose a model, then an algorithm, to see every result from that run: scores, per-class metrics, the learning curve and the figures the notebook saved.</p>
+              <ModelResults />
               {study.findings && (
                 <div>
                   <h3 className="text-2xl text-ink">What the results show</h3>
@@ -279,28 +296,34 @@ export default async function StudyPage({ params }: Props) {
                   </div>
                 </div>
               )}
-              {study.figures?.map((figure) => (
-                <figure key={figure.src} className="card overflow-hidden">
-                  <div className="zoom-media bg-white p-2">
-                    <Image
-                      src={figure.src}
-                      alt={figure.alt}
-                      width={figure.width}
-                      height={figure.height}
-                      sizes="(min-width: 1024px) 760px, 100vw"
-                      className={figure.width / figure.height < 1.5 ? "mx-auto h-auto w-full max-w-lg" : "h-auto w-full"}
-                    />
-                  </div>
-                  <figcaption className="border-t border-line p-3 text-sm text-muted">{figure.caption}</figcaption>
-                </figure>
-              ))}
             </Block>
           )}
 
           {interactive && (
             <Block id="comparison" title="Comparative analysis">
-              <p>All nine configurations, best accuracy first. Rounds to 90% shows the first round where test accuracy reached 90%.</p>
+              <p>All nine configurations side by side.</p>
+              <div className="grid gap-4 lg:grid-cols-[1fr_1.3fr]">
+                <Podium />
+                <GroupedF1 />
+              </div>
+              <ClassHeatmap />
+              <ResultsExplorer />
+              <h3 className="text-2xl text-ink">Full table</h3>
+              <p>Best accuracy first. Rounds to 90% is the first round where test accuracy reached 90%.</p>
               <ComparisonTable />
+            </Block>
+          )}
+
+          {study.conclusions && (
+            <Block id="conclusions" title="Conclusions">
+              <ol className="grid gap-3 sm:grid-cols-2">
+                {study.conclusions.map((item, index) => (
+                  <li key={item} className="card spotlight relative overflow-hidden p-5 pl-14">
+                    <span className="absolute top-4 left-4 grid size-8 place-items-center rounded-full bg-primary text-sm font-semibold text-on-primary">{index + 1}</span>
+                    <p className="text-[0.97rem]">{item}</p>
+                  </li>
+                ))}
+              </ol>
             </Block>
           )}
 
