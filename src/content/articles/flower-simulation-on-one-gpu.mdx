@@ -1,0 +1,90 @@
+---
+title: "Five hospitals on one free GPU: simulating federated learning with Flower"
+description: "How a Flower simulation is put together, how five clients share a single Tesla T4, and one line of parameter-export code that quietly decides what gets averaged."
+date: "2026-01-26"
+category: "Federated Learning"
+tags: ["Flower", "PyTorch", "Simulation", "Implementation"]
+references:
+  - text: "Beutel et al. Flower: A Friendly Federated Learning Research Framework. 2020."
+    url: "https://arxiv.org/abs/2007.14390"
+  - text: "Flower documentation. Run simulations."
+    url: "https://flower.ai/docs/framework/how-to-run-simulations.html"
+  - text: "Li et al. FedBN: Federated Learning on Non-IID Features via Local Batch Normalization. ICLR, 2021."
+    url: "https://arxiv.org/abs/2102.07623"
+---
+
+The second half of the dissertation is implementation, and the first decision was the framework. I chose **Flower**: it is framework-agnostic, it has built-in FedAvg and FedProx strategies, and its simulation mode runs many virtual clients in one process. Everything runs in a Kaggle notebook on a single NVIDIA Tesla T4 with 16 GB of memory.
+
+## The three pieces
+
+A Flower simulation needs a client class, a function that builds clients on demand, and a strategy that runs on the server.
+
+<Flow
+  title="How a simulated round runs"
+  steps="Strategy=Picks clients and sends them the global parameters;client_fn=Builds the client object for a given id, with its own data;fit()=Loads the parameters, trains locally, returns new parameters and a sample count;aggregate_fit()=The strategy combines the returned parameters into the next global model"
+/>
+
+## A client
+
+Each client holds its partition of the data and a fresh model. `fit` receives the global weights, trains for the configured local epochs and returns the result:
+
+```python
+import flwr as fl
+
+class AlzheimerClient(fl.client.NumPyClient):
+    def __init__(self, cid, train_loader, n_samples):
+        self.cid, self.loader, self.n = cid, train_loader, n_samples
+        self.model = create_model().to(DEVICE)
+
+    def get_parameters(self, config):
+        return get_parameters(self.model)
+
+    def fit(self, parameters, config):
+        set_parameters(self.model, parameters)
+        train_local(self.model, self.loader, epochs=LOCAL_EPOCHS)
+        return get_parameters(self.model), self.n, {}
+```
+
+The sample count `self.n` is what FedAvg weights by, so a client with 11,000 images counts three times as much as one with 3,500.
+
+## Sharing one GPU
+
+Flower's simulation engine runs on Ray, and each virtual client asks for a slice of the hardware:
+
+```python
+history = fl.simulation.start_simulation(
+    client_fn=client_fn,
+    num_clients=5,
+    config=fl.server.ServerConfig(num_rounds=30),
+    strategy=strategy,
+    client_resources={"num_cpus": 1, "num_gpus": 0.2},
+)
+```
+
+`num_gpus: 0.2` lets five clients be scheduled on one GPU together. That works here because each model is around 2.5 million parameters and the images are 64 × 64. With larger models, the fraction would need to go up and clients would run in turn.
+
+## The line that decides what is averaged
+
+The usual helper for converting a PyTorch model to Flower's list of arrays is short:
+
+```python
+def get_parameters(model):
+    return [val.cpu().numpy() for _, val in model.state_dict().items()]
+```
+
+It is easy to read past, but `state_dict()` is not only the trainable weights. It also contains:
+
+- **frozen parameters**, so they are sent every round even though no client changes them
+- **Batch Normalisation buffers**: `running_mean`, `running_var` and `num_batches_tracked`
+
+So with this helper, FedAvg averages the BatchNorm running statistics of all clients, computed on their differently skewed data, into the global model's statistics. That is one defensible choice. FedBN, by Li and colleagues, makes the opposite one and keeps BatchNorm layers local to each client. The point is that the choice is being made by a one-line helper, not by the experiment design.
+
+<Callout type="key" title="Worth checking in any federated codebase">
+Print the names and shapes of everything your parameter export returns. Know whether buffers and frozen layers are in it, because they change both what is averaged and how many bytes are sent.
+</Callout>
+
+For my Custom CNN this question doesn't arise: it uses Group Normalisation, which has no running buffers, and nothing is frozen. For MobileNetV2 and EfficientNetB0 it does, and I'll note it in the write-up.
+
+## Evaluation
+
+After the last round, the strategy's final parameters are loaded into a fresh model, which is scored once on the held-out test set of 8,800 images that no client ever trained on. I also log accuracy, loss and AUC on that set after every round, to draw learning curves. The reported numbers are from the final round, not the best one, so the curves can't be used to pick a lucky round after the fact.

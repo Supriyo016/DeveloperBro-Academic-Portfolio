@@ -1,0 +1,86 @@
+---
+title: "Why hospitals can't just pool their MRI scans"
+description: "Deep learning wants one big dataset. Medicine keeps data in many small, protected places. Federated learning is one answer to that mismatch, and it is worth understanding what it does and does not solve."
+date: "2024-11-18"
+category: "Federated Learning"
+tags: ["Federated learning", "Healthcare data", "Privacy"]
+references:
+  - text: "McMahan et al. Communication-Efficient Learning of Deep Networks from Decentralized Data. AISTATS, 2017."
+    url: "https://arxiv.org/abs/1602.05629"
+  - text: "Kairouz et al. Advances and Open Problems in Federated Learning. Foundations and Trends in Machine Learning, 2021."
+    url: "https://arxiv.org/abs/1912.04977"
+  - text: "Rieke et al. The future of digital health with federated learning. npj Digital Medicine, 2020."
+    url: "https://doi.org/10.1038/s41746-020-00323-1"
+  - text: "Regulation (EU) 2016/679, General Data Protection Regulation, Article 9."
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+  - text: "The Digital Personal Data Protection Act, 2023 (India)."
+    url: "https://www.meity.gov.in/data-protection-framework"
+---
+
+I started my M.Tech this year with a simple picture of how medical AI gets built: collect a lot of scans, label them, train a network. The more I read, the less that picture held up. Training is the easy part. Getting the data into one place is where projects stall.
+
+This post is my attempt to write down why, and what federated learning changes.
+
+## The data problem in one paragraph
+
+A useful Alzheimer's classifier needs scans from many scanners, many hospitals and many kinds of patients. A model trained on one hospital's machine learns that machine's quirks as well as the disease. But each hospital holds its scans under its own rules, its own ethics approvals and its own legal duties. Copying them to a central server means new agreements, new security reviews and, often, a long wait.
+
+## What the law says about health data
+
+Health data is not ordinary personal data in most legal systems.
+
+| Framework | Where | What it means for pooling scans |
+| --- | --- | --- |
+| GDPR, Article 9 | European Union | Health data is a "special category". Processing it is prohibited unless a specific exception applies |
+| HIPAA | United States | Protected health information can be shared only under defined conditions, such as de-identification |
+| DPDP Act, 2023 | India | Personal data needs a lawful basis and consent, and data fiduciaries carry security duties |
+
+None of these makes research impossible. They do make "just send us the scans" an expensive request, and anonymisation of images is harder than it sounds, because a brain MRI can carry a face in its outer slices and metadata in its headers.
+
+## The federated idea
+
+Federated learning, introduced by McMahan and colleagues in 2017, turns the problem around. The data stays where it is. The model travels.
+
+<Flow
+  title="One federated round"
+  caption="Only model parameters cross the network. Raw images never leave a hospital."
+  steps="Server sends model=The current global model goes to each participating hospital;Local training=Each hospital trains it for a few epochs on its own scans;Send update=Each hospital returns its updated weights and its sample count;Aggregate=The server averages the updates, weighted by sample count;Repeat=The new global model starts the next round"
+/>
+
+The averaging step is called FedAvg. With $K$ clients, where client $k$ holds $n_k$ of the $n$ total samples:
+
+$$
+w^{t+1} = \sum_{k=1}^{K} \frac{n_k}{n}\, w_k^{t+1}
+$$
+
+That is the whole core idea. Everything else in the field is about the ways this simple loop goes wrong.
+
+## Hospitals are not phones
+
+Most early federated learning work targeted mobile keyboards: millions of phones, each with a little data, most offline at any moment. Hospitals are a different setting, which Kairouz and colleagues call cross-silo.
+
+| | Cross-device | Cross-silo |
+| --- | --- | --- |
+| Typical clients | Phones, up to billions | Organisations, roughly 2 to 100 |
+| Data per client | Small | Large |
+| Availability | Most offline at any time | Mostly available |
+| Identity | Anonymous, interchangeable | Known, accountable institutions |
+| Main bottleneck | Communication, dropout | Data heterogeneity, governance |
+
+For a handful of hospitals, the hard problem is not that clients drop out. It is that each hospital's data looks different.
+
+## What federated learning does not solve
+
+Keeping images local is a real gain, but it is not the same as privacy. Three problems remain, and they shaped what I want to study:
+
+1. **Updates leak.** Model weights and gradients are computed from the data, and there is published work showing that inputs can be partly reconstructed from them. The server sees every update in plain form.
+2. **Data is not identically distributed.** One hospital may see mostly early cases, another mostly healthy controls. Averaging models trained on such different data can slow training or bias the result.
+3. **Trust is assumed.** The basic protocol trusts the server to aggregate honestly and the clients to send honest updates.
+
+<Callout type="key" title="Where I'm heading">
+The first two problems are the ones I find most interesting: protecting the updates themselves, and making training hold up when each hospital's data is skewed. I'll be reading about both over the coming months and writing up what I learn here.
+</Callout>
+
+## Further reading
+
+Rieke and colleagues' 2020 paper in npj Digital Medicine is the most readable overview I've found of why medicine needs this. Kairouz and colleagues' survey is long, but its first chapter alone clears up a lot of vocabulary.

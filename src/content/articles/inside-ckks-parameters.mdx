@@ -1,0 +1,90 @@
+---
+title: "Reading a CKKS context: 8192, [60, 40, 40, 60] and 2^40"
+description: "Every TenSEAL tutorial starts with the same three numbers. Here is what each one controls, what it costs, and how to check that the choice is secure."
+date: "2025-10-20"
+category: "Privacy"
+tags: ["CKKS", "TenSEAL", "Parameters"]
+references:
+  - text: "Cheon, Kim, Kim and Song. Homomorphic Encryption for Arithmetic of Approximate Numbers. ASIACRYPT, 2017."
+    url: "https://doi.org/10.1007/978-3-319-70694-8_15"
+  - text: "Albrecht et al. Homomorphic Encryption Security Standard. HomomorphicEncryption.org, 2018."
+    url: "https://homomorphicencryption.org/standard/"
+  - text: "Microsoft SEAL. Examples: CKKS basics."
+    url: "https://github.com/microsoft/SEAL/blob/main/native/examples/5_ckks_basics.cpp"
+  - text: "TenSEAL tutorials."
+    url: "https://github.com/OpenMined/TenSEAL/tree/main/tutorials"
+---
+
+This line appears, nearly unchanged, in most CKKS code I've read, and it will appear in mine:
+
+```python
+import tenseal as ts
+
+ctx = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
+ctx.global_scale = 2**40
+```
+
+I didn't want to copy it without understanding it. Here is what I worked out.
+
+## Polynomial degree: 8192
+
+CKKS works with polynomials of degree below $N$. Two things follow from $N$.
+
+**Capacity.** One ciphertext holds $N/2$ real numbers in its slots. At $N = 8192$, that is **4,096 values per ciphertext**. A model is flattened and cut into chunks of 4,096.
+
+**Security budget.** The security of the underlying ring learning-with-errors problem depends on $N$ and on the total size of the coefficient modulus $q$. Larger $N$ allows a larger $q$ for the same security. The Homomorphic Encryption Security Standard tabulates the limits:
+
+| $N$ | Max total bits of $q$ for 128-bit security |
+| --- | --- |
+| 2,048 | 54 |
+| 4,096 | 109 |
+| 8,192 | **218** |
+| 16,384 | 438 |
+| 32,768 | 881 |
+
+## Coefficient modulus: [60, 40, 40, 60]
+
+The modulus $q$ is a product of primes, and these are their sizes in bits. The total is $60 + 40 + 40 + 60 = 200$ bits, under the 218-bit limit for $N = 8192$, so this context targets 128-bit security.
+
+The primes have different jobs:
+
+<Flow
+  title="What each prime is for"
+  steps="First prime, 60 bits=Holds the final result after the last rescaling. Its excess over the scale sets the room for the integer part;Middle primes, 40 bits each=Each one is consumed by one rescaling, so two middle primes allow two multiplications in sequence;Last prime, 60 bits=A special prime used during key switching, not part of the data levels"
+/>
+
+So this context supports a **multiplicative depth of 2**. Encrypted FedAvg needs additions plus one multiplication by a plain constant, $1/n$, so depth 2 is more than enough.
+
+## Scale: 2^40
+
+CKKS stores a real number $x$ as roughly the integer $x \cdot \Delta$, with $\Delta = 2^{40}$. The scale should match the middle primes, so that each rescaling divides by about $\Delta$ and keeps numbers at the same scale.
+
+The scale sets precision. With 40 bits of scale, and noise of a few bits, results keep roughly 20 or more bits after the binary point, about $10^{-6}$ or better in absolute terms. That is far finer than the differences that matter between two neural network weights.
+
+## The detail that matters for FedAvg
+
+The first prime is 60 bits and the scale is 40, which leaves about **20 bits for the integer part** of a value, a magnitude of up to roughly $2^{20} \approx 10^6$.
+
+Encrypted FedAvg has each client encrypt $n_k \cdot w_k$, its weights multiplied by its sample count. If a client holds 10,000 images and a weight is 0.5, the encrypted value is 5,000, well within range. But the **sum** over clients is what the server computes, so the bound applies to the total sample count times the largest weight. With tens of thousands of images and weights near 1, it still fits. With very large clients or very large weights, it might not, and CKKS would fail silently with wrong values rather than an error.
+
+<Callout type="warn" title="A check worth keeping">
+Decrypt the aggregate and compare it with the plaintext average on every round, at least while developing. An overflow in CKKS does not raise an exception. It just returns nonsense.
+</Callout>
+
+## What a ciphertext weighs
+
+A fresh ciphertext is two polynomials of degree $N$ with coefficients modulo the data primes, here three of them. Uncompressed, that is about
+
+$$
+2 \times 8192 \times 3 \times 8 \text{ bytes} \approx 0.39 \text{ MB}
+$$
+
+for 4,096 values that take 16 KB as float32. Serialisation can compress this, and after a rescaling a ciphertext carries one prime fewer and shrinks. But an expansion of about 20 times or more over float32 is the order of magnitude to expect. I'll measure the real figure once the pipeline exists.
+
+## Summary
+
+| Parameter | Value | Controls | Cost of increasing it |
+| --- | --- | --- | --- |
+| Polynomial degree $N$ | 8192 | Slots per ciphertext, security budget | Slower operations, larger ciphertexts |
+| Coefficient modulus | [60, 40, 40, 60] | Multiplicative depth, integer range | Lower security for the same $N$ |
+| Scale $\Delta$ | $2^{40}$ | Precision | Needs larger primes, less depth |

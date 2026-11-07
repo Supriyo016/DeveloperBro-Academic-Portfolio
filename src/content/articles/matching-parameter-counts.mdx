@@ -1,0 +1,78 @@
+---
+title: "Designing a CNN to an exact parameter budget"
+description: "To compare backbones fairly under encryption, I matched their trainable parameters. The arithmetic, layer by layer, including 152 parameters that do nothing at all."
+date: "2025-11-17"
+category: "Deep Learning"
+tags: ["Experimental design", "CNN architectures", "Group Normalisation"]
+references:
+  - text: "Sandler et al. MobileNetV2: Inverted Residuals and Linear Bottlenecks. CVPR, 2018."
+    url: "https://arxiv.org/abs/1801.04381"
+  - text: "Wu and He. Group Normalization. ECCV, 2018."
+    url: "https://arxiv.org/abs/1803.08494"
+  - text: "Hendrycks and Gimpel. Gaussian Error Linear Units (GELUs). 2016."
+    url: "https://arxiv.org/abs/1606.08415"
+---
+
+In my dissertation, three backbones are compared under encrypted federated training. Encrypted communication cost scales with the number of parameters a client sends: with 4,096 values per CKKS ciphertext, a model of $P$ trainable parameters needs $\lceil P / 4096 \rceil$ ciphertexts per update. If one backbone has twice the parameters, it is twice as expensive to protect, and any accuracy difference is confounded with budget.
+
+So I fixed the budget first and designed to it.
+
+## The target
+
+MobileNetV2, loaded with ImageNet weights, has 2,881,796 parameters. With the earliest layers frozen, it trains **2,575,812** of them. That became the target. EfficientNetB0 has 4,055,296 parameters, so more of it is frozen, leaving **2,575,764** trainable.
+
+| Backbone | Total parameters | Trainable | Frozen |
+| --- | --- | --- | --- |
+| MobileNetV2 | 2,881,796 | 2,575,812 | 305,984 |
+| EfficientNetB0 | 4,055,296 | 2,575,764 | 1,479,532 |
+| Custom CNN | 2,575,764 | 2,575,764 | 0 |
+
+The third row is the network I designed.
+
+## Building the Custom CNN
+
+Five convolution blocks, each a 3 × 3 convolution, Group Normalisation, GELU and pooling, followed by a two-layer classifier. A convolution with $C_\text{in}$ inputs and $C_\text{out}$ outputs has $9 C_\text{in} C_\text{out} + C_\text{out}$ parameters, and a GroupNorm layer has $2C$, a scale and a shift per channel.
+
+| Layer | Shape | Parameters |
+| --- | --- | --- |
+| Conv 1 + GroupNorm(8) | 3 → 32 | 896 + 64 |
+| Conv 2 + GroupNorm(16) | 32 → 64 | 18,496 + 128 |
+| Conv 3 + GroupNorm(32) | 64 → 128 | 73,856 + 256 |
+| Conv 4 + GroupNorm(32) | 128 → 256 | 295,168 + 512 |
+| Conv 5 + GroupNorm(32) | 256 → 512 | 1,180,160 + 1,024 |
+| **Feature extractor** | | **1,570,560** |
+| Linear | 512 → 1,944 | 997,272 |
+| Linear | 1,944 → 4 | 7,780 |
+| **Classifier** | | **1,005,052** |
+| Alignment vector | 152 | 152 |
+| **Total** | | **2,575,764** |
+
+The odd hidden width of 1,944 is the tuning knob. Each unit of width adds $512 + 1 + 4 = 517$ parameters, so the width gets the total close to the target, and a small vector of zeros fills the rest.
+
+## The 152 parameters that do nothing
+
+In simplified form:
+
+```python
+self.fhe_payload_alignment = nn.Parameter(torch.zeros(152), requires_grad=True)
+
+def forward(self, x):
+    x = self.classifier(self.features(x))
+    return x + 0.0 * self.fhe_payload_alignment.sum()
+```
+
+The vector is multiplied by zero, so it never changes a prediction. It exists only so the encrypted payload is the same size. I'll admit that the first version of my code comment said the total matched MobileNetV2 exactly. The arithmetic above says it matches EfficientNetB0 exactly and MobileNetV2 to within 48 parameters, which, at 4,096 values per ciphertext, makes no difference to the number of ciphertexts: 629 for all three.
+
+$$
+\left\lceil \frac{2{,}575{,}764}{4096} \right\rceil = \left\lceil \frac{2{,}575{,}812}{4096} \right\rceil = 629
+$$
+
+## Why Group Normalisation
+
+The pretrained backbones both use Batch Normalisation, which normalises with statistics computed over each batch and stored as running averages. In federated training each client computes those statistics on its own skewed data, and averaging them may not produce statistics that suit anyone.
+
+Group Normalisation computes its statistics within each image, over groups of channels, so it does not depend on the batch or on the client's class mix at all. That is my main design bet: a smaller, unpretrained network that avoids batch statistics may do better under skewed clients than a larger pretrained one that relies on them.
+
+<Callout type="note" title="What matching does not control">
+Equal trainable parameters do not make the comparison fully fair. The pretrained backbones start from ImageNet weights and keep frozen layers, while the Custom CNN starts from scratch. Architecture, normalisation and pretraining all differ at once, so a difference in results will point at a combination of them, not one cause.
+</Callout>

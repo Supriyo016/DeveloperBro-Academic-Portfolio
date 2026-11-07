@@ -1,0 +1,103 @@
+---
+title: "Measured, not estimated: what CKKS-encrypted FedAvg costs per round"
+description: "A 0.30 MB model becomes a 6.3 MB upload. Encryption takes about a second per round, aggregation an eighth of that, and the error is around 10⁻⁷. Real numbers from serialized ciphertexts."
+date: "2026-10-20"
+category: "Privacy"
+tags: ["CKKS", "Secure aggregation", "Benchmarks", "TenSEAL"]
+references:
+  - text: "Cheon, Kim, Kim and Song. Homomorphic Encryption for Arithmetic of Approximate Numbers. ASIACRYPT, 2017."
+    url: "https://doi.org/10.1007/978-3-319-70694-8_15"
+  - text: "Benaissa et al. TenSEAL: A Library for Encrypted Tensor Operations Using Homomorphic Encryption. 2021."
+    url: "https://arxiv.org/abs/2104.03152"
+  - text: "Truhn et al. Encrypted federated learning for secure decentralized collaboration in cancer image analysis. Medical Image Analysis, 2024."
+    url: "https://doi.org/10.1016/j.media.2023.103059"
+---
+
+A year ago I worked out from first principles roughly what a CKKS ciphertext should weigh. In my dissertation, encryption ran on a sample of each update as a prototype, so I never measured the real cost of a fully encrypted round. My current pipeline encrypts the whole update, and logs every byte and every second. These are the first numbers from a complete run on Kaggle's two Tesla T4 GPUs.
+
+## What changed in the pipeline
+
+The server now holds a **public** context with no secret key, checked at start-up:
+
+| Item | Value |
+| --- | --- |
+| Polynomial degree | 8192 |
+| Coefficient modulus | [60, 40, 40, 60] bits |
+| Scale | $2^{40}$ |
+| Values per ciphertext | 4,096 |
+| Server's keys | Public context and relinearisation key only |
+| Server can decrypt? | No, checked in code |
+| Client key file | 0.70 MB |
+
+Each client encrypts its sample-weighted model, $n_k W_k$, flattened into chunks of 4,096. The server adds ciphertexts and multiplies the sum by $1/\sum n_k$, a plain number, without ever decrypting:
+
+```python
+def secure_weighted_fedavg(server_ctx, encrypted_updates, sample_counts):
+    total = None
+    for update in encrypted_updates:
+        chunks = [ts.ckks_vector_from(server_ctx, blob) for blob in update]
+        total = chunks if total is None else [a + b for a, b in zip(total, chunks)]
+    scale = 1.0 / sum(sample_counts)
+    return [(chunk * scale).serialize() for chunk in total]
+```
+
+## The model
+
+The client model in this run is a Tiny CNN with **74,508 parameters**, 0.298 MB in float32. At 4,096 values per ciphertext, that is $\lceil 74{,}508 / 4{,}096 \rceil = 19$ ciphertexts per update.
+
+## Communication
+
+<Stats items="0.298 MB=Plaintext model, float32;6.296 MB=Encrypted upload per client;21.1×=Ciphertext expansion;4.466 MB=Encrypted global model" />
+
+<BarChart
+  title="Size of one model, three ways"
+  caption="Measured from serialized ciphertexts, averaged over 30 aggregated rounds."
+  data="Plaintext float32=0.298;Encrypted global model=4.466;Encrypted client upload=6.296"
+  unit=" MB"
+  decimals="3"
+/>
+
+Two things are worth explaining.
+
+**About 0.33 MB per ciphertext.** 6.296 MB over 19 ciphertexts is 0.331 MB each. My back-of-envelope figure a year ago was 0.39 MB uncompressed, so serialisation saves a little.
+
+**The global model is smaller than the uploads.** Multiplying by $1/\sum n_k$ consumes one level: the ciphertext is rescaled and drops one of its 40-bit primes. Going from 140 bits of data modulus to 100 should shrink it to about $100/140 \approx 0.71$ of its size, and the measured ratio is $4.466 / 6.296 = 0.709$.
+
+## Time
+
+| Step | Time per round | Who |
+| --- | --- | --- |
+| Encryption | 1.047 s | All contributing clients together |
+| Aggregation | 0.125 s | Server, on ciphertexts |
+| Decryption | 0.040 s | One global model |
+| A client's whole local fit | 26.6 s | For comparison |
+
+<BarChart
+  title="Encryption overhead against local training"
+  caption="Per round. The cryptography is about 4% of the time of a single client's local training."
+  data="Local training, one client=26.556;Encryption, all clients=1.047;Aggregation=0.125;Decryption=0.040"
+  unit=" s"
+  decimals="3"
+/>
+
+For a model this small, the cryptography is not the bottleneck. Local training is.
+
+## Error
+
+Every round, the decrypted CKKS average is compared with a plaintext FedAvg of the same updates. The largest values over all rounds were:
+
+| Measure | Value |
+| --- | --- |
+| Maximum absolute error | $2.07 \times 10^{-7}$ |
+| Root mean square error | $2.76 \times 10^{-8}$ |
+| Relative L2 error | $1.50 \times 10^{-7}$ |
+
+For comparison, float32 itself has a relative precision of about $6 \times 10^{-8}$. CKKS's approximation error here is of the same order as ordinary floating point rounding, far below anything that would change training.
+
+## How it scales
+
+Size and encryption time both grow linearly with the number of ciphertexts, so with parameters. Applying the same 0.331 MB per ciphertext to my dissertation's 2.58-million-parameter models, at 629 ciphertexts, gives an estimate of about **208 MB per client upload**. That is an extrapolation, not a measurement, but it shows why a 74,508-parameter client model is worth the trouble.
+
+<Callout type="key" title="The lesson I keep relearning">
+Measure serialized ciphertexts. Estimating "encrypted size" from the plaintext model, which an early version of my code did, underestimates the payload by a factor of about 21.
+</Callout>

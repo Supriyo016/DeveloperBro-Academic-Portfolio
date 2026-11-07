@@ -1,0 +1,80 @@
+---
+title: "MobileNetV2 and EfficientNet: what 'efficient' actually means"
+description: "Depthwise separable convolutions, inverted residuals and compound scaling, worked through with the arithmetic. And why both networks share a component that worries me for federated learning."
+date: "2025-05-26"
+category: "Deep Learning"
+tags: ["CNN architectures", "MobileNetV2", "EfficientNet", "Paper notes"]
+references:
+  - text: "Howard et al. MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications. 2017."
+    url: "https://arxiv.org/abs/1704.04861"
+  - text: "Sandler et al. MobileNetV2: Inverted Residuals and Linear Bottlenecks. CVPR, 2018."
+    url: "https://arxiv.org/abs/1801.04381"
+  - text: "Tan and Le. EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks. ICML, 2019."
+    url: "https://arxiv.org/abs/1905.11946"
+---
+
+If clients have to send their models every round, and those models may be encrypted, then parameter count is a direct cost. So the "efficient" CNN families are natural candidates for federated medical imaging. I read the two most common ones this month.
+
+## The trick both families share
+
+A standard convolution with a $D_K \times D_K$ kernel, $M$ input channels and $N$ output channels, over a $D_F \times D_F$ feature map, costs
+
+$$
+D_K^2 \cdot M \cdot N \cdot D_F^2
+$$
+
+multiply-adds. A **depthwise separable** convolution splits this in two: a depthwise step that filters each channel separately, then a $1 \times 1$ pointwise step that mixes channels.
+
+$$
+D_K^2 \cdot M \cdot D_F^2 \;+\; M \cdot N \cdot D_F^2
+$$
+
+The ratio of the two is
+
+$$
+\frac{1}{N} + \frac{1}{D_K^2}
+$$
+
+For a $3 \times 3$ kernel and many output channels, that is close to $1/9$, so roughly eight to nine times less computation. The MobileNet paper reports only a small accuracy loss for this saving.
+
+## MobileNetV2: inverted residuals
+
+Classic residual blocks are wide, then narrow, then wide. MobileNetV2 inverts this:
+
+<Flow
+  title="An inverted residual block"
+  steps="Expand=1×1 conv widens the narrow input, typically by a factor of 6;Filter=3×3 depthwise conv on the wide representation;Project=1×1 conv back to a narrow output, with no activation;Add=A skip connection joins the narrow input and output"
+/>
+
+The last step has no ReLU, which the paper calls a **linear bottleneck**. The argument is that a ReLU in a low-dimensional space destroys information, so the narrow layers stay linear.
+
+## EfficientNet: scale everything together
+
+EfficientNet asks a different question. Given a good small network, how should it grow? Making it deeper, wider or feeding it larger images each helps, but with diminishing returns. Tan and Le scale all three with one coefficient $\phi$:
+
+$$
+\text{depth} = \alpha^{\phi}, \quad \text{width} = \beta^{\phi}, \quad \text{resolution} = \gamma^{\phi},
+\qquad \alpha \cdot \beta^2 \cdot \gamma^2 \approx 2
+$$
+
+A small grid search on the baseline gave $\alpha = 1.2$, $\beta = 1.1$ and $\gamma = 1.15$, so each step of $\phi$ roughly doubles the computation. The baseline, B0, was itself found by neural architecture search and is built from MBConv blocks, which are inverted residuals with squeeze-and-excitation.
+
+## The numbers from the papers
+
+| Model | Parameters | Multiply-adds | ImageNet top-1 | Default input |
+| --- | --- | --- | --- | --- |
+| MobileNetV2 (1.0) | 3.4 M | 300 M | 72.0% | 224 × 224 |
+| EfficientNet-B0 | 5.3 M | 390 M | 77.1% | 224 × 224 |
+| ResNet-50, for reference | 26 M | 4.1 B | 76.0% | 224 × 224 |
+
+EfficientNet-B0 matches ResNet-50's accuracy with about a fifth of the parameters. That is the kind of saving that matters if every parameter is sent, or encrypted, every round.
+
+## Two things I want to keep in mind
+
+**Both were designed at 224 × 224.** Many Alzheimer's slice datasets are used at much lower resolution to keep training cheap. A network whose early layers downsample aggressively may have very little spatial detail left by its middle layers if the input is small.
+
+**Both rely on Batch Normalisation.** Every block normalises activations with statistics computed over a batch. In federated learning, each client computes those statistics on its own, differently distributed data. I don't yet know how much that matters in practice, but it is the first question I'd want to test.
+
+<Callout type="note">
+ImageNet accuracy measures how well an architecture learns natural photos at 224 pixels. It is weak evidence about grayscale brain slices at a fraction of that size, trained across skewed clients.
+</Callout>

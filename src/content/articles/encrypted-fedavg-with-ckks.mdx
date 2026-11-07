@@ -1,0 +1,84 @@
+---
+title: "Encrypted FedAvg with CKKS, step by step"
+description: "Weighted averaging only needs addition, which makes it a natural fit for homomorphic encryption. Here is how the pieces fit together with TenSEAL."
+date: "2026-11-05"
+category: "Privacy"
+tags: ["CKKS", "Secure aggregation", "Tutorial"]
+references:
+  - text: "McMahan et al. Communication-Efficient Learning of Deep Networks from Decentralized Data. AISTATS, 2017."
+    url: "https://arxiv.org/abs/1602.05629"
+  - text: "Cheon et al. Homomorphic Encryption for Arithmetic of Approximate Numbers. ASIACRYPT, 2017."
+    url: "https://doi.org/10.1007/978-3-319-70694-8_15"
+---
+
+Federated learning keeps data at each client, but model updates still travel to a server, and updates can leak information about the data behind them. Homomorphic encryption offers a way round this: let the server combine updates it cannot read.
+
+## Why FedAvg suits this
+
+FedAvg forms the next global model as a weighted average:
+
+$$
+\theta^{t+1} = \sum_{k=1}^{N} \frac{n_k}{n}\, \theta_k^{t}
+$$
+
+If each client multiplies its own weights by its sample count before encrypting, the server's job is only to add ciphertexts. That matters because addition is cheap in CKKS, while each multiplication consumes part of a limited budget.
+
+## Who holds which key
+
+This is the part that is easiest to get wrong. If the server can decrypt, the encryption protects nothing against the server.
+
+```python
+import tenseal as ts
+
+client_ctx = ts.context(
+    ts.SCHEME_TYPE.CKKS,
+    poly_modulus_degree=8192,
+    coeff_mod_bit_sizes=[60, 40, 40, 60],
+)
+client_ctx.global_scale = 2**40
+
+server_ctx = client_ctx.copy()
+server_ctx.make_context_public()
+
+assert not server_ctx.has_secret_key()
+```
+
+Clients keep the secret key. The server gets a public context. That final assertion is worth keeping in real code, because a mistake here fails silently: everything still runs and looks secure.
+
+## One round
+
+With a polynomial degree of 8192, one CKKS vector packs 4,096 values, so a model is flattened and split into chunks.
+
+```python
+SLOTS = 8192 // 2
+
+def encrypt_update(ctx, weights, n_samples):
+    flat = (weights * n_samples).ravel()
+    return [
+        ts.ckks_vector(ctx, flat[i:i + SLOTS].tolist()).serialize()
+        for i in range(0, len(flat), SLOTS)
+    ]
+
+def aggregate(server_ctx, updates):
+    total = None
+    for chunks in updates:
+        vectors = [ts.ckks_vector_from(server_ctx, c) for c in chunks]
+        total = vectors if total is None else [a + b for a, b in zip(total, vectors)]
+    return [v.serialize() for v in total]
+```
+
+Clients decrypt the summed result and divide by the total sample count.
+
+## What to check before trusting it
+
+CKKS is approximate, so a few things are worth measuring rather than assuming.
+
+- **Error.** Compare the decrypted average with the plaintext average every round.
+- **Size.** Serialize real ciphertexts and count the bytes. An estimate based on the plaintext model will be far too low.
+- **The whole path.** Confirm that what leaves the client is ciphertext, not only that encryption ran somewhere in the code.
+
+That last point comes from experience. In my M.Tech dissertation, CKKS ran on a sampled slice of the weights as a prototype, while training itself used plaintext aggregation. Moving the full update through the encrypted path is what my current work does, and I have written up [the measured costs per round](/blogs/measured-ckks-cost-per-round).
+
+## What this does not protect against
+
+This setup assumes an honest-but-curious server. It does not stop a client from sending a poisoned update, and the final global model can still reveal things about its training data. Encrypted aggregation is one layer of a design, not the whole of it.

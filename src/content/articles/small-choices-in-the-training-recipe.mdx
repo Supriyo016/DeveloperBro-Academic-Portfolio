@@ -1,0 +1,79 @@
+---
+title: "The small choices in a training recipe, and why I fixed them all"
+description: "Image size, label smoothing, class weights, gradient clipping and a seed. None of them is the subject of my dissertation, which is exactly why every one of them has to be the same in all nine runs."
+date: "2026-02-23"
+category: "Deep Learning"
+tags: ["Training", "Reproducibility", "Hyperparameters"]
+references:
+  - text: "Szegedy et al. Rethinking the Inception Architecture for Computer Vision (label smoothing). CVPR, 2016."
+    url: "https://arxiv.org/abs/1512.00567"
+  - text: "Pascanu, Mikolov and Bengio. On the difficulty of training recurrent neural networks (gradient clipping). ICML, 2013."
+    url: "https://arxiv.org/abs/1211.5063"
+  - text: "Kingma and Ba. Adam: A Method for Stochastic Optimization. ICLR, 2015."
+    url: "https://arxiv.org/abs/1412.6980"
+---
+
+A comparison of backbones and federated algorithms is only as clean as everything around it. This post lists the parts of my training recipe that are not under study, and why each is what it is. They are the same in all nine experiments.
+
+## The recipe
+
+| Setting | Value |
+| --- | --- |
+| Input size | 64 × 64 × 3 |
+| Normalisation | ImageNet mean and standard deviation |
+| Augmentation | Horizontal flip (p = 0.5), rotation up to 15° |
+| Optimiser | Adam, learning rate $1 \times 10^{-4}$ |
+| Batch size | 128 |
+| Loss | Cross-entropy, label smoothing 0.05, per-client class weights |
+| Gradient clipping | Maximum norm 1.0 |
+| Local epochs per round | 10 |
+| Rounds | 30 |
+| Clients | 5, Dirichlet α = 0.5 |
+| Seed | 42 |
+
+## 64 × 64 pixels
+
+This is the decision I'm least comfortable with. The source slices are around 200 × 190 pixels, and the pretrained backbones expect 224 × 224. At 64 × 64, a network that downsamples by 32 ends with a 2 × 2 feature map.
+
+The reason is budget. Nine federated runs of 30 rounds, five clients each training ten epochs per round, is a lot of computation for a free GPU quota. Larger images would have meant fewer runs. I'd rather run the full design small than half of it large. It does mean the pretrained models are being used well outside the conditions they were trained for.
+
+## Label smoothing, 0.05
+
+Label smoothing replaces a one-hot target with a slightly softened one. With $K$ classes and smoothing $\varepsilon$:
+
+$$
+y_c^{\text{smooth}} = (1 - \varepsilon)\, y_c + \frac{\varepsilon}{K}
+$$
+
+At $\varepsilon = 0.05$ and $K = 4$, the true class gets 0.9625 and each other class 0.0125. It discourages over-confident logits, which matters when a client sees very few examples of a class and could otherwise learn to never predict it.
+
+## Per-client class weights
+
+Under a Dirichlet split, one client might hold 4,000 mild cases and 268 healthy ones. Each client weights its loss by the inverse of its own class frequencies:
+
+```python
+counts = np.array([max(1, local_counts[c]) for c in range(NUM_CLASSES)], dtype=np.float32)
+weights = counts.sum() / (NUM_CLASSES * counts)
+weights = weights / weights.sum() * NUM_CLASSES
+criterion = nn.CrossEntropyLoss(weight=torch.tensor(weights), label_smoothing=0.05)
+```
+
+The weights are computed locally, from the client's own counts, so no client reveals its class distribution to the server. The global test set is balanced, but no individual client is.
+
+## Gradient clipping, max norm 1.0
+
+If the total gradient norm exceeds 1, it is scaled down to 1:
+
+$$
+g \leftarrow g \cdot \min\left(1, \frac{1}{\lVert g \rVert}\right)
+$$
+
+Early federated rounds can produce large gradients when a client sees a global model trained mostly on other clients' classes. Clipping keeps one bad batch from throwing a local model far from the global one, which would make drift worse.
+
+## One seed
+
+Everything that is random, from the train-test split and the partition to initialisation and batch order, is driven from seed 42. Two runs of the same configuration should then be close to identical, and two runs of different configurations differ only in the factor being studied.
+
+<Callout type="warn" title="The cost of one seed">
+A single seed makes runs comparable, but it also means each configuration is one sample. A difference of half a percentage point between two configurations could be within the variation that a different seed would produce. Repeating each run with several seeds would answer that, and it is the first thing I would add with more compute.
+</Callout>

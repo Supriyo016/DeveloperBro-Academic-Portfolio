@@ -1,0 +1,75 @@
+---
+title: "FedAvg won all three. Should that surprise anyone?"
+description: "FedProx and FedDyn were designed to beat FedAvg on non-IID data. In my nine runs they didn't, by margins smaller than one run's noise. The backbone mattered seventeen times more than the algorithm."
+date: "2026-05-25"
+category: "Federated Learning"
+tags: ["FedAvg", "FedProx", "FedDyn", "Results"]
+references:
+  - text: "Li et al. Federated Optimization in Heterogeneous Networks (FedProx). MLSys, 2020."
+    url: "https://arxiv.org/abs/1812.06127"
+  - text: "Acar et al. Federated Learning Based on Dynamic Regularization (FedDyn). ICLR, 2021."
+    url: "https://arxiv.org/abs/2111.04263"
+  - text: "Li, Diao, Chen and He. Federated Learning on Non-IID Data Silos: An Experimental Study. ICDE, 2022."
+    url: "https://arxiv.org/abs/2102.02079"
+---
+
+The expectation going in was that FedProx and FedDyn, both designed for client drift, would beat plain FedAvg under a strongly skewed split. The opposite happened, in every backbone.
+
+## The results
+
+<BarChart
+  title="Macro F1 by backbone and algorithm"
+  caption="Final-round results on 8,800 held-out images. One run per configuration."
+  series="FedAvg,FedProx,FedDyn"
+  data="Custom CNN=94.80|94.13|93.80;MobileNetV2=92.80|92.63|92.64;EfficientNetB0=79.16|78.37|77.63"
+  unit="%"
+  min="70"
+  max="100"
+  decimals="2"
+/>
+
+| Backbone | FedAvg | FedProx | FedDyn | FedAvg lead over the next best |
+| --- | --- | --- | --- | --- |
+| MobileNetV2 | **92.80** | 92.63 | 92.64 | 0.16 |
+| EfficientNetB0 | **79.16** | 78.37 | 77.63 | 0.79 |
+| Custom CNN | **94.80** | 94.13 | 93.80 | 0.67 |
+
+## Which factor mattered
+
+Averaging over the other factor gives a rough sense of each one's effect.
+
+<BarChart
+  title="Average macro F1 by level of each factor"
+  caption="Backbone averages span 15.9 points. Algorithm averages span 0.9."
+  data="Custom CNN=94.24;MobileNetV2=92.69;EfficientNetB0=78.39;FedAvg=88.92;FedProx=88.38;FedDyn=88.02"
+  unit="%"
+  min="70"
+  max="100"
+  decimals="2"
+/>
+
+The spread between backbones is 15.85 points. The spread between algorithms is 0.90. In this setting, choosing the model was about seventeen times more consequential than choosing the aggregation rule.
+
+## Reasons this is less surprising than it looks
+
+**The coefficients were small.** Both FedProx's μ and FedDyn's α were 0.01. On my toy drift problem last year, μ = 0.01 barely changed FedAvg's answer, and α = 0.01 moved FedDyn only slowly towards the optimum. A small coefficient makes both methods close to FedAvg with a little extra regularisation, which can cost a little accuracy and buy nothing.
+
+**The regulariser has a price.** With ten local epochs per round, the proximal term pulls every local model back towards the global one. If drift isn't the main problem, that pull just slows local learning, and FedProx and FedDyn reached 90% three rounds later than FedAvg with the Custom CNN.
+
+**The partition was softened.** My partition code guarantees every client a minimum number of images of every class and clips tiny shares. That removes the most extreme drift, where a client has no examples of a class at all.
+
+**Other studies find the same.** Li, Diao, Chen and He benchmarked FedAvg, FedProx, SCAFFOLD and FedNova across many non-IID settings and found that no algorithm beat the others consistently, and FedAvg was often competitive.
+
+## Reasons not to read too much into it
+
+The differences between algorithms, 0.16 to 1.53 points, are smaller than what I'd expect from changing the random seed alone. With one run per configuration, I can't estimate that variation, so I can't claim FedAvg is better. I can claim only that FedProx and FedDyn showed no advantage here.
+
+<Callout type="warn" title="A missing number">
+The FedDyn runs never printed a global AUC in the notebooks, so macro AUC is not recorded for those three configurations. I'd rather leave a cell empty than estimate it.
+</Callout>
+
+## What I would change
+
+1. **Tune μ and α** on a validation split, over at least $\{0.001, 0.01, 0.1, 1\}$, instead of using one default.
+2. **Run several seeds** for each configuration, so that differences can be compared with run-to-run variation.
+3. **Try a harsher split**, α = 0.1 without safeguards, where drift correction has more to correct.

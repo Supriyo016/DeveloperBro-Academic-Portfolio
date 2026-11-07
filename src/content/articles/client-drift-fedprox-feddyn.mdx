@@ -1,0 +1,113 @@
+---
+title: "Client drift on a toy problem: FedAvg, FedProx and FedDyn"
+description: "Two clients, two quadratics, and a global optimum at 8. FedAvg settles at 5. A small simulation shows what each fix does, and why the coefficient matters as much as the method."
+date: "2025-08-25"
+category: "Federated Learning"
+tags: ["FedProx", "FedDyn", "Client drift", "Non-IID data"]
+references:
+  - text: "Li et al. Federated Optimization in Heterogeneous Networks (FedProx). MLSys, 2020."
+    url: "https://arxiv.org/abs/1812.06127"
+  - text: "Acar et al. Federated Learning Based on Dynamic Regularization (FedDyn). ICLR, 2021."
+    url: "https://arxiv.org/abs/2111.04263"
+  - text: "Karimireddy et al. SCAFFOLD: Stochastic Controlled Averaging for Federated Learning. ICML, 2020."
+    url: "https://arxiv.org/abs/1910.06378"
+---
+
+Two of my dissertation's three algorithms exist to fix one problem: **client drift**. I understood the idea in words but not in numbers, so I built the smallest example I could and ran it.
+
+## The setup
+
+Two clients, one parameter $w$. Each client has a quadratic loss with its own minimum and its own curvature:
+
+$$
+F_1(w) = \tfrac{1}{2}(w - 0)^2, \qquad F_2(w) = \tfrac{4}{2}(w - 10)^2
+$$
+
+The true objective is their average. Setting its derivative to zero gives the global optimum:
+
+$$
+w^{*} = \frac{1 \cdot 0 + 4 \cdot 10}{1 + 4} = 8
+$$
+
+Client 2's loss is steeper, so the optimum sits closer to its minimum. Each round, both clients start from the global $w$, take $E$ steps of gradient descent with learning rate 0.1, and the server averages the results.
+
+## What FedAvg does
+
+With many local steps, each client simply walks to its own minimum, at 0 and at 10. Their average is 5, not 8. The curvature information that should pull the answer towards 10 is lost, because the server only sees endpoints.
+
+| Local steps $E$ | FedAvg converges to | Distance from optimum |
+| --- | --- | --- |
+| 1 | 8.00 | 0.00 |
+| 5 | 6.93 | 1.07 |
+| 20 | 5.32 | 2.68 |
+| 100 | 5.00 | 3.00 |
+
+With one local step, FedAvg is just gradient descent on the average loss, and it finds 8. Every extra local step trades communication for bias. This is the result the theory papers prove in general.
+
+## FedProx: a leash
+
+FedProx adds a proximal term to each client's loss, penalising distance from the global model it started the round with:
+
+$$
+h_k(w) = F_k(w) + \frac{\mu}{2}\, \lVert w - w^{t} \rVert^2
+$$
+
+This is the version I implemented in PyTorch for the dissertation code:
+
+```python
+def fedprox_loss(model, global_params, logits, labels, criterion, mu=0.01):
+    fit = criterion(logits, labels)
+    prox = sum(torch.sum((w - g) ** 2) for w, g in zip(model.parameters(), global_params))
+    return fit + (mu / 2.0) * prox
+```
+
+On the toy problem:
+
+| Local steps $E$ | FedAvg | FedProx, μ = 0.01 | FedProx, μ = 1 |
+| --- | --- | --- | --- |
+| 5 | 6.93 | 6.93 | 6.97 |
+| 20 | 5.32 | 5.33 | 6.18 |
+| 100 | 5.00 | 5.02 | 6.15 |
+
+The leash helps, but it doesn't remove the bias. It keeps clients from wandering all the way to their own minima, so it reduces drift without correcting its direction. And at μ = 0.01, it does almost nothing here.
+
+## FedDyn: correcting the direction
+
+FedDyn gives each client a running memory of its past gradients and adds a linear term that cancels the client's pull away from the global optimum:
+
+$$
+\min_w \; F_k(w) - \big\langle \nabla F_k(w_k^{t-1}),\, w \big\rangle + \frac{\alpha}{2}\, \lVert w - w^{t} \rVert^2
+$$
+
+After each round the client updates its gradient memory, and the server keeps a matching state that adjusts the average. At a fixed point, the linear terms exactly offset the differences between clients' gradients.
+
+| Local steps $E$ | FedAvg | FedDyn, α = 0.01 | FedDyn, α = 1 |
+| --- | --- | --- | --- |
+| 5 | 6.93 | 7.78 | **8.00** |
+| 20 | 5.32 | 7.72 | **8.00** |
+| 100 | 5.00 | 7.75 | **8.00** |
+
+With α = 1, FedDyn finds the true optimum however many local steps the clients take. With α = 0.01, it is still heading there after 400 rounds, but slowly.
+
+<LineChart
+  title="Where each method settles as local work grows"
+  caption="Final w after 200 to 400 rounds on the toy problem. The dashed line is the true optimum."
+  series="FedAvg=8.00,6.93,5.32,5.00;FedProx, μ = 1=8.00,6.97,6.18,6.15;FedDyn, α = 1=8.00,8.00,8.00,8.00"
+  xLabel="Local steps per round, E"
+  xLabels="1,5,20,100"
+  yLabel="Final w"
+  yMin="4"
+  yMax="9"
+  reference="8"
+  referenceLabel="Optimum"
+/>
+
+## What I'm taking into the dissertation
+
+1. **Drift is bias, not just noise.** More rounds don't fix it, because the method converges to the wrong point.
+2. **FedProx limits drift. FedDyn corrects it.** On paper that makes FedDyn the stronger method.
+3. **The coefficient decides how much either does.** I plan to use 0.01 for both, a common default, and on this toy problem that value barely moves FedProx. Whether that holds for a CNN with millions of parameters is an empirical question.
+
+<Callout type="warn">
+A one-dimensional quadratic is the friendliest possible case. Neural network losses are not convex, and averaging is not the only thing that goes wrong under skewed data. Normalisation layers, for example, have their own problems. This toy shows the mechanism, not the size of the effect.
+</Callout>

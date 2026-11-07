@@ -1,0 +1,77 @@
+---
+title: "What a CNN is looking at in an Alzheimer's MRI"
+description: "A computer scientist's primer on the disease, the scans, the four labels used in public datasets, and the traps in 2D slice datasets."
+date: "2025-04-28"
+category: "Medical Imaging"
+tags: ["Alzheimer's disease", "MRI", "Datasets"]
+references:
+  - text: "World Health Organization. Dementia fact sheet."
+    url: "https://www.who.int/news-room/fact-sheets/detail/dementia"
+  - text: "Morris. The Clinical Dementia Rating (CDR): current version and scoring rules. Neurology, 1993."
+    url: "https://doi.org/10.1212/WNL.43.11.2412-a"
+  - text: "Marcus et al. Open Access Series of Imaging Studies (OASIS): Cross-sectional MRI Data in Young, Middle Aged, Nondemented, and Demented Older Adults. Journal of Cognitive Neuroscience, 2007."
+    url: "https://doi.org/10.1162/jocn.2007.19.9.1498"
+  - text: "Wen et al. Convolutional neural networks for classification of Alzheimer's disease: Overview and reproducible evaluation. Medical Image Analysis, 2020."
+    url: "https://doi.org/10.1016/j.media.2020.101694"
+---
+
+I come to this from computer science, not medicine. Before training anything on brain scans, I wanted to know what the labels mean and what a network could reasonably see in an image. This post collects what I've learned so far, mostly for my own reference.
+
+## The disease, briefly
+
+The WHO estimates that about 57 million people were living with dementia in 2021, and that Alzheimer's disease may account for 60 to 70 percent of cases. It is progressive. Damage starts years before obvious symptoms, which is why early detection is the part research cares most about.
+
+## What shows up on structural MRI
+
+A T1-weighted MRI shows anatomy, not activity. Alzheimer's leaves anatomical traces as brain tissue is lost:
+
+- **Hippocampal atrophy.** The hippocampus, central to memory, shrinks early.
+- **Enlarged ventricles.** The fluid-filled spaces grow as surrounding tissue is lost.
+- **Widened sulci and cortical thinning.** The folds of the cortex open up.
+
+None of these is unique to Alzheimer's, and normal ageing produces milder versions of all of them. That is the core difficulty: the early classes differ from healthy ageing by degree, not by kind.
+
+## Where the four labels come from
+
+Public Alzheimer's MRI datasets on Kaggle usually have four classes. They trace back to the **Clinical Dementia Rating** (CDR), a clinical scale from structured interviews, not from the image.
+
+| CDR | Clinical meaning | Typical dataset label |
+| --- | --- | --- |
+| 0 | No dementia | NonDemented |
+| 0.5 | Very mild, questionable dementia | VeryMildDemented |
+| 1 | Mild dementia | MildDemented |
+| 2 | Moderate dementia | ModerateDemented |
+| 3 | Severe dementia | Rarely present |
+
+So the network is asked to predict a clinical judgement from anatomy. Some of the information it needs may simply not be in one slice.
+
+## The dataset I've been exploring
+
+The "Alzheimer's Multiclass Dataset (Equal and Augmented)" on Kaggle has 44,000 2D slices, already pre-processed and augmented by its authors so that the classes are close to balanced.
+
+<BarChart
+  title="Images per class"
+  caption="Counts as published in the dataset. The balance comes from augmentation by the dataset authors."
+  data="NonDemented=12800;VeryMildDemented=11200;MildDemented=10000;ModerateDemented=10000"
+  decimals="0"
+/>
+
+<Figure
+  src="/images/blog/sample-mri-grid.webp"
+  alt="Eight axial MRI slices, two per class, labelled Mild, Moderate, Non-demented and Very mild demented, with varying colour tints."
+  caption="Random slices from the dataset. The colour tints and slight shifts are signs of the augmentation already applied to the images."
+  width="945"
+  height="584"
+/>
+
+## Three traps I want to avoid
+
+**2D slices hide 3D context.** A volume has well over a hundred slices. A single axial slice may or may not cut through the hippocampus. Results on slices are not the same as results on patients.
+
+**Balanced classes can be manufactured.** Real cohorts are dominated by healthy and very mild cases. A balanced dataset made by augmentation can contain several altered copies of one original image.
+
+**Splitting by image is not splitting by person.** If slices or augmented copies of one person land in both training and test sets, the test score rewards memorising that person. Wen and colleagues reviewed CNN papers on Alzheimer's classification in 2020 and reported that more than half of the papers they surveyed may have suffered from this kind of data leakage.
+
+<Callout type="warn" title="A note to my future self">
+Whatever dataset I end up using, I need to know how it was built before I trust a test score on it. A suspiciously perfect score on one class is a reason to look at the data, not a reason to celebrate.
+</Callout>

@@ -1,0 +1,85 @@
+---
+title: "Attention transfer: teaching a student where to look"
+description: "Soft labels tell a student what the teacher concludes. Attention maps tell it where the teacher looked. How the maps are computed, matched across very different networks, and checked."
+date: "2026-09-21"
+category: "Deep Learning"
+tags: ["Knowledge distillation", "Attention maps", "Feature distillation"]
+references:
+  - text: "Zagoruyko and Komodakis. Paying More Attention to Attention: Improving the Performance of Convolutional Neural Networks via Attention Transfer. ICLR, 2017."
+    url: "https://arxiv.org/abs/1612.03928"
+  - text: "Romero et al. FitNets: Hints for Thin Deep Nets. ICLR, 2015."
+    url: "https://arxiv.org/abs/1412.6550"
+  - text: "He et al. Deep Residual Learning for Image Recognition. CVPR, 2016."
+    url: "https://arxiv.org/abs/1512.03385"
+---
+
+Last month's post was about distilling a teacher's outputs. Outputs are only the last layer. A teacher's intermediate layers also carry knowledge: which regions of an image it found informative. **Attention transfer**, from Zagoruyko and Komodakis (ICLR 2017), passes that on cheaply, and it is the second distillation term I'm using in my current work.
+
+## From a feature map to an attention map
+
+A convolutional layer produces an activation tensor $A \in \mathbb{R}^{C \times H \times W}$: $C$ channels over an $H \times W$ grid. Collapse the channels by summing squared activations at each position:
+
+$$
+Q(A)_{h,w} = \sum_{c=1}^{C} A_{c,h,w}^{2}
+$$
+
+The result is a single $H \times W$ map that is large wherever the layer responds strongly. Squaring, rather than taking absolute values, emphasises the strongest responses.
+
+## Why this works across different networks
+
+The teacher and student can have different channel counts. My teacher, a ResNet18, has 64 to 512 channels per stage. My student is a tiny CNN with 40 to 136. Feature distillation methods like FitNets need a learned adapter to compare feature maps of different widths. Attention maps don't: summing over channels removes $C$, so only the spatial sizes need to agree.
+
+Each map is flattened and normalised to unit length, and the loss is the squared distance between the normalised maps, summed over matched stage pairs $j$:
+
+$$
+\mathcal{L}_{\text{AT}} = \sum_{j} \left\lVert \frac{q_s^{(j)}}{\lVert q_s^{(j)} \rVert_2} - \frac{q_t^{(j)}}{\lVert q_t^{(j)} \rVert_2} \right\rVert_2^2
+$$
+
+Normalisation makes the comparison about **where** activations are high, not how large they are.
+
+```python
+import torch.nn.functional as F
+
+def attention_map(features):
+    q = features.pow(2).sum(dim=1).flatten(1)      # (batch, H*W)
+    return F.normalize(q, dim=1)
+
+def attention_loss(student_feats, teacher_feats):
+    return sum(
+        (attention_map(s) - attention_map(t)).pow(2).mean()
+        for s, t in zip(student_feats, teacher_feats)
+    )
+```
+
+## Matching stages
+
+For 64 × 64 inputs, I removed the ResNet18 teacher's initial max-pooling so its early feature maps stay larger. The stages are then paired by spatial size:
+
+| Pair | Teacher stage | Student stage | Map size |
+| --- | --- | --- | --- |
+| 1 | Stage 1 | Stage 2 | 32 × 32 |
+| 2 | Stage 2 | Stage 3 | 16 × 16 |
+| 3 | Stage 3 | Stage 4 | 8 × 8 |
+
+The code checks the sizes of each pair at start-up and refuses to run if they differ. A silent mismatch would otherwise be caught only by a shape error deep in training, or, worse, by an interpolation that hides it.
+
+## Weighting the term
+
+Normalised maps with hundreds or thousands of positions have tiny per-position differences, so the raw attention loss is small, of the order of $10^{-3}$. To have any effect beside the cross-entropy it needs a large weight, in the hundreds. The combined loss has three terms:
+
+$$
+\mathcal{L} = \mathcal{L}_{\text{CE}} + \lambda_{\text{soft}} \cdot \mathcal{L}_{\text{soft}} + \lambda_{\text{AT}} \cdot \mathcal{L}_{\text{AT}}
+$$
+
+A weight of several hundred on the attention term looks extreme, but it reflects the term's scale, not its importance. The weights have to be fixed before the final test, not chosen by looking at it.
+
+## How to check that it did anything
+
+A distillation loss going down is not proof that the student learned from the teacher. Two direct checks are better:
+
+1. **Map similarity.** On held-out validation images, compute the cosine similarity between the student's and the teacher's attention maps at each pair, and compare a distilled student with an identical student trained without the teacher.
+2. **A baseline map.** Compute the cosine similarity of the teacher's maps to their own average map. A student that just learned "look at the middle of the brain" would score about that much without learning anything image-specific.
+
+<Callout type="key">
+If the distilled student's maps are closer to the teacher's than both the undistilled student's and the average-map baseline, the transfer happened. Whether it also improves test accuracy is a separate question, and the one that matters.
+</Callout>

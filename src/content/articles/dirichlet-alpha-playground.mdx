@@ -1,0 +1,87 @@
+---
+title: "One parameter, five kinds of hospital: choosing a Dirichlet α"
+description: "Most federated papers pick α = 0.5 and move on. I simulated 500 partitions at five values of α to see what the choice actually does to client sizes and class mixes."
+date: "2025-09-22"
+category: "Federated Learning"
+tags: ["Non-IID data", "Dirichlet partition", "Simulation"]
+references:
+  - text: "Hsu, Qi and Brown. Measuring the Effects of Non-Identical Data Distribution for Federated Visual Classification. 2019."
+    url: "https://arxiv.org/abs/1909.06335"
+  - text: "Li, Diao, Chen and He. Federated Learning on Non-IID Data Silos: An Experimental Study. ICDE, 2022."
+    url: "https://arxiv.org/abs/2102.02079"
+---
+
+My dissertation needs a non-IID split of the training data across five simulated hospitals. The standard tool is a Dirichlet partition, popularised for federated learning by Hsu, Qi and Brown in 2019. It has one knob, the concentration $\alpha$. Before picking a value, I wanted to see what each value produces.
+
+## How the partition works
+
+For each class $c$, draw a vector of client shares from a symmetric Dirichlet distribution, and deal that class's images out in those proportions:
+
+$$
+\mathbf{p}_c = (p_{c,1}, \dots, p_{c,K}) \sim \mathrm{Dir}(\alpha, \dots, \alpha), \qquad \textstyle\sum_k p_{c,k} = 1
+$$
+
+Small $\alpha$ concentrates each class on a few clients. Large $\alpha$ spreads each class evenly, which approaches an IID split.
+
+```python
+import numpy as np
+
+def dirichlet_partition(counts, clients=5, alpha=0.5, seed=0):
+    rng = np.random.default_rng(seed)
+    shares = rng.dirichlet([alpha] * clients, size=len(counts))   # one row per class
+    return np.floor(shares * np.asarray(counts)[:, None]).astype(int)
+```
+
+## The experiment
+
+I used class counts matching an 80% training split of my dataset: 8,000 mild, 8,000 moderate, 10,240 non-demented and 8,960 very mild images, 35,200 in all. For each $\alpha$, I drew 500 partitions with different seeds and recorded three things:
+
+- **largest-class share**: for each client, the fraction of its data in its most common class, averaged over clients
+- **client sizes**: the smallest and largest client, as medians over the 500 draws
+- **near-empty cells**: how many of the 20 client-class pairs hold under 5% of that client's data
+
+## Results
+
+| α | Largest-class share | Smallest client | Largest client | Near-empty cells (of 20) |
+| --- | --- | --- | --- | --- |
+| 0.1 | 0.78 | 274 | 15,059 | 10.9 |
+| 0.5 | 0.58 | 2,635 | 12,112 | 5.2 |
+| 1 | 0.49 | 3,644 | 10,776 | 2.4 |
+| 10 | 0.33 | 5,885 | 8,286 | 0.0 |
+| 100 | 0.29 | 6,668 | 7,432 | 0.0 |
+
+<BarChart
+  title="Average share of each client's data in its largest class"
+  caption="Medians and means over 500 simulated partitions. With four classes, a perfectly IID client would sit at about 0.29."
+  data="α = 0.1=0.78;α = 0.5=0.58;α = 1=0.49;α = 10=0.33;α = 100=0.29"
+  max="1"
+  decimals="2"
+  highlight="α = 0.5"
+/>
+
+## What one α = 0.5 draw looks like
+
+Averages hide how uneven a single draw is. Here is one partition at α = 0.5, as the percentage of each class sent to each client:
+
+| Class | Client 1 | Client 2 | Client 3 | Client 4 | Client 5 |
+| --- | --- | --- | --- | --- | --- |
+| Mild | 18.7 | 36.5 | 4.1 | 0.0 | 40.7 |
+| Moderate | 15.5 | 10.9 | 69.0 | 4.3 | 0.3 |
+| Non-demented | 10.3 | 76.3 | 10.3 | 1.4 | 1.6 |
+| Very mild | 0.0 | 0.7 | 43.6 | 35.3 | 20.4 |
+
+Client 4 gets almost no mild, moderate or healthy scans. Client 2 gets three quarters of all healthy scans. That is a plausible picture of hospitals with different referral patterns, and a hard one for training.
+
+## The choice
+
+I'm going with **α = 0.5**, for three reasons.
+
+1. At α = 0.1, about half the client-class pairs are near empty and the smallest client can have only a few hundred images. That tests whether training survives at all, more than which method is better.
+2. At α of 10 or more, the split is close to IID, and the algorithms designed for drift have nothing to correct.
+3. α = 0.5 is used widely enough that results can be set beside other papers.
+
+Two safeguards go into my partition code: every client gets at least a few images of every class before the Dirichlet draw, and very small shares are clipped up, so no client is left with a class it has literally never seen.
+
+<Callout type="note">
+A Dirichlet split over labels models label skew only. Real hospitals also differ in scanners, protocols and patient age, which is feature skew. A simulation with one public dataset can't produce that, and I'll have to say so in the limitations.
+</Callout>

@@ -1,0 +1,60 @@
+// A continuously moving page background: drifting light, a data network with flowing links,
+// and mathematical symbols rising slowly. Pure CSS and SVG, decorative only, and off under reduced motion.
+
+const blobs = [
+  { top: "-12%", left: "-10%", color: "var(--lavender)", delay: "0s" },
+  { top: "35%", left: "65%", color: "var(--accent-soft)", delay: "-9s" },
+  { top: "70%", left: "-5%", color: "var(--primary-soft)", delay: "-17s" },
+];
+
+const glyphs = ["Σ", "∇", "θ", "|ψ⟩", "λ", "∫", "π", "⊕", "σ", "∂", "α", "ℏ"];
+
+const nodes = [
+  [8, 18], [22, 42], [14, 72], [36, 12], [48, 58], [62, 28], [72, 76], [86, 44], [94, 14], [56, 92], [30, 88], [80, 92],
+] as const;
+const edges = [
+  [0, 1], [1, 2], [1, 4], [0, 3], [3, 5], [4, 5], [4, 6], [5, 7], [7, 8], [6, 9], [2, 10], [6, 11], [7, 11], [4, 10],
+] as const;
+
+export function AmbientBackground() {
+  return (
+    <div className="ambient" aria-hidden="true">
+      {blobs.map((blob) => (
+        <span key={blob.top} className="ambient-blob" style={{ top: blob.top, left: blob.left, animationDelay: blob.delay, ["--blob" as string]: blob.color }} />
+      ))}
+      <svg className="ambient-net" viewBox="0 0 100 100" preserveAspectRatio="none">
+        {edges.map(([a, b]) => (
+          <line
+            key={`${a}-${b}`}
+            x1={nodes[a][0]}
+            y1={nodes[a][1]}
+            x2={nodes[b][0]}
+            y2={nodes[b][1]}
+            stroke="var(--primary)"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+            className="il-dash"
+            style={{ strokeDasharray: "0.8 1.2", animationDuration: `${3 + ((a + b) % 4)}s` }}
+          />
+        ))}
+        {nodes.map(([x, y], index) => (
+          <circle key={index} cx={x} cy={y} r="0.6" fill="var(--accent)" className="il-twinkle" style={{ animationDelay: `${index * 0.33}s`, animationDuration: "2.4s" }} />
+        ))}
+      </svg>
+      {glyphs.map((glyph, index) => (
+        <span
+          key={glyph}
+          className="ambient-glyph"
+          style={{
+            left: `${4 + ((index * 83) % 92)}%`,
+            fontSize: `${1.2 + (index % 4) * 0.5}rem`,
+            animationDuration: `${26 + (index % 5) * 6}s`,
+            animationDelay: `${-index * 4.3}s`,
+          }}
+        >
+          {glyph}
+        </span>
+      ))}
+    </div>
+  );
+}

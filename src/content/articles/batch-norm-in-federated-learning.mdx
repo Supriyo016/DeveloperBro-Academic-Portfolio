@@ -1,0 +1,56 @@
+---
+title: "Why Batch Normalisation is a suspect in federated learning"
+description: "A from-scratch CNN beat two pretrained backbones in my experiments. Normalisation is a likely reason, but my results alone cannot prove it."
+date: "2026-11-04"
+category: "Deep Learning"
+tags: ["Normalisation", "Non-IID data", "Research methodology"]
+references:
+  - text: "Wu and He. Group Normalization. ECCV, 2018."
+    url: "https://arxiv.org/abs/1803.08494"
+  - text: "Zhu et al. Federated learning on non-IID data: A survey. Neurocomputing, 2021."
+    url: "https://doi.org/10.1016/j.neucom.2021.07.098"
+---
+
+One result from my dissertation surprised me. Under a strongly non-IID split, EfficientNetB0 reached a macro F1 of about 79%, while a compact network trained from scratch reached about 95%. On centralised benchmarks, you would expect that ordering to look quite different.
+
+## The mechanism
+
+Batch Normalisation normalises activations using the mean and variance of the current batch, and keeps running estimates for use at inference.
+
+In federated training, each client computes those statistics on its own data. If Client 2's data is mostly non-demented scans and Client 4's is mostly mild cases, their batch statistics differ. Averaging their models then mixes parameters that were trained against different statistics.
+
+Group Normalisation avoids this. It computes statistics within each sample, across groups of channels, so it does not depend on what else is in the batch or on which client holds it.
+
+```python
+import torch.nn as nn
+
+def block(c_in, c_out, groups):
+    return nn.Sequential(
+        nn.Conv2d(c_in, c_out, kernel_size=3, padding=1),
+        nn.GroupNorm(groups, c_out),  # statistics per sample, not per batch
+        nn.GELU(),
+        nn.MaxPool2d(2),
+    )
+```
+
+This is a known concern in the federated learning literature, and it fits what I saw.
+
+## What my results show
+
+| Backbone | Normalisation | Mean macro F1 |
+| --- | --- | --- |
+| Custom CNN | Group | 94.24% |
+| MobileNetV2 | Batch | 92.69% |
+| EfficientNetB0 | Batch | 78.39% |
+
+## What they do not show
+
+It would be easy to conclude that Group Normalisation is the cause. The table does not establish that, for three reasons.
+
+**MobileNetV2 also uses Batch Normalisation** and still reaches 92.69%. If Batch Normalisation alone were decisive, the two pretrained backbones should look more alike.
+
+**The backbones differ in other ways.** The Custom CNN trains from scratch. The other two start from ImageNet weights and have different frozen layers. Pretraining on natural images at a 64 × 64 input could help or hurt in ways I did not isolate.
+
+**There is no ablation.** The experiment that would settle this is the same Custom CNN with Batch Normalisation swapped in, and everything else held fixed. I have not run it.
+
+So I treat normalisation as the leading hypothesis, not a finding. The clean next step is that one ablation, repeated over several seeds.

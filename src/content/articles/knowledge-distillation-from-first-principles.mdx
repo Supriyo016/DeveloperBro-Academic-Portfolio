@@ -1,0 +1,82 @@
+---
+title: "Knowledge distillation from first principles"
+description: "What a teacher's 'dark knowledge' is, why temperature reveals it, where the T² factor comes from, and why distillation is attractive for federated hospitals with small models."
+date: "2026-08-24"
+category: "Deep Learning"
+tags: ["Knowledge distillation", "Model compression", "Paper notes"]
+references:
+  - text: "Hinton, Vinyals and Dean. Distilling the Knowledge in a Neural Network. 2015."
+    url: "https://arxiv.org/abs/1503.02531"
+  - text: "Buciluǎ, Caruana and Niculescu-Mizil. Model Compression. KDD, 2006."
+    url: "https://doi.org/10.1145/1150402.1150464"
+  - text: "Sun et al. Logit Standardization in Knowledge Distillation. CVPR, 2024."
+    url: "https://arxiv.org/abs/2403.01427"
+  - text: "Gou et al. Knowledge Distillation: A Survey. International Journal of Computer Vision, 2021."
+    url: "https://arxiv.org/abs/2006.05525"
+---
+
+With the dissertation submitted, I've started on the next question. My best federated model had 2.58 million parameters, and every one of them has to be encrypted and sent each round. A model a hundred times smaller would be a hundred times cheaper to protect, but small models learn less. **Knowledge distillation** is the standard way to narrow that gap, so I've gone back to its foundations.
+
+## The idea
+
+Train a large **teacher** first. Then train a small **student** to match not only the correct labels, but the teacher's full output distribution. The idea goes back to model compression work by Buciluǎ, Caruana and Niculescu-Mizil in 2006. Hinton, Vinyals and Dean gave it its modern form, and its name, in 2015.
+
+## What the teacher knows that the label doesn't
+
+A label says "mild dementia". A teacher's output says something richer: mild, quite possibly very mild, almost certainly not moderate. Those relative probabilities on the wrong classes encode how the teacher thinks the classes relate. Hinton called this "dark knowledge".
+
+The trouble is that a confident teacher hides it. Take logits of $[6, 2, 1, 0]$ for mild, very mild, non-demented and moderate:
+
+| Temperature $T$ | Mild | Very mild | Non-demented | Moderate | Entropy |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 97.3% | 1.8% | 0.7% | 0.2% | 0.21 bits |
+| 2 | 78.9% | 10.7% | 6.5% | 3.9% | 1.05 bits |
+| 4 | 53.3% | 19.6% | 15.3% | 11.9% | 1.72 bits |
+
+At $T = 1$, the student would learn little beyond the label. Dividing logits by a temperature before the softmax spreads the distribution out, and the ranking of the wrong classes becomes visible:
+
+$$
+p_i^{(T)} = \frac{\exp(z_i / T)}{\sum_j \exp(z_j / T)}
+$$
+
+## The loss
+
+The student minimises a weighted sum of the usual cross-entropy on labels and a divergence from the teacher's softened distribution:
+
+$$
+\mathcal{L} = \mathcal{L}_{\text{CE}}\big(y, p_s^{(1)}\big) + \lambda \, T^2 \, \mathrm{KL}\big(p_t^{(T)} \,\Vert\, p_s^{(T)}\big)
+$$
+
+**Why $T^2$?** The gradient of the softened term with respect to the student's logits scales as $1/T^2$ for large $T$. Without the correction, raising the temperature would quietly turn the distillation term down. Multiplying by $T^2$ keeps its weight roughly constant as $T$ changes, so $\lambda$ and $T$ can be tuned separately.
+
+```python
+import torch.nn.functional as F
+
+def kd_loss(student_logits, teacher_logits, labels, T=2.0, weight=1.0):
+    hard = F.cross_entropy(student_logits, labels)
+    soft = F.kl_div(
+        F.log_softmax(student_logits / T, dim=1),
+        F.softmax(teacher_logits / T, dim=1),
+        reduction="batchmean",
+    )
+    return hard + weight * T * T * soft
+```
+
+## A recent refinement: standardise first
+
+A teacher and a much smaller student usually produce logits on different scales. Matching softened probabilities forces the student to match the teacher's scale too, which it may not have the capacity to do. Sun and colleagues (CVPR 2024) proposed standardising each image's logits to zero mean and unit variance before the temperature, so the student matches the teacher's ranking and relative gaps rather than its raw magnitudes.
+
+For the example above, standardised logits become $[1.65, -0.11, -0.55, -0.99]$, and at $T = 2$ the softened distribution is 49.6%, 20.6%, 16.5% and 13.3%.
+
+## Why this fits federated hospitals
+
+<Flow
+  title="The design I'm working towards"
+  steps="Teacher=Train a large model once, centrally, on data that may be pooled, such as a public dataset;Freeze=Fix the teacher and give a copy to every hospital;Local training=Each hospital trains a small student on its own scans, with the teacher's soft targets added to the loss;Encrypted averaging=Only the small student's weights are encrypted and aggregated"
+/>
+
+Two things make this attractive. The encrypted payload is the **student**, so cost falls with its size. And the teacher gives every hospital the **same** soft targets, including for classes a hospital barely has, which might reduce how far local models drift apart under skewed data.
+
+<Callout type="warn" title="What could go wrong">
+Distillation is not guaranteed to help. If the capacity gap between teacher and student is too large, the student can't follow. If the teacher was trained on different data from the hospitals', its soft targets may be confidently wrong for them. And any gain needs to be measured against a student trained identically without the teacher, or it means nothing.
+</Callout>

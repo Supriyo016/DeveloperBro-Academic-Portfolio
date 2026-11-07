@@ -1,0 +1,93 @@
+---
+title: "98% on one dataset, below the baseline on another: splitting by patient"
+description: "The same ResNet18 recipe scores 98.3% balanced accuracy on a pre-augmented slice dataset and 36.8% on OASIS with every patient kept to one side of the split. Why both numbers are 'correct', and what the second one teaches."
+date: "2026-10-28"
+category: "Medical Imaging"
+tags: ["OASIS", "Data leakage", "Subject-level split", "Evaluation"]
+references:
+  - text: "Marcus et al. Open Access Series of Imaging Studies (OASIS): Cross-sectional MRI Data in Young, Middle Aged, Nondemented, and Demented Older Adults. Journal of Cognitive Neuroscience, 2007."
+    url: "https://doi.org/10.1162/jocn.2007.19.9.1498"
+  - text: "Wen et al. Convolutional neural networks for classification of Alzheimer's disease: Overview and reproducible evaluation. Medical Image Analysis, 2020."
+    url: "https://doi.org/10.1016/j.media.2020.101694"
+  - text: "Yagis et al. Effect of data leakage in brain MRI classification using 2D convolutional neural networks. Scientific Reports, 2021."
+    url: "https://doi.org/10.1038/s41598-021-01681-w"
+  - text: "Kaggle. OASIS Alzheimer's detection images (ninadaithal/imagesoasis)."
+    url: "https://www.kaggle.com/datasets/ninadaithal/imagesoasis"
+---
+
+After finding duplicates in my dissertation's dataset, I wanted a dataset where the strongest kind of split is possible: by person. A Kaggle export of the OASIS MRI collection provides subject IDs with every slice. I ran the same pipeline on it. The result is the most sobering number I've produced.
+
+## The dataset
+
+The export has 86,437 2D slices from **347 subjects**. Every slice of a subject carries that subject's label, so splitting by subject is the only honest option. It also looks nothing like a balanced Kaggle set.
+
+| Class | Images | Share | Subjects |
+| --- | --- | --- | --- |
+| Non-demented | 67,222 | 77.8% | 266 |
+| Very mild | 13,725 | 15.9% | 58 |
+| Mild | 5,002 | 5.8% | 21 |
+| Moderate | 488 | 0.6% | **2** |
+
+The moderate class is two people. With a subject-level split, one goes to the test set and one to the hospitals, and the server's public set gets none.
+
+<BarChart
+  title="Images per subject, by class"
+  caption="Average number of slices per person. Many slices per subject means that an image-level split would put the same brain on both sides."
+  data="Moderate=244;Non-demented=253;Very mild=237;Mild=238"
+  decimals="0"
+/>
+
+## The split
+
+Subjects are assigned whole, class by class, to the locked test set (20%), the server's public set (20%) and the hospitals (60%). The code refuses to continue if any subject appears in two places.
+
+| Split | Images | Subjects |
+| --- | --- | --- |
+| Locked test | 17,385 | 69 |
+| Public (server) | 16,958 | 65 |
+| Hospitals | 52,094 | 213 |
+
+On this test set, predicting "non-demented" for every image scores **77.5% accuracy**.
+
+## The results
+
+The same recipe as on the augmented dataset: a ResNet18 teacher from ImageNet weights, trained on the public set, and a tiny CNN with and without distillation. On the subject-level OASIS split:
+
+| Model | Accuracy | Balanced accuracy |
+| --- | --- | --- |
+| Always predict non-demented | 77.5% | 25.0% |
+| ResNet18 teacher | 67.9% | 36.8% |
+| Tiny CNN | 65.4% | 36.4% |
+| Tiny CNN with distillation | 61.7% | 36.1% |
+
+<BarChart
+  title="Balanced accuracy of the same teacher recipe on two datasets"
+  caption="Augmented dataset: exact duplicates grouped, no subject IDs. OASIS: every subject on one side. Settings differed slightly between the runs, so this compares regimes, not models."
+  data="Augmented Kaggle set=98.3;OASIS, subject-level=36.8;Chance, four classes=25.0"
+  unit="%"
+  max="100"
+  decimals="1"
+/>
+
+Every model is below the majority-class baseline in accuracy, and barely above chance in balanced accuracy. A second OASIS run with different settings gave the teacher 72.5% accuracy and 31.0% balanced accuracy, so this isn't one unlucky run.
+
+## Why the two numbers differ so much
+
+I can't attribute the whole gap to leakage. Several things change at once:
+
+1. **Independence.** On OASIS, no test brain was seen in training. On the augmented set, near-copies of test slices may have been.
+2. **Class balance.** OASIS is 78% healthy, and the rare classes have few people. Mild has 21 subjects in total, so the server's public set, which trains the teacher, holds the scans of only four mild subjects.
+3. **A missing class.** The public set has no moderate images, so the teacher can't learn that class at all, which caps its balanced accuracy at 75%.
+4. **Label noise from slices.** A subject's CDR applies to the whole brain. Many of that person's slices show nothing diagnostic, but all carry the label.
+
+Yagis and colleagues ran a controlled version of this comparison on OASIS and other datasets in 2021, splitting the same data by slice and by subject. Slice-level splitting raised 2D CNN test accuracy by about 30% on OASIS, and on a randomly labelled control it produced about 96% accuracy where a subject-level split gave the expected 50%.
+
+<Callout type="key" title="What I take from it">
+98% and 37% are both correct numbers for what they measure. The first says how well a model separates images in a dataset whose images are not independent. The second says how well it would do on new people, from 2D slices, with this little data. Only the second is the question medicine cares about.
+</Callout>
+
+## What I'm changing
+
+- Report subject-level results wherever subject IDs exist, and say clearly when they don't.
+- Treat 2D slice classification on OASIS as a hard baseline, and consider aggregating predictions per subject, or 3D models, rather than tuning slice models further.
+- Never present a score on the augmented dataset without saying how it was built.
