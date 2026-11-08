@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { issueFormToken } from "@/lib/security/form-token";
 
 const send = vi.fn();
 vi.mock("resend", () => ({
@@ -20,7 +21,7 @@ function request(payload: unknown, headers: Record<string, string> = {}) {
   });
 }
 
-const human = () => ({ ...body, fillMs: 10_000 });
+const human = () => ({ ...body, formToken: issueFormToken(Date.now() - 10_000) });
 
 describe("POST /api/contact", () => {
   beforeEach(() => {
@@ -78,10 +79,23 @@ describe("POST /api/contact", () => {
   });
 
   it("tells a fast sender to retry rather than silently dropping the message", async () => {
-    const response = await post(request({ ...body, fillMs: 300 }));
+    const response = await post(request({ ...body, formToken: issueFormToken() }));
     expect(response.status).toBe(429);
     expect(send).not.toHaveBeenCalled();
     expect((await response.json()).error).toContain("send it again");
+  });
+
+  it("rejects a missing or forged form token", async () => {
+    expect((await post(request(body))).status).toBe(400);
+    const forged = `${Date.now() - 10_000}.not-a-real-signature-aaaaaaaaaaaaaaaaaaaaaaaaaaaa`;
+    expect((await post(request({ ...body, formToken: forged }))).status).toBe(400);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("stops reading a body without a length header once it passes the limit", async () => {
+    const big = JSON.stringify({ ...human(), message: "x".repeat(20_000) });
+    const response = await post(new Request(`${ORIGIN}/api/contact`, { method: "POST", headers: { "content-type": "application/json", origin: ORIGIN, host: "site.example", "x-forwarded-for": "203.0.113.9" }, body: big }));
+    expect(response.status).toBe(413);
   });
 
   it("rate limits one client", async () => {

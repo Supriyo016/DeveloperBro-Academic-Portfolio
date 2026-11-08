@@ -43,11 +43,14 @@ export function CodeScene() {
 
 export function AwardScene() {
   return (
-    <Scene viewBox="0 0 480 400" label="A certificate with a seal next to a trophy on a podium.">
+    <Scene viewBox="0 0 480 400" label="A framed certificate with a seal hanging on the wall from a nail, next to a trophy on a podium.">
       <circle cx="240" cy="200" r="176" fill={il.soft} />
       <ellipse cx="240" cy="372" rx="180" ry="11" fill={il.ground} />
-      <g transform="rotate(-5 160 200)">
-        <rect x="60" y="94" width="210" height="150" rx="6" fill={il.paper} stroke={il.line} />
+      <path d="M72 92L165 50 258 92" fill="none" stroke={il.coat2} strokeWidth="2" strokeLinejoin="round" />
+      <circle cx="165" cy="48" r="4" fill={il.coat2} />
+      <g>
+        <rect x="52" y="86" width="226" height="166" rx="8" fill={il.wood} />
+        <rect x="60" y="94" width="210" height="150" rx="4" fill={il.paper} stroke={il.line} />
         <rect x="72" y="106" width="186" height="126" rx="3" fill="none" stroke={il.lavender} strokeWidth="2" />
         <path d="M112 134h106" stroke={il.primary} strokeWidth="6" strokeLinecap="round" />
         <path d="M96 160h138M96 176h138M96 192h86" stroke={il.paper2} strokeWidth="5" strokeLinecap="round" />
@@ -57,12 +60,12 @@ export function AwardScene() {
       <rect x="282" y="306" width="130" height="64" rx="5" fill={il.primary} />
       <rect x="306" y="286" width="82" height="20" rx="4" fill={toon.coat2} />
       <path d="M328 286c2-18 6-26 19-30 13 4 17 12 19 30Z" fill={il.amber} />
-      <Anim kind="il-bob">
+      <g>
         <path d="M302 150h90v42c0 36-24 62-45 66-21-4-45-30-45-66Z" fill={il.amber} />
         <path d="M302 164h-22c0 32 12 48 32 54M392 164h22c0 32-12 48-32 54" fill="none" stroke={il.amber} strokeWidth="9" />
         <path d="M347 176l7 15 16 2-12 11 3 16-14-8-14 8 3-16-12-11 16-2Z" fill={il.paper} className="il-pulse" />
         <path d="M318 160c-2 14 0 28 6 38" fill="none" stroke={il.paper} strokeWidth="4" strokeLinecap="round" opacity="0.45" />
-      </Anim>
+      </g>
       <Sparkle x={290} y={128} size={9} delay={0.2} />
       <Sparkle x={414} y={118} size={7} color={il.cyan} delay={0.9} />
       <Sparkle x={436} y={232} size={6} color={il.primary} delay={1.5} />
@@ -72,31 +75,31 @@ export function AwardScene() {
 
 export function WritingScene() {
   return (
-    <Scene viewBox="0 0 480 400" label="An open notebook with a pen, a desk lamp and a cup of coffee.">
+    <Scene viewBox="0 0 480 400" label="An open notebook with a freshly written line and a pen lying on it, a desk lamp and a cup of coffee on a desk.">
       <circle cx="240" cy="200" r="176" fill={il.soft} />
-      <rect x="44" y="310" width="392" height="14" rx="5" fill={il.wood} />
-      <path d="M86 324h14l-5 54h-6ZM380 324h14l-2 54h-6Z" fill={il.wood} opacity="0.75" />
+      <rect x="28" y="310" width="408" height="14" rx="5" fill={il.wood} />
+      <path d="M70 324h14l-5 54h-6ZM380 324h14l-2 54h-6Z" fill={il.wood} opacity="0.75" />
       <path d="M96 310l22-120c34-16 72-14 104 8 32-22 70-24 104-8l22 120c-36-14-90-14-126 0-36-14-90-14-126 0Z" fill={il.paper} stroke={il.line} />
       <path d="M222 198v112" stroke={il.line} strokeWidth="2" />
-      <g stroke={il.paper2} strokeWidth="5" strokeLinecap="round">
+      <g fill="none" stroke={il.paper2} strokeWidth="5" strokeLinecap="round">
         <path d="M130 220c24-8 48-8 72 0M126 244c26-8 52-8 76 0M122 268c28-8 56-8 80 0" />
         <path d="M242 220c24-8 48-8 72 0M242 244c26-8 52-8 76 0" />
       </g>
       <path d="M248 268c14-20 28 14 42-6s24 12 34 0" fill="none" stroke={il.primary} strokeWidth="3" strokeLinecap="round" pathLength={1} className="il-draw" />
-      <Anim kind="il-write">
-        <g transform="rotate(38 330 230)">
-          <rect x="324" y="176" width="13" height="96" rx="3" fill={il.primary} />
-          <path d="M324 272h13l-6.5 18Z" fill={il.amber} />
-          <rect x="324" y="188" width="13" height="8" fill={il.paper} opacity="0.5" />
-        </g>
-      </Anim>
+      {/* the pen lies on the right-hand page, below the line it just wrote */}
+      <g transform="translate(250 292) rotate(-7)">
+        <rect x="14" y="-5" width="78" height="10" rx="3" fill={il.primary} />
+        <rect x="74" y="-5" width="7" height="10" fill={il.paper} opacity="0.5" />
+        <path d="M14-5L0 0 14 5Z" fill={il.amber} />
+        <path d="M0 0l4-1.4v2.8Z" fill={il.coat} />
+      </g>
       <g>
         <path d="M402 310V180l-48-60" fill="none" stroke={il.coat2} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M330 92l50 12-26 46-44-26Z" fill={il.primary} />
         <path d="M310 124l44 26-90 90Z" fill={il.amber} opacity="0.15" className="il-glow" />
         <rect x="380" y="302" width="44" height="8" rx="3" fill={toon.coat2} />
       </g>
-      <g transform="translate(46 262)">
+      <g transform="translate(32 266)">
         <path d="M0 0h42v34a10 10 0 0 1-10 10H10a10 10 0 0 1-10-10Z" fill={il.cyan} />
         <path d="M42 8h6a9 9 0 0 1 0 18h-6" fill="none" stroke={il.cyan} strokeWidth="4" />
         {[12, 26].map((dx, index) => (
@@ -168,21 +171,23 @@ export function PapersScene() {
 
 export function WorkbenchScene() {
   return (
-    <Scene viewBox="0 0 480 400" label="A laptop showing a website next to an Arduino board with an ultrasonic sensor.">
+    <Scene viewBox="0 0 480 400" label="A coffee mug, a laptop showing a website and an Arduino board with an ultrasonic sensor on a workbench.">
       <circle cx="240" cy="200" r="176" fill={il.soft} />
-      <rect x="40" y="306" width="400" height="14" rx="5" fill={il.wood} />
-      <path d="M80 320h14l-5 56h-6ZM386 320h14l-2 56h-6Z" fill={il.wood} opacity="0.75" />
-      <Mug x={46} y={306} />
-      <rect x="84" y="112" width="208" height="150" rx="10" fill={toon.coat} />
-      <rect x="94" y="122" width="188" height="130" rx="4" fill={il.paper} />
-      <rect x="94" y="122" width="188" height="20" rx="4" fill={toon.lavender} />
-      <rect x="106" y="154" width="70" height="46" rx="4" fill={il.cyanSoft} />
-      <path d="M112 196l18-20 14 12 12-8 16 16Z" fill={il.cyan} />
-      <CodeLines x={188} y={156} widths={[82, 70, 52]} gap={14} />
-      <rect x="106" y="212" width="164" height="28" rx="4" fill={il.soft} />
-      <path d="M66 262h244l14 16H52Z" fill={toon.coat2} />
-      <rect x="52" y="278" width="272" height="8" rx="3" fill={toon.coat} />
-      <g transform="translate(330 214)">
+      <rect x="18" y="306" width="444" height="14" rx="5" fill={il.wood} />
+      <path d="M60 320h14l-5 56h-6ZM408 320h14l-2 56h-6Z" fill={il.wood} opacity="0.75" />
+      <Mug x={24} y={306} />
+      <g transform="translate(20 20)">
+        <rect x="84" y="112" width="208" height="150" rx="10" fill={toon.coat} />
+        <rect x="94" y="122" width="188" height="130" rx="4" fill={il.paper} />
+        <rect x="94" y="122" width="188" height="20" rx="4" fill={toon.lavender} />
+        <rect x="106" y="154" width="70" height="46" rx="4" fill={il.cyanSoft} />
+        <path d="M112 196l18-20 14 12 12-8 16 16Z" fill={il.cyan} />
+        <CodeLines x={188} y={156} widths={[82, 70, 52]} gap={14} />
+        <rect x="106" y="212" width="164" height="28" rx="4" fill={il.soft} />
+        <path d="M66 262h244l14 16H52Z" fill={toon.coat2} />
+        <rect x="52" y="278" width="272" height="8" rx="3" fill={toon.coat} />
+      </g>
+      <g transform="translate(352 220)">
         <rect width="104" height="86" rx="6" fill={il.cyan} />
         <rect x="10" y="10" width="46" height="26" rx="3" fill={toon.coat} />
         <rect x="66" y="10" width="28" height="10" rx="2" fill={il.paper2} />
@@ -190,7 +195,7 @@ export function WorkbenchScene() {
         <path d="M12 54h80M12 72h80" stroke={il.paper} strokeWidth="4" className="il-dash" />
         <circle cx="94" cy="44" r="4" fill={il.amber} className="il-twinkle" />
       </g>
-      <g transform="translate(346 148)">
+      <g transform="translate(368 154)">
         <rect width="72" height="30" rx="4" fill={il.primary} />
         <circle cx="19" cy="15" r="11" fill={il.paper} stroke={il.coat} strokeWidth="3" />
         <circle cx="53" cy="15" r="11" fill={il.paper} stroke={il.coat} strokeWidth="3" />

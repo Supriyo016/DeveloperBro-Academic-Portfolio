@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getGithubSnapshot } from "@/lib/github";
+import { getGithubSnapshot } from "@/services/github";
 
 const repo = {
   name: "TourIndia",

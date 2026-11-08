@@ -17,7 +17,7 @@ const frontmatterSchema = z.object({
   updated: isoDate.optional(),
   category: z.string().min(1),
   tags: z.array(z.string()).min(1),
-  references: z.array(z.object({ text: z.string().min(1), url: z.url() })).default([]),
+  references: z.array(z.object({ text: z.string().min(1), url: z.url({ protocol: /^https?$/ }) })).default([]),
 });
 
 export interface Article extends ArticleMeta {

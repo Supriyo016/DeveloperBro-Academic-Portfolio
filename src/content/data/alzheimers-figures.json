@@ -312,18 +312,6 @@
    }
   }
  },
- "shared": {
-  "class-split": {
-   "src": "/images/research/mtech/class-split.webp",
-   "width": 991,
-   "height": 591
-  },
-  "clients": {
-   "src": "/images/research/mtech/clients.webp",
-   "width": 991,
-   "height": 591
-  }
- },
  "samples": {
   "MildDemented": [
    {

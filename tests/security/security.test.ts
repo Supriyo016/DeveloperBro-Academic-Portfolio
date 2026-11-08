@@ -5,7 +5,8 @@ import { profile } from "@/content/profile";
 import { buildCsp, securityHeaders } from "@/lib/security/headers";
 import { clientKey, createRateLimiter } from "@/lib/security/rate-limit";
 import { isSameOrigin } from "@/lib/security/same-origin";
-import { contactSchema, isHoneypotHit, isTooFast } from "@/lib/validation/contact";
+import { checkFormToken, issueFormToken } from "@/lib/security/form-token";
+import { contactSchema, isHoneypotHit } from "@/lib/validation/contact";
 
 const valid = { name: "Ada Lovelace", email: "ada@example.com", subject: "Collaboration", message: "A message that is long enough to pass." };
 
@@ -36,9 +37,12 @@ describe("contact validation", () => {
   it("flags the honeypot and implausibly fast or missing timing", () => {
     expect(isHoneypotHit({ ...valid, verification_note: "spam" })).toBe(true);
     expect(isHoneypotHit({ ...valid, verification_note: "" })).toBe(false);
-    expect(isTooFast({ ...valid, fillMs: 500 })).toBe(true);
-    expect(isTooFast({ ...valid })).toBe(true);
-    expect(isTooFast({ ...valid, fillMs: 10_000 })).toBe(false);
+    const now = Date.now();
+    expect(checkFormToken(issueFormToken(now - 500), now)).toBe("too-fast");
+    expect(checkFormToken(issueFormToken(now - 10_000), now)).toBe("ok");
+    expect(checkFormToken(issueFormToken(now - 7 * 60 * 60 * 1000), now)).toBe("expired");
+    expect(checkFormToken(`${now - 10_000}.forged`, now)).toBe("invalid");
+    expect(checkFormToken(undefined, now)).toBe("invalid");
   });
 });
 

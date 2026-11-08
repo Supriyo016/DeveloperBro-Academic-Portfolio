@@ -1,11 +1,13 @@
 import { FlaskConical, GraduationCap, Mail } from "lucide-react";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { CollaborationScene } from "@/components/illustrations/scenes-research";
 import { MailScene } from "@/components/illustrations/scenes-objects";
 import { CopyButton } from "@/components/shared/CopyButton";
 import { SocialLinks } from "@/components/shared/SocialLinks";
 import { profile } from "@/content/profile";
+import { issueFormToken } from "@/lib/security/form-token";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -18,7 +20,9 @@ const invitations = [
   { Icon: FlaskConical, title: "Research collaboration", body: "I welcome collaboration on federated learning, medical imaging or model compression." },
 ];
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  // Rendered per request, so every visitor gets a fresh form token.
+  await connection();
   return (
     <div className="container-page pt-12 sm:pt-16">
       <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
@@ -50,7 +54,7 @@ export default function ContactPage() {
             ))}
           </ul>
         </div>
-        <ContactForm />
+        <ContactForm formToken={issueFormToken()} />
       </div>
       <div className="mx-auto mt-10 hidden max-w-2xl grid-cols-2 gap-6 md:grid">
         <CollaborationScene />

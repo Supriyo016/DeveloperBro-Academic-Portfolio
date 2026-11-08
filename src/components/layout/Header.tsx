@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { CalendarPopover } from "@/components/layout/CalendarPopover";
 import { LiveClock } from "@/components/layout/LiveClock";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
@@ -55,6 +56,10 @@ function MobileMenu({ pathname, onClose }: { pathname: string; onClose: () => vo
             ))}
           </ul>
         </nav>
+        <div className="flex items-center justify-between border-t border-line py-4">
+          <span className="text-sm text-muted">Calendar</span>
+          <CalendarPopover up />
+        </div>
         <div className="flex items-center justify-between py-5">
           <span className="text-sm text-muted">Theme</span>
           <ThemeToggle />
@@ -85,7 +90,12 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LiveClock className="hidden min-[400px]:flex" />
+          <div className="hidden items-center gap-1.5 min-[400px]:flex">
+            <LiveClock className="flex" />
+            <span className="hidden sm:block">
+              <CalendarPopover />
+            </span>
+          </div>
           <GlobalSearch />
           <div className="hidden lg:block"><ThemeToggle /></div>
           <button type="button" onClick={() => setMenuOpen(true)} aria-label="Open menu" aria-expanded={menuOpen} className="grid size-10 place-items-center rounded-full border border-line lg:hidden">

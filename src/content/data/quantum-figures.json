@@ -1,0 +1,87 @@
+{
+ "cswap-circuit-basis": {
+  "src": "/images/research/btech/cswap-circuit-basis.webp",
+  "width": 490,
+  "height": 269
+ },
+ "cswap-circuit-psi": {
+  "src": "/images/research/btech/cswap-circuit-psi.webp",
+  "width": 588,
+  "height": 256
+ },
+ "cswap-hardware-psi": {
+  "src": "/images/research/btech/cswap-hardware-psi.webp",
+  "width": 708,
+  "height": 375
+ },
+ "cswap-mitigated-psi": {
+  "src": "/images/research/btech/cswap-mitigated-psi.webp",
+  "width": 1018,
+  "height": 452
+ },
+ "peres-circuit-basis": {
+  "src": "/images/research/btech/peres-circuit-basis.webp",
+  "width": 556,
+  "height": 271
+ },
+ "peres-circuit-psi": {
+  "src": "/images/research/btech/peres-circuit-psi.webp",
+  "width": 588,
+  "height": 233
+ },
+ "peres-hardware-psi": {
+  "src": "/images/research/btech/peres-hardware-psi.webp",
+  "width": 708,
+  "height": 375
+ },
+ "peres-mitigated-psi": {
+  "src": "/images/research/btech/peres-mitigated-psi.webp",
+  "width": 1018,
+  "height": 452
+ },
+ "cnot-circuit-10": {
+  "src": "/images/research/btech/cnot-circuit-10.webp",
+  "width": 498,
+  "height": 238
+ },
+ "cnot-hardware-10": {
+  "src": "/images/research/btech/cnot-hardware-10.webp",
+  "width": 571,
+  "height": 455
+ },
+ "cswap-lagos-101": {
+  "src": "/images/research/btech/cswap-lagos-101.webp",
+  "width": 950,
+  "height": 393
+ },
+ "peres-lagos-110": {
+  "src": "/images/research/btech/peres-lagos-110.webp",
+  "width": 950,
+  "height": 393
+ },
+ "ccnot-circuit-psi": {
+  "src": "/images/research/btech/ccnot-circuit-psi.webp",
+  "width": 627,
+  "height": 303
+ },
+ "ccnot-simulator-psi": {
+  "src": "/images/research/btech/ccnot-simulator-psi.webp",
+  "width": 633,
+  "height": 455
+ },
+ "ccnot-hardware-psi": {
+  "src": "/images/research/btech/ccnot-hardware-psi.webp",
+  "width": 633,
+  "height": 461
+ },
+ "ccnot-calibration": {
+  "src": "/images/research/btech/ccnot-calibration.webp",
+  "width": 520,
+  "height": 438
+ },
+ "ccnot-mitigated-psi": {
+  "src": "/images/research/btech/ccnot-mitigated-psi.webp",
+  "width": 850,
+  "height": 456
+ }
+}

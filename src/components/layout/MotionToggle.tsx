@@ -2,7 +2,7 @@
 
 import { Pause, Play } from "lucide-react";
 import { useSyncExternalStore } from "react";
-import { canRemember } from "@/lib/consent";
+import { canRemember, STORAGE_KEYS } from "@/lib/consent";
 
 // Lets any visitor stop all moving content (WCAG 2.2.2 Pause, Stop, Hide). The choice is remembered.
 const EVENT = "motionchange";
@@ -20,8 +20,8 @@ export function MotionToggle() {
     if (next) document.documentElement.dataset.motion = "paused";
     else delete document.documentElement.dataset.motion;
     try {
-      if (next && canRemember()) localStorage.setItem("motion", "paused");
-      else localStorage.removeItem("motion");
+      if (next && canRemember()) localStorage.setItem(STORAGE_KEYS.motion, "paused");
+      else localStorage.removeItem(STORAGE_KEYS.motion);
     } catch {
       // Storage can be blocked. The choice still applies on this page.
     }

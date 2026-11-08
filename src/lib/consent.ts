@@ -3,17 +3,24 @@
 // bookmarks, this tab's chat). With "essential", those stay for the current page view only and are cleared.
 
 export const CONSENT_COOKIE = "dbro_consent";
-export const CONSENT_EVENT = "consentchange";
+const CONSENT_EVENT = "consentchange";
 export const OPEN_SETTINGS_EVENT = "open-cookie-settings";
 const MAX_AGE = 60 * 60 * 24 * 180;
 
 export type Consent = "all" | "essential";
 
+export const STORAGE_KEYS = {
+  theme: "theme",
+  motion: "motion",
+  bookmarks: "bookmarked-articles",
+  chat: "assistant-chat-v1",
+} as const;
+
 export const storedPreferences = [
-  { key: "theme", store: "localStorage", purpose: "Remembers light or dark theme if you chose one", lifetime: "Until you clear it" },
-  { key: "motion", store: "localStorage", purpose: "Remembers that you paused animations", lifetime: "Until you clear it" },
-  { key: "bookmarked-articles", store: "localStorage", purpose: "Research notes you bookmarked", lifetime: "Until you clear it" },
-  { key: "assistant-chat-v1", store: "sessionStorage", purpose: "Your conversation with Bro in this tab", lifetime: "Until the tab closes" },
+  { key: STORAGE_KEYS.theme, store: "localStorage", purpose: "Remembers light or dark theme if you chose one", lifetime: "Until you clear it" },
+  { key: STORAGE_KEYS.motion, store: "localStorage", purpose: "Remembers that you paused animations", lifetime: "Until you clear it" },
+  { key: STORAGE_KEYS.bookmarks, store: "localStorage", purpose: "Research notes you bookmarked", lifetime: "Until you clear it" },
+  { key: STORAGE_KEYS.chat, store: "sessionStorage", purpose: "Your conversation with Bro in this tab", lifetime: "Until the tab closes" },
 ] as const;
 
 export function readConsent(): Consent | null {
@@ -22,9 +29,14 @@ export function readConsent(): Consent | null {
   return (match?.[1] as Consent | undefined) ?? null;
 }
 
-/** Preferences may be stored unless the visitor chose essential only. */
+/** Preferences are stored only after the visitor allows them. */
 export function canRemember(): boolean {
-  return readConsent() !== "essential";
+  return readConsent() === "all";
+}
+
+/** True when the visitor asked for less motion, in the system settings or with the site's pause switch. */
+export function isCalm(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.dataset.motion === "paused";
 }
 
 export function writeConsent(value: Consent) {

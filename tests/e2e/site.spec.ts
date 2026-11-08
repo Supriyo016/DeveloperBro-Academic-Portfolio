@@ -269,7 +269,7 @@ test.describe("research depth", () => {
   test("research explorer filters by status, and proposed work is labelled", async ({ page }) => {
     await page.goto("/research");
     await page.getByRole("button", { name: "More filters" }).click();
-    await page.getByLabel("Status").selectOption("Completed");
+    await page.getByRole("combobox", { name: /^Status/ }).selectOption("Completed");
     await expect(page.getByText("2 results", { exact: true })).toBeVisible();
     await expect(page.locator("#proposed").getByText("Proposed", { exact: true }).first()).toBeVisible();
   });
@@ -395,7 +395,7 @@ test.describe("contact form", () => {
     await page.getByRole("textbox", { name: "Email" }).fill("visitor@example.com");
     await page.getByLabel("Subject").fill("Collaboration");
     await page.getByLabel("Message").fill("I would like to talk about federated learning.");
-    await page.waitForTimeout(2700);
+    await page.waitForTimeout(3200);
     await page.getByRole("button", { name: "Send message" }).click();
     await expect(page.getByText("not available right now")).toBeVisible();
     await expect(page.getByRole("link", { name: "Email me directly" })).toBeVisible();

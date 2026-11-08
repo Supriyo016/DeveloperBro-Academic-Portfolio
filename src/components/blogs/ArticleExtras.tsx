@@ -4,9 +4,9 @@ import { Bookmark, BookmarkCheck, Glasses, Share2 } from "lucide-react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { CopyButton } from "@/components/shared/CopyButton";
 import { useScrollFrame } from "@/hooks/useScrollFrame";
-import { canRemember } from "@/lib/consent";
+import { canRemember, STORAGE_KEYS } from "@/lib/consent";
 
-const BOOKMARKS_KEY = "bookmarked-articles";
+const BOOKMARKS_KEY = STORAGE_KEYS.bookmarks;
 // With "essential only" cookies, bookmarks live in memory for this page view instead of in storage.
 let memoryBookmarks: string[] = [];
 

@@ -65,8 +65,12 @@ describe("content claims", () => {
 
   it("does not claim real hardware or measured costs without evidence", () => {
     const text = JSON.stringify(studies).toLowerCase();
-    expect(text).not.toContain("real ibm");
-    expect(text).not.toContain("quantum hardware");
+    // Only the B.Tech study ran on IBM hardware, and its notebooks name the backends.
+    const others = JSON.stringify(studies.filter((study) => study.slug !== "quantum-gate-assessment")).toLowerCase();
+    expect(others).not.toContain("real ibm");
+    expect(others).not.toContain("quantum hardware");
+    const quantum = JSON.stringify(studies.find((study) => study.slug === "quantum-gate-assessment")).toLowerCase();
+    for (const backend of ["ibm_perth", "ibm_lagos", "ibmq_quito"]) expect(quantum).toContain(backend);
     expect(text).not.toContain("anova");
     expect(text).not.toMatch(/p\s*<\s*0\.0/);
   });

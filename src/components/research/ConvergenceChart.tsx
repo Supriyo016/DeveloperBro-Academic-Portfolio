@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { ExperimentRun } from "@/content/data/alzheimers";
 import { cn, formatPercent } from "@/lib/utils";
-import { useWidth } from "./useWidth";
+import { useWidth } from "@/hooks/useWidth";
 
 const HEIGHT = 300;
 const margin = { top: 14, right: 16, bottom: 38, left: 42 };

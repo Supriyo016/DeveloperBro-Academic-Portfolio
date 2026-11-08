@@ -1,4 +1,5 @@
-import { Anim, Books, Head, il, Mug, Plant, Scene, Sparkle, toon } from "./base";
+import { Anim, Books, Head, il, Mug, Plant, Scene, Sparkle } from "./base";
+import { Arm, LaptopBack, OfficeChair, SeatedLegs, SHOULDER_L, SHOULDER_R, Torso } from "./body";
 
 const server = { x: 320, y: 96 };
 
@@ -39,7 +40,7 @@ export function HeroScene() {
   return (
     <Scene
       viewBox="0 0 640 590"
-      label="A researcher at a laptop. Four hospital clients with different class mixes exchange model updates with a central aggregator."
+      label="A bearded researcher with glasses typing at a laptop on his desk. Four hospital clients with different class mixes exchange model updates with a central aggregator."
     >
       <circle cx="320" cy="310" r="262" fill={il.soft} />
       <ellipse cx="320" cy="566" rx="240" ry="14" fill={il.ground} />
@@ -79,47 +80,40 @@ export function HeroScene() {
         </text>
       </g>
 
-      <path d="M268 484h44l-4 74h-34ZM328 484h44l-6 74h-34Z" fill={toon.coat2} />
-      <path d="M262 566c0-8 8-10 18-10h28v10ZM332 566v-10h28c10 0 18 2 18 10Z" fill={il.hair} />
-
-      <Anim kind="il-breathe" origin="320 470">
-        <path d="M212 470c6-62 34-92 74-100h68c40 8 68 38 74 100Z" fill={toon.coat} />
-        <path d="M296 370l24 62 24-62-24 12Z" fill={toon.shirt} />
-        <path d="M313 380h14l-3 12 6 40-10 12-10-12 6-40Z" fill={il.primary} />
-        <path d="M296 370l-14 22 26 42 12-2ZM344 370l14 22-26 42-12-2Z" fill={toon.coat2} />
-        <path d="M302 330h36v44c-10 12-26 12-36 0Z" fill={toon.skinShade} />
-        <Head x={320} y={284} scale={1.4} beard />
-      </Anim>
-
-      <rect x="124" y="470" width="392" height="14" rx="5" fill={il.wood} />
-      <path d="M152 484h16l-8 82h-8ZM472 484h16l0 82h-8Z" fill={il.wood} opacity="0.75" />
-
-      <g>
-        <path d="M250 382a8 8 0 0 1 8-8h124a8 8 0 0 1 8 8v82H250Z" fill={il.paper2} />
-        <path d="M232 464h176l6 6H226Z" fill={il.line} />
-        <g transform="translate(320 420)">
-          <g className="il-spin">
-          <circle r="5" fill={il.primary} />
-          {[0, 72, 144, 216, 288].map((angle) => (
-            <g key={angle} transform={`rotate(${angle})`}>
-              <line y1="-5" y2="-19" stroke={il.primary} strokeWidth="1.5" />
-              <circle cy="-20" r="3" fill={il.cyan} />
-            </g>
-          ))}
-          </g>
-        </g>
-        <Anim kind="il-type" origin="286 466">
-          <path d="M266 470c4-10 14-14 26-12l6 10c-10 4-22 6-32 2Z" fill={toon.skin} />
-          <path d="M276 462l4 6M284 460l3 7M292 460l2 7" stroke={il.skinShade} strokeWidth="1.5" strokeLinecap="round" />
-        </Anim>
-        <Anim kind="il-type-late" origin="354 466">
-          <path d="M374 470c-4-10-14-14-26-12l-6 10c10 4 22 6 32 2Z" fill={toon.skin} />
-          <path d="M364 462l-4 6M356 460l-3 7M348 460l-2 7" stroke={il.skinShade} strokeWidth="1.5" strokeLinecap="round" />
+      {/* The researcher sits behind his desk, typing. The laptop faces him, so we see the back of its lid. */}
+      <g transform="translate(320 546) scale(1.25)">
+        <OfficeChair seat={-92} floor={16} />
+        <SeatedLegs knee={-84} floor={16} />
+        <Anim kind="il-breathe" origin="0 -96">
+          <Torso outfit="jacket" />
+          <Arm shoulder={SHOULDER_R} elbow={[-66, -118]} wrist={[-34, -105]} pose="none" foreKind="il-type" />
+          <Arm shoulder={SHOULDER_L} elbow={[66, -118]} wrist={[34, -105]} pose="none" foreKind="il-type-late" />
+          <Head x={0} y={-230} beard glasses />
         </Anim>
       </g>
 
-      <Books x={140} y={470} />
-      <Mug x={446} y={470} />
+      <rect x="124" y="415" width="392" height="14" rx="5" fill={il.wood} />
+      <path d="M152 429h16l-6 137h-6ZM472 429h16l-2 137h-8Z" fill={il.wood} opacity="0.75" />
+
+      <LaptopBack
+        x={320}
+        y={415}
+        width={124}
+        logo={
+          <g className="il-spin">
+            <circle r="5" fill={il.primary} />
+            {[0, 72, 144, 216, 288].map((angle) => (
+              <g key={angle} transform={`rotate(${angle})`}>
+                <line y1="-5" y2="-17" stroke={il.primary} strokeWidth="1.5" />
+                <circle cy="-18" r="3" fill={il.cyan} />
+              </g>
+            ))}
+          </g>
+        }
+      />
+
+      <Books x={150} y={415} />
+      <Mug x={448} y={415} />
       <Sparkle x={86} y={92} size={9} delay={0.2} />
       <Sparkle x={572} y={330} size={7} color={il.cyan} delay={1.1} />
       <Sparkle x={604} y={106} size={6} color={il.primary} delay={0.6} />
