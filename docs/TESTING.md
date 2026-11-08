@@ -102,3 +102,9 @@ Local production build. Type check, lint and MDX check pass. 73 of 73 unit tests
 contrast on the active MRI class tab and inactive model cards, and the 375 px overflow test exceeding its timeout
 across 23 routes; its timeout is now 150 s). `npm audit --omit=dev` reports 0 vulnerabilities. Deployed by pushing
 commit 48a6cc6; on the live site the 14 feature tests pass, new pages return 200 and the old distillation URL redirects (308).
+
+## 8 November 2026, round 3 (commit 05dfbc3)
+
+Local: type check, lint, MDX check, 75 of 75 unit tests, production build, 128 browser tests (one flaky contrast
+scan caught a section mid-fade; the axe scans now run with reduced motion and all 46 pass). Independent illustration
+review: 20 defects on the first pass, all fixed, second pass PASS. Live site: 17 of 17 feature tests pass.
