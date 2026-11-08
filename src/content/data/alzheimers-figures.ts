@@ -14,7 +14,6 @@ export type BackboneFigureKind = "cv" | "compare-f1" | "compare-curves" | "compa
 
 export const runFigures = figures.runs as Record<string, Partial<Record<RunFigureKind, Img>>>;
 export const backboneFigures = figures.backbones as Record<string, Record<BackboneFigureKind, Img>>;
-export const sharedFigures = figures.shared as Record<"class-split" | "clients", Img>;
 export const mriSamples = figures.samples as Record<ClassName, (Img & { split: string })[]>;
 
 export const runKey = (backbone: string, algorithm: string) => `${backbone}-${algorithm.toLowerCase()}`;

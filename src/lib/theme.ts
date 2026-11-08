@@ -1,8 +1,8 @@
-import { canRemember } from "@/lib/consent";
+import { canRemember, STORAGE_KEYS } from "@/lib/consent";
 
 export type ThemePreference = "light" | "dark" | "system";
 
-export const THEME_STORAGE_KEY = "theme";
+const THEME_STORAGE_KEY = STORAGE_KEYS.theme;
 
 export const themeInitScript = `(function(){var d=document.documentElement;d.classList.add('js');setTimeout(function(){if(!d.dataset.ready)d.classList.remove('js')},4000);try{var t=localStorage.getItem('${THEME_STORAGE_KEY}');d.dataset.theme=t==='light'||t==='dark'?t:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){d.dataset.theme='light'}try{if(localStorage.getItem('motion')==='paused')d.dataset.motion='paused'}catch(e){}})()`;
 

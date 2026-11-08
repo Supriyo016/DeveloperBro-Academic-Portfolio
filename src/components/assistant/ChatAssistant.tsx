@@ -6,14 +6,14 @@ import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from 
 import { initialState, respond, welcome, type BotReply, type ChatState } from "@/lib/assistant/engine";
 import type { Knowledge } from "@/lib/assistant/knowledge";
 import { cn } from "@/lib/utils";
-import { canRemember } from "@/lib/consent";
+import { canRemember, isCalm, STORAGE_KEYS } from "@/lib/consent";
 
 interface Message extends BotReply {
   id: number;
   from: "bot" | "visitor";
 }
 
-const STORAGE_KEY = "assistant-chat-v1";
+const STORAGE_KEY = STORAGE_KEYS.chat;
 const MAX_LENGTH = 300;
 
 function RobotFace({ mood = "happy", className }: { mood?: BotReply["mood"]; className?: string }) {
@@ -126,7 +126,7 @@ export function ChatAssistant({ knowledge }: { knowledge: Knowledge }) {
     setTyping(true);
     setMood("thinking");
     const { reply, state: nextState } = respond(clean, state, knowledge);
-    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const calm = isCalm();
     const delay = calm ? 150 : Math.min(450 + reply.text.join(" ").length * 6, 1600);
     timer.current = setTimeout(() => {
       setTyping(false);

@@ -14,6 +14,11 @@ import { StudyHero } from "@/components/research/StudyHero";
 import { PipelineViewer } from "@/components/research/PipelineViewer";
 import { ResultsExplorer } from "@/components/research/ResultsExplorer";
 import { ComparisonTable } from "@/components/research/ComparisonTable";
+import { GateLab } from "@/components/research/quantum/GateLab";
+import { MeasurementExplorer } from "@/components/research/quantum/MeasurementExplorer";
+import { BasisHeatmap, SuperpositionSummary } from "@/components/research/quantum/MetricsSummary";
+import { QuantumGallery } from "@/components/research/quantum/QuantumGallery";
+import { SuperpositionExplainer } from "@/components/research/quantum/SuperpositionExplainer";
 import { CopyButton } from "@/components/shared/CopyButton";
 import { ArrowLink, Badge, ExternalLink } from "@/components/ui/primitives";
 import { profile } from "@/content/profile";
@@ -57,6 +62,7 @@ export default async function StudyPage({ params }: Props) {
   if (!study) notFound();
 
   const interactive = study.slug === "federated-alzheimers-detection";
+  const quantum = study.slug === "quantum-gate-assessment";
   const sections = [
     study.motivation && ["motivation", "Motivation"],
     study.problem && ["problem", "Problem statement"],
@@ -67,9 +73,13 @@ export default async function StudyPage({ params }: Props) {
     study.models && ["models", "Models and algorithms"],
     interactive && ["architecture", "System architecture"],
     interactive && ["samples", "MRI samples and feature maps"],
+    quantum && ["gates", "Gates and circuits"],
     study.setup && ["setup", "Experimental setup"],
     study.metrics && ["metrics", "Evaluation metrics"],
     interactive && ["results", "Results"],
+    quantum && ["superposition", "Superposition input"],
+    quantum && ["results", "Results"],
+    quantum && ["figures", "Figures"],
     interactive && ["comparison", "Comparative analysis"],
     study.conclusions && ["conclusions", "Conclusions"],
     study.contributions && ["contributions", "Contributions"],
@@ -265,6 +275,16 @@ export default async function StudyPage({ params }: Props) {
             </Block>
           )}
 
+          {quantum && (
+            <Block id="gates" title="Gates and circuits">
+              <p>
+                The four gates in the project, drawn from the same operations the notebooks build in Qiskit. Pick an input in the truth table to redraw the circuit; the right-hand columns give the share of
+                shots that reached the expected output on IBM hardware.
+              </p>
+              <GateLab />
+            </Block>
+          )}
+
           {study.setup && (
             <Block id="setup" title="Experimental setup">
               <dl className="divide-y divide-line border-y border-line text-[0.95rem]">
@@ -296,6 +316,35 @@ export default async function StudyPage({ params }: Props) {
                   </div>
                 </div>
               )}
+            </Block>
+          )}
+
+          {quantum && (
+            <Block id="superposition" title="Superposition input">
+              <SuperpositionExplainer />
+            </Block>
+          )}
+
+          {quantum && (
+            <Block id="results" title="Results">
+              <p>Choose a gate and an input to compare the simulator with raw and mitigated IBM hardware. Every bar is a mean over the saved runs; the table view lists the same numbers.</p>
+              <MeasurementExplorer />
+              <BasisHeatmap />
+              <SuperpositionSummary />
+              {study.findings && (
+                <div>
+                  <h3 className="text-2xl text-ink">What the results show</h3>
+                  <div className="mt-3">
+                    <Bullets items={study.findings} />
+                  </div>
+                </div>
+              )}
+            </Block>
+          )}
+
+          {quantum && (
+            <Block id="figures" title="Figures">
+              <QuantumGallery />
             </Block>
           )}
 

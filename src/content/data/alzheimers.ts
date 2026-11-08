@@ -46,16 +46,6 @@ export const clientDistribution: { client: string; counts: Record<ClassName, num
   { client: "Client 5", counts: { MildDemented: 833, ModerateDemented: 802, NonDemented: 4086, VeryMildDemented: 5480 } },
 ];
 
-export const customCnnStages = [
-  { stage: "Input", layers: "MRI slice, three channels", output: "64 × 64 × 3", channels: 3 },
-  { stage: "Block 1", layers: "Conv 3×3 (32), GroupNorm (8 groups), GELU, MaxPool", output: "32 × 32 × 32", channels: 32 },
-  { stage: "Block 2", layers: "Conv 3×3 (64), GroupNorm (16 groups), GELU, MaxPool", output: "16 × 16 × 64", channels: 64 },
-  { stage: "Block 3", layers: "Conv 3×3 (128), GroupNorm (32 groups), GELU, MaxPool", output: "8 × 8 × 128", channels: 128 },
-  { stage: "Block 4", layers: "Conv 3×3 (256), GroupNorm (32 groups), GELU, MaxPool", output: "4 × 4 × 256", channels: 256 },
-  { stage: "Block 5", layers: "Conv 3×3 (512), GroupNorm (32 groups), GELU, adaptive average pooling", output: "1 × 1 × 512", channels: 512 },
-  { stage: "Head", layers: "Dropout 0.4, Linear 512 → 1944, GELU", output: "1944", channels: 512 },
-  { stage: "Classifier", layers: "Dropout 0.4, Linear 1944 → 4", output: "4 class logits", channels: 4 },
-];
 
 export interface PipelineStep {
   title: string;

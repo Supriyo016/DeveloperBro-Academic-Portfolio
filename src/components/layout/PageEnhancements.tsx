@@ -3,6 +3,7 @@
 import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useScrollFrame } from "@/hooks/useScrollFrame";
+import { isCalm } from "@/lib/consent";
 import { cn } from "@/lib/utils";
 
 const MAGNET_RANGE = 8;
@@ -19,7 +20,7 @@ export function PageEnhancements() {
 
   useEffect(() => {
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const calm = isCalm();
     if (!finePointer || calm) return;
 
     const onMove = (event: PointerEvent) => {

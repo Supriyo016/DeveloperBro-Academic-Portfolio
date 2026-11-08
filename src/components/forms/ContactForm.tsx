@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle2, CircleAlert, Loader2 } from "lucide-react";
-import { useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/primitives";
 import { profile } from "@/content/profile";
 import { contactSchema } from "@/lib/validation/contact";
@@ -30,21 +30,15 @@ function Text({ name, label, error, ...props }: { name: Field; label: string; er
   );
 }
 
-export function ContactForm() {
+export function ContactForm({ formToken }: { formToken: string }) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
-  const startedAt = useRef<number | undefined>(undefined);
-
-  const onFocus = () => {
-    startedAt.current ??= Date.now();
-  };
-
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
-    const payload = { ...data, fillMs: startedAt.current === undefined ? undefined : Math.max(0, Date.now() - startedAt.current) };
+    const payload = { ...data, formToken };
 
     const parsed = contactSchema.safeParse(payload);
     if (!parsed.success) {
@@ -70,7 +64,6 @@ export function ContactForm() {
       const body = (await response.json()) as { error?: string; fieldErrors?: Partial<Record<Field, string>> };
       if (response.ok) {
         form.reset();
-        startedAt.current = undefined;
         setStatus("sent");
         setMessage("Thank you. Your message has been sent, and I will reply by email.");
         return;
@@ -85,7 +78,7 @@ export function ContactForm() {
   };
 
   return (
-    <form onSubmit={onSubmit} onFocus={onFocus} noValidate className="card space-y-4 p-5 sm:p-7">
+    <form onSubmit={onSubmit} noValidate className="card space-y-4 p-5 sm:p-7">
       <div className="grid gap-4 sm:grid-cols-2">
         <Text name="name" label="Name" autoComplete="name" error={errors.name} />
         <Text name="email" label="Email" type="email" autoComplete="email" error={errors.email} />

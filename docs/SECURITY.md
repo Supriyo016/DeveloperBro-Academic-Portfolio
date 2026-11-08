@@ -64,3 +64,15 @@ The contact form stores nothing and logs no message content.
 ## Dependency upkeep
 
 Run `npm audit --omit=dev` before each release, and update Next.js promptly when security releases appear.
+
+## Contact form abuse controls (8 November 2026)
+
+- The contact page issues a signed timestamp (`src/lib/security/form-token.ts`, HMAC-SHA256 with `CONTACT_FORM_SECRET`
+  or `RESEND_API_KEY`). The route accepts a message only if the token is genuine, at least 3 seconds old and under
+  6 hours old, so a script cannot fake "time spent filling the form".
+- The body is read as a stream and abandoned at 16 KB, even without a `Content-Length` header.
+- Per-IP limit of 5 an hour and a ceiling of 40 messages a day per server instance.
+- These limits are per serverless instance. For a hard limit across instances, add a Vercel Firewall rate-limit rule
+  on `/api/contact` (for example 5 requests per 10 minutes per IP) in the Vercel dashboard.
+- Link URLs in article front matter and GitHub data must be http or https.
+- Preferences are stored in the browser only after the visitor allows them in the cookie notice.

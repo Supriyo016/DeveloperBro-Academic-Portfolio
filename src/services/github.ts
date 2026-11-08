@@ -14,7 +14,7 @@ const userSchema = z.object({
 
 const repoSchema = z.object({
   name: z.string(),
-  html_url: z.url(),
+  html_url: z.url({ protocol: /^https?$/ }),
   description: z.string().nullable(),
   language: z.string().nullable(),
   stargazers_count: z.number().int().nonnegative(),

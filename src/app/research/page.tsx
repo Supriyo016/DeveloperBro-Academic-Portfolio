@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ResearcherStory } from "@/components/illustrations/ResearcherStory";
+import { CaseStudies } from "@/components/research/CaseStudies";
 import { InterestExplorer } from "@/components/research/InterestExplorer";
 import { ResearchExplorer, type ExplorerItem } from "@/components/research/ResearchExplorer";
 import { ResearchMap } from "@/components/research/ResearchMap";
-import { Badge, PageHeader, Reveal, SectionHeading } from "@/components/ui/primitives";
+import { Badge, PageHeader, SectionHeading } from "@/components/ui/primitives";
 import { proposedResearch, studies } from "@/content/research";
 import { researchAreas } from "@/content/research-areas";
 import { getArticleMetas } from "@/lib/articles";
+import { byRecency } from "@/lib/research-order";
 import { resolveWork } from "@/lib/work";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 function explorerItems(): ExplorerItem[] {
-  const fromStudies = studies.map((study) => ({
+  const fromStudies = byRecency(studies).map((study) => ({
     title: study.shortTitle,
     href: `/research/${study.slug}`,
     kind: study.kind,
@@ -55,28 +56,9 @@ export default function ResearchPage() {
 
       <section className="container-page" aria-labelledby="studies-title">
         <SectionHeading id="studies-title" eyebrow="Case studies" title="Research works" />
-        <ul className="mt-6 grid gap-4">
-          {studies.map((study, index) => (
-            <Reveal as="li" key={study.slug} delay={index * 80}>
-              <Link
-                href={`/research/${study.slug}`}
-                className="case-card group card card-lift relative grid gap-3 overflow-hidden p-5 sm:grid-cols-[8.5rem_1fr_auto] sm:items-start sm:gap-6 sm:p-6"
-                data-status={study.status === "In progress" ? "ongoing" : "done"}
-              >
-                <span className="font-mono text-sm text-muted">{study.period}</span>
-                <span>
-                  <span className="block text-sm font-medium text-accent">{study.kind}</span>
-                  <span className="mt-1 block font-serif text-xl leading-snug transition-colors group-hover:text-primary sm:text-2xl">{study.title}</span>
-                  <span className="mt-2 line-clamp-2 text-[0.95rem] text-ink-2">{study.abstract}</span>
-                </span>
-                <Badge tone={study.status === "In progress" ? "accent" : "ok"} className="w-fit">
-                  {study.status === "In progress" && <span className="mr-1.5 inline-block size-1.5 animate-pulse rounded-full bg-current align-middle" aria-hidden />}
-                  {study.status === "In progress" ? "Ongoing" : study.status}
-                </Badge>
-              </Link>
-            </Reveal>
-          ))}
-        </ul>
+        <CaseStudies
+          studies={byRecency(studies).map(({ slug, title, kind, period, status, abstract, domains }) => ({ slug, title, kind, period, status, abstract, domains }))}
+        />
       </section>
 
       <section className="container-page pt-16" aria-labelledby="map-title">

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { headers } from "next/headers";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { ChatAssistant } from "@/components/assistant/ChatAssistant";
 import { ToonDefs } from "@/components/illustrations/base";
 import { AmbientBackground } from "@/components/layout/AmbientBackground";
@@ -9,14 +9,16 @@ import { CookieNotice } from "@/components/layout/CookieNotice";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { MotionScheduler } from "@/components/layout/MotionScheduler";
+import { NavigationProgress } from "@/components/layout/NavigationProgress";
 import { PageEnhancements } from "@/components/layout/PageEnhancements";
 import { RevealObserver } from "@/components/layout/RevealObserver";
-import { themeInitScript } from "@/components/theme/theme";
+import { themeInitScript } from "@/lib/theme";
 import { profile } from "@/content/profile";
 import { getArticleMetas } from "@/lib/articles";
 import { buildKnowledge } from "@/lib/assistant/knowledge";
 import { rssAlternate, siteUrl } from "@/lib/site";
 import "./globals.css";
+import "./toon.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap", preload: false });
@@ -60,6 +62,15 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         </a>
         <ToonDefs />
         <span className="scroll-progress" aria-hidden="true" />
+        {/* Shown only if the page takes a while to become interactive, e.g. on a slow connection */}
+        <div className="boot-loader" aria-hidden="true">
+          <span className="boot-orbit">
+            <span />
+            <span />
+            <span />
+          </span>
+          <span className="boot-text">Loading DeveloperBro.</span>
+        </div>
         <AmbientBackground />
         <div className="site-layer flex min-h-dvh flex-col">
           <Header />
@@ -68,6 +79,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           </main>
           <Footer />
         </div>
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
         <RevealObserver />
         <PageEnhancements />
         <MotionScheduler />

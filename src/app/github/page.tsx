@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { CodeScene } from "@/components/illustrations/scenes-objects";
 import { Badge, ExternalLink, PageHeader } from "@/components/ui/primitives";
 import { profile } from "@/content/profile";
-import { getGithubSnapshot } from "@/lib/github";
+import { getGithubSnapshot } from "@/services/github";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {

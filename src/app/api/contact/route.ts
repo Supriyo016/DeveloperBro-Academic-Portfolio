@@ -1,11 +1,33 @@
 import { NextResponse } from "next/server";
 import { clientKey, createRateLimiter } from "@/lib/security/rate-limit";
+import { checkFormToken } from "@/lib/security/form-token";
 import { isSameOrigin } from "@/lib/security/same-origin";
-import { contactSchema, isHoneypotHit, isTooFast } from "@/lib/validation/contact";
+import { contactSchema, isHoneypotHit } from "@/lib/validation/contact";
 import { sendContactEmail } from "@/services/email";
 
 const MAX_BODY_BYTES = 16 * 1024;
 const checkLimit = createRateLimiter({ limit: 5, windowMs: 60 * 60 * 1000 });
+// A ceiling on all messages per instance per day, so a flood cannot exhaust the email quota.
+const checkDaily = createRateLimiter({ limit: 40, windowMs: 24 * 60 * 60 * 1000 });
+
+/** Reads the body, stopping as soon as it passes the size limit. Returns null if it is too large. */
+async function readLimited(request: Request): Promise<string | null> {
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > MAX_BODY_BYTES) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+  return new TextDecoder().decode(Buffer.concat(chunks));
+}
 
 const reply = (status: number, body: Record<string, unknown>, headers?: HeadersInit) =>
   NextResponse.json(body, { status, headers: { "Cache-Control": "no-store", ...headers } });
@@ -25,13 +47,13 @@ export async function POST(request: Request) {
     return reply(429, { error: "Too many messages. Please try again later." }, { "Retry-After": String(limit.retryAfterSeconds) });
   }
 
-  let raw: string;
+  let raw: string | null;
   try {
-    raw = await request.text();
+    raw = await readLimited(request);
   } catch {
     return reply(400, { error: "Could not read the request." });
   }
-  if (new TextEncoder().encode(raw).length > MAX_BODY_BYTES) return reply(413, { error: "Message is too large." });
+  if (raw === null) return reply(413, { error: "Message is too large." });
 
   let json: unknown;
   try {
@@ -51,7 +73,10 @@ export async function POST(request: Request) {
   }
 
   if (isHoneypotHit(parsed.data)) return reply(200, { ok: true });
-  if (isTooFast(parsed.data)) return reply(429, { error: "That was very quick. Please wait a moment and send it again." });
+  const token = checkFormToken(parsed.data.formToken);
+  if (token === "too-fast") return reply(429, { error: "That was very quick. Please wait a moment and send it again." });
+  if (token !== "ok") return reply(400, { error: "This form has expired. Please reload the page and try again." });
+  if (!checkDaily("all").allowed) return reply(429, { error: "The inbox is busy today. Please use email instead." });
 
   const outcome = await sendContactEmail(parsed.data);
   if (outcome === "sent") return reply(200, { ok: true });

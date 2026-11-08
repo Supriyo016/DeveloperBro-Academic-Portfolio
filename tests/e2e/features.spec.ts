@@ -156,7 +156,7 @@ test.describe("new research features", () => {
     await expect(list).toContainText("Privacy-Preserving Alzheimer's Disease Detection for Non-IID MRI Data: A Comparative Analysis of Federated Learning Algorithms under Homomorphic Encryption");
     await expect(list).toContainText("Knowledge Distillation for CKKS-Secured Federated Learning");
     await expect(list).toContainText("Ongoing");
-    await expect(page.getByRole("img", { name: /animated researcher/ })).toBeVisible();
+    await expect(page.getByRole("img", { name: /animated .*researcher/ })).toBeVisible();
   });
 
   test("the explorer starts short and grows on request", async ({ page }) => {
@@ -187,5 +187,43 @@ test.describe("new research features", () => {
     await expect(page.getByRole("heading", { name: "Inside the Custom CNN" })).toBeVisible();
     await page.getByRole("button", { name: "Show all layers" }).click();
     await expect(page.getByRole("cell", { name: "2,575,764" }).first()).toBeVisible();
+  });
+});
+
+test.describe("case studies, calendar and replayed animations", () => {
+  test("case studies are newest first and can be filtered", async ({ page }) => {
+    await page.goto("/research");
+    const section = page.locator("#studies-title").locator("xpath=ancestor::section[1]");
+    const periods = await section.locator("ul li a > span.font-mono").allTextContents();
+    expect(periods).toEqual(["2026 – present", "2024 – 2026", "2023 – 2024"]);
+    await section.getByRole("group", { name: "Case studies by status" }).getByRole("button", { name: "Completed" }).click();
+    await expect(section.getByText("2 research works, newest first")).toBeVisible();
+    await section.getByRole("group", { name: "Case studies by type" }).getByRole("button", { name: "B.Tech dissertation" }).click();
+    await expect(section.getByText("1 research work, newest first")).toBeVisible();
+    await section.getByRole("group", { name: "Case studies by status" }).getByRole("button", { name: "Ongoing" }).click();
+    await expect(section.getByText("No research work matches those filters.")).toBeVisible();
+  });
+
+  test("the calendar opens beside the clock and marks today", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Open calendar" }).first().click();
+    const calendar = page.getByRole("dialog", { name: "Calendar" });
+    await expect(calendar.locator('[aria-current="date"]')).toHaveText(String(new Date().getDate()));
+    const title = await calendar.locator("p.font-serif").textContent();
+    await calendar.getByRole("button", { name: "Next month" }).click();
+    await expect(calendar.locator("p.font-serif")).not.toHaveText(title ?? "");
+    await page.keyboard.press("Escape");
+    await expect(calendar).toBeHidden();
+  });
+
+  test("sections animate again when scrolled back into view", async ({ page }) => {
+    await page.goto("/research");
+    const section = page.locator("#proposed");
+    await section.scrollIntoViewIfNeeded();
+    await expect(section).toHaveClass(/is-visible/);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(section).not.toHaveClass(/is-visible/);
+    await section.scrollIntoViewIfNeeded();
+    await expect(section).toHaveClass(/is-visible/);
   });
 });

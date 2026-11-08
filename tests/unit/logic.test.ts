@@ -6,7 +6,7 @@ import { filterExplorerItems } from "@/components/research/ResearchExplorer";
 import { connectedNodes } from "@/components/research/ResearchMap";
 import { projects } from "@/content/projects";
 import { estimateReadingMinutes, extractHeadings, getAdjacentArticles, getArticleMetas, getArticles, getRelatedArticles } from "@/lib/articles";
-import { selectRepos, type GithubRepo } from "@/lib/github";
+import { selectRepos, type GithubRepo } from "@/services/github";
 import { searchItems } from "@/lib/search";
 import { buildSearchIndex } from "@/lib/search-index";
 

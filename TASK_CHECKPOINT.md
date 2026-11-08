@@ -124,6 +124,28 @@ and checked live (see `docs/TESTING.md`).
   `dbro_consent` cookie; "Essential only" stops and clears preference storage. Policy at `/cookies`.
 - Explorer shows four results and topic chips first, with "Show more", "Show all" and a collapsible filter panel.
 
+## Round 3, 8 November 2026 (COMPLETED)
+
+Request: case-study filters and newest-first order; replay section animations on re-scroll; detailed responsive
+CNN process with node connections; realistic cartoon people (moustaches, hands, lip shapes, laptop and book
+viewing logic) checked by a verifier agent; calendar beside the clock; B.Tech quantum page from
+`Desktop\DevloperBro\B.Tech Final Year Project`; academic light palette; page transitions and loaders;
+contact form to supriyo.sarkar016@gmail.com; code cleanup; security review.
+
+Done here: `CaseStudies.tsx` + `lib/research-order.ts`; `RevealObserver` toggles `is-visible` both ways and
+auto-tags `main section`; `CnnProcess.tsx` inside `CnnArchitecture`; `CalendarPopover.tsx`; `template.tsx`
+page transition, `NavigationProgress.tsx`, boot loader in layout; academic light tokens in globals.css;
+`services/email.ts` defaults to the Gmail address (needs only RESEND_API_KEY); new e2e tests in features.spec.ts.
+Delegated (background agents): cartoons (`illustrations/*`, `src/app/toon.css`), quantum page
+(`components/research/quantum/*`, `content/data/quantum*`, quantum entry in research.ts), read-only security
+and cleanup review. Outcome: cartoons rebuilt on `illustrations/body.tsx` (hands, bodies, laptop lid backs, book covers, three mouth
+shapes, owner drawn with beard, moustache and glasses everywhere); an independent verifier agent found 20 defects,
+all fixed, and its second pass was PASS. Quantum page: `components/research/quantum/*`, data in
+`content/data/quantum*.{ts,json}`, figures from `private/scripts/export_btech_figures.mjs` (team of five, names not
+published; the IBMQ API token in the notebooks is not in the repo). Security review applied: signed contact form
+token (`lib/security/form-token.ts`), streamed body limit, daily cap, http(s)-only URLs, consent-gated storage,
+Vercel URL fallback; cleanup moved `useWidth` to hooks, `theme.ts` to lib, `github.ts` to services.
+
 ## Next exact steps
 
 1. Owner reads `docs/private/CONTENT_REVIEW.md`, including the blog section, and removes or edits any post.

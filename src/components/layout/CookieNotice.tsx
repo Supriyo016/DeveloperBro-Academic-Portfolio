@@ -32,14 +32,9 @@ function CookieFace() {
   );
 }
 
-const subscribeAll = (callback: () => void) => {
-  const off = subscribeConsent(callback);
-  return off;
-};
-
 export function CookieNotice() {
   // undefined on the server and before hydration, so nothing renders until the cookie has been read
-  const consent = useSyncExternalStore<Consent | null | undefined>(subscribeAll, readConsent, () => undefined);
+  const consent = useSyncExternalStore<Consent | null | undefined>(subscribeConsent, readConsent, () => undefined);
   const [reopened, setReopened] = useState(false);
   const [details, setDetails] = useState(false);
 

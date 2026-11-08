@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { backboneComparison, blockParams, cnnBlocks, cnnTotalParams, type LayerKind } from "@/content/data/cnn-architecture";
 import { cn } from "@/lib/utils";
+import { CnnProcess } from "./CnnProcess";
 
 const kindStyle: Record<LayerKind, { label: string; color: string }> = {
   input: { label: "Input", color: "var(--series-5)" },
@@ -18,29 +19,10 @@ const kindStyle: Record<LayerKind, { label: string; color: string }> = {
 
 const n = (value: number) => value.toLocaleString("en-GB");
 
-/** A cuboid for one feature map. Height follows spatial size, depth follows channel count. */
-function Cuboid({ x, size, channels, color, active }: { x: number; size: number; channels: number; color: string; active: boolean }) {
-  const h = 28 + Math.log2(Math.max(size, 1) + 1) * 22;
-  const d = 10 + Math.log2(channels) * 5;
-  const w = 16 + Math.log2(channels) * 3.2;
-  const y = 150 - h / 2;
-  const k = d * 0.55;
-  return (
-    <g className={cn("transition-opacity", active ? "opacity-100" : "opacity-80")}>
-      <path d={`M${x} ${y}l${k} ${-k}h${w}l${-k} ${k}Z`} fill={color} opacity="0.55" />
-      <path d={`M${x + w} ${y}l${k} ${-k}v${h}l${-k} ${k}Z`} fill={color} opacity="0.75" />
-      <rect x={x} y={y} width={w} height={h} fill={color} />
-      <rect x={x} y={y} width={w} height={h} fill="url(#cnn-shine)" />
-      {active && <rect x={x - 4} y={y - k - 4} width={w + k + 8} height={h + k + 8} rx="6" fill="none" stroke="var(--ink)" strokeWidth="1.5" strokeDasharray="4 4" className="il-dash" />}
-    </g>
-  );
-}
-
 export function CnnArchitecture() {
   const [active, setActive] = useState("block-1");
   const [showAll, setShowAll] = useState(false);
   const block = cnnBlocks.find((item) => item.id === active) ?? cnnBlocks[0];
-  const xs = cnnBlocks.map((_, index) => 24 + index * 118);
   const rows = showAll ? cnnBlocks.flatMap((item) => item.layers.map((layer) => ({ ...layer, block: item.label }))) : (block?.layers ?? []).map((layer) => ({ ...layer, block: block?.label ?? "" }));
 
   return (
@@ -48,45 +30,14 @@ export function CnnArchitecture() {
       <div className="p-4 sm:p-6">
         <h3 className="text-2xl">Inside the Custom CNN</h3>
         <p className="mt-1 text-[0.95rem] text-ink-2">
-          Five convolution blocks and a two-layer classifier, {n(cnnTotalParams)} trainable parameters in total. Choose a block to see its layers.
+          Five convolution blocks and a two-layer classifier, {n(cnnTotalParams)} trainable parameters in total. Below the process, choose a block to see its exact layers.
         </p>
       </div>
 
-      <div className="overflow-x-auto border-y border-line bg-surface-2/60">
-        <svg viewBox="0 0 980 270" className="h-auto w-full min-w-[44rem]" role="img" aria-label="Diagram of the Custom CNN, from a 64 by 64 input through five convolution blocks to a four-class output">
-          <defs>
-            <linearGradient id="cnn-shine" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#fff" stopOpacity="0.45" />
-              <stop offset="0.5" stopColor="#fff" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path d={`M${xs[0]} 150H${(xs.at(-1) ?? 0) + 60}`} stroke="var(--line-strong)" strokeWidth="2" strokeDasharray="5 6" className="il-dash" />
-          {cnnBlocks.map((item, index) => (
-            <circle key={item.id} r="5" fill={item.color} className="il-packet" style={{ offsetPath: `path("M${xs[0]} 150H${(xs.at(-1) ?? 0) + 60}")`, animationDelay: `${index * 0.9}s`, animationDuration: "6.5s" }} />
-          ))}
-          {cnnBlocks.map((item, index) => {
-            const x = xs[index] ?? 0;
-            const on = item.id === active;
-            return (
-              <g key={item.id} onClick={() => setActive(item.id)} className="cursor-pointer">
-                <rect x={x - 12} y="20" width="112" height="240" rx="14" fill={on ? "var(--surface)" : "transparent"} stroke={on ? item.color : "transparent"} strokeWidth="2" />
-                {item.id === "head" || item.id === "align" ? (
-                  <g>
-                    {[0, 1, 2, 3].map((dot) => (
-                      <circle key={dot} cx={x + 40} cy={104 + dot * 30} r={item.id === "align" ? 6 : 9} fill={item.color} opacity={0.6 + dot * 0.1} className={on ? "il-pulse" : undefined} />
-                    ))}
-                  </g>
-                ) : (
-                  <Cuboid x={x + 16} size={item.size} channels={item.channels} color={item.color} active={on} />
-                )}
-                <text x={x + 44} y="44" textAnchor="middle" fontSize="15" fontWeight="600" fill="var(--ink)">{item.label}</text>
-                <text x={x + 44} y="238" textAnchor="middle" fontSize="12" fill="var(--ink-2)" fontFamily="var(--font-geist-mono), monospace">
-                  {item.layers.at(-1)?.output}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
+      <div className="border-y border-line bg-surface-2/40 p-4 sm:p-6">
+        <h4 className="text-xl">From MRI slice to diagnosis</h4>
+        <p className="mt-1 mb-4 text-sm text-ink-2">The forward pass in order. Shapes are channels × height × width.</p>
+        <CnnProcess />
       </div>
 
       <div role="group" aria-label="Choose a block" className="flex flex-wrap gap-1.5 px-4 pt-4 sm:px-6">

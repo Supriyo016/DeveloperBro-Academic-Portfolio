@@ -3,7 +3,7 @@
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useSyncExternalStore } from "react";
 import { cn } from "@/lib/utils";
-import { applyPreference, readPreference, savePreference, type ThemePreference } from "./theme";
+import { applyPreference, readPreference, savePreference, type ThemePreference } from "@/lib/theme";
 
 const options: { value: ThemePreference; label: string; Icon: typeof Sun }[] = [
   { value: "light", label: "Light theme", Icon: Sun },

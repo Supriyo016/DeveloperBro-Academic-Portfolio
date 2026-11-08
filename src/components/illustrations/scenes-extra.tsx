@@ -1,29 +1,30 @@
-import { Anim, Head, il, Laptop, Mug, Plant, Robot, Scene, Sparkle, toon } from "./base";
+import { Anim, Head, il, Mug, Plant, Robot, Scene, Sparkle, toon } from "./base";
+import { Arm, LaptopBack, OfficeChair, SeatedLegs, SHOULDER_L, SHOULDER_R, Torso } from "./body";
 
 const orbit = (rx: number, ry: number) => `M${-rx} 0a${rx} ${ry} 0 1 0 ${rx * 2} 0a${rx} ${ry} 0 1 0 ${-rx * 2} 0`;
 
 /** B.Tech work: a researcher running a circuit while a qubit precesses on a Bloch sphere. */
 export function QuantumScene() {
   return (
-    <Scene viewBox="0 0 480 400" label="A researcher at a laptop running a quantum circuit, beside a Bloch sphere whose state vector rotates and electrons orbiting an atom.">
+    <Scene viewBox="0 0 480 400" label="A bearded researcher with glasses types at a laptop on his desk, running a quantum circuit, beside a Bloch sphere whose state vector rotates and electrons orbiting an atom.">
       <circle cx="240" cy="200" r="176" fill={il.soft} />
       <ellipse cx="240" cy="374" rx="190" ry="11" fill={il.ground} />
 
-      <g transform="translate(140 132)">
+      <g transform="translate(380 150) scale(0.82)">
         <circle r="74" fill={il.paper} stroke={il.line} strokeWidth="2" />
         <ellipse rx="74" ry="24" fill="none" stroke={il.line} strokeWidth="1.5" strokeDasharray="4 6" className="il-dash" />
         <path d="M0-74V74M-74 0H74" stroke={il.line} strokeWidth="1" />
-        <text x="-9" y="-80" fontFamily="var(--font-newsreader), serif" fontSize="16" fill={il.onPaper}>|0⟩</text>
-        <text x="-9" y="96" fontFamily="var(--font-newsreader), serif" fontSize="16" fill={il.onPaper}>|1⟩</text>
+        <text x="-9" y="-80" fontFamily="var(--font-newsreader), serif" fontSize="16" fill={il.ink}>|0⟩</text>
+        <text x="-9" y="96" fontFamily="var(--font-newsreader), serif" fontSize="16" fill={il.ink}>|1⟩</text>
         <Anim kind="il-clock" origin="0 0">
           <path d="M0 0L40-50" stroke={il.primary} strokeWidth="3.5" strokeLinecap="round" />
           <circle cx="40" cy="-50" r="7" fill={il.primary} />
         </Anim>
         <circle r="4" fill={il.amber} className="il-orbit" style={{ offsetPath: `path("${orbit(74, 24)}")` }} />
-        <circle r="5" fill={il.ink} />
+        <circle r="5" fill={il.onPaper} />
       </g>
 
-      <g transform="translate(388 108)">
+      <g transform="translate(62 176) scale(0.75)">
         <circle r="10" fill={il.amber} className="il-pulse" />
         {[0, 60, 120].map((angle, index) => (
           <g key={angle} transform={`rotate(${angle})`}>
@@ -33,43 +34,47 @@ export function QuantumScene() {
         ))}
       </g>
 
-      <g transform="translate(250 224)">
-        <rect width="210" height="76" rx="10" fill={il.paper} stroke={il.line} />
-        <path d="M14 26h182M14 54h182" stroke={il.line} strokeWidth="2" />
-        <rect x="34" y="14" width="24" height="24" rx="4" fill={il.primary} />
-        <text x="46" y="31" textAnchor="middle" fontFamily="var(--font-geist-mono), monospace" fontSize="13" fill={il.paper}>H</text>
-        <circle cx="96" cy="26" r="6" fill={il.ink} />
-        <path d="M96 26v28" stroke={il.ink} strokeWidth="2" />
-        <circle cx="96" cy="54" r="10" fill="none" stroke={il.ink} strokeWidth="2" />
-        <path d="M86 54h20M96 44v20" stroke={il.ink} strokeWidth="2" />
-        <rect x="136" y="42" width="24" height="24" rx="4" fill={il.amber} />
-        <text x="148" y="59" textAnchor="middle" fontFamily="var(--font-geist-mono), monospace" fontSize="13" fill={il.onPaper}>X</text>
-        <g transform="translate(172 14)">
-          <rect width="26" height="24" rx="4" fill={il.cyan} />
-          <path d="M5 18a8 8 0 0 1 16 0" fill="none" stroke={il.paper} strokeWidth="2" />
-          <Anim kind="il-point" origin="13 18">
-            <path d="M13 18l6-9" stroke={il.paper} strokeWidth="2" strokeLinecap="round" />
-          </Anim>
+      <g className="il-float">
+        <g transform="translate(96 30)">
+          <rect width="210" height="76" rx="10" fill={il.paper} stroke={il.line} />
+          <path d="M14 26h182M14 54h182" stroke={il.line} strokeWidth="2" />
+          <rect x="34" y="14" width="24" height="24" rx="4" fill={il.primary} />
+          <text x="46" y="31" textAnchor="middle" fontFamily="var(--font-geist-mono), monospace" fontSize="13" fill={il.paper}>H</text>
+          <circle cx="96" cy="26" r="6" fill={il.onPaper} />
+          <path d="M96 26v28" stroke={il.onPaper} strokeWidth="2" />
+          <circle cx="96" cy="54" r="10" fill="none" stroke={il.onPaper} strokeWidth="2" />
+          <path d="M86 54h20M96 44v20" stroke={il.onPaper} strokeWidth="2" />
+          <rect x="136" y="42" width="24" height="24" rx="4" fill={il.amber} />
+          <text x="148" y="59" textAnchor="middle" fontFamily="var(--font-geist-mono), monospace" fontSize="13" fill={il.onPaper}>X</text>
+          <g transform="translate(172 14)">
+            <rect width="26" height="24" rx="4" fill={il.cyan} />
+            <path d="M5 18a8 8 0 0 1 16 0" fill="none" stroke={il.paper} strokeWidth="2" />
+            <Anim kind="il-point" origin="13 18">
+              <path d="M13 18l6-9" stroke={il.paper} strokeWidth="2" strokeLinecap="round" />
+            </Anim>
+          </g>
+          <circle r="4" fill={il.primary} className="il-orbit" style={{ offsetPath: 'path("M14 26H196")', animationDuration: "2.8s" }} />
+          <circle r="4" fill={il.amber} className="il-orbit" style={{ offsetPath: 'path("M14 54H196")', animationDuration: "2.8s", animationDelay: "-1.4s" }} />
         </g>
-        <circle r="4" fill={il.primary} className="il-orbit" style={{ offsetPath: 'path("M14 26H196")', animationDuration: "2.8s" }} />
-        <circle r="4" fill={il.amber} className="il-orbit" style={{ offsetPath: 'path("M14 54H196")', animationDuration: "2.8s", animationDelay: "-1.4s" }} />
       </g>
 
-      <rect x="40" y="318" width="250" height="12" rx="5" fill={il.wood} />
-      <path d="M62 330h12l-4 44h-6ZM256 330h12l-2 44h-6Z" fill={il.wood} opacity="0.75" />
-      <Anim kind="il-breathe" origin="346 374">
-        <path d="M300 374c-4-62 6-100 44-118 40 12 54 50 50 118Z" fill={toon.coat} />
-        <path d="M330 258l14 28 14-28Z" fill={toon.shirt} />
-      </Anim>
-      <Head x={346} y={214} skin={il.skinShade} glasses delay={1} />
-      <Laptop x={176} y={318} width={120} />
-      <Anim kind="il-type" origin="316 284">
-        <path d="M314 282c-22 10-50 22-74 30l4 12c26-6 54-16 76-28Z" fill={toon.coat2} />
-        <ellipse cx="240" cy="316" rx="10" ry="6" fill={toon.skinShade} />
-      </Anim>
-      <Mug x={60} y={318} />
-      <Sparkle x={292} y={70} size={8} delay={0.2} />
-      <Sparkle x={52} y={210} size={6} color={il.primary} delay={1.1} />
+      <g transform="translate(165 358.4) scale(0.85)">
+        <OfficeChair seat={-92} floor={16} />
+        <SeatedLegs knee={-84} floor={16} pants={toon.coat} />
+        <Anim kind="il-breathe" origin="0 -96">
+          <Torso outfit="jacket" color={toon.coat2} accent={toon.coat} />
+          <Arm shoulder={SHOULDER_R} elbow={[-66, -118]} wrist={[-32, -106]} sleeve={toon.coat2} pose="none" foreKind="il-type" />
+          <Arm shoulder={SHOULDER_L} elbow={[66, -118]} wrist={[32, -106]} sleeve={toon.coat2} pose="none" foreKind="il-type-late" />
+          <Head x={0} y={-230} glasses beard delay={1} look="il-screen-look" />
+        </Anim>
+      </g>
+      <rect x="40" y="269" width="260" height="12" rx="5" fill={il.wood} />
+      <path d="M62 281h12l-4 91h-6ZM266 281h12l-2 91h-6Z" fill={il.wood} opacity="0.75" />
+      <LaptopBack x={165} y={269} width={92} />
+      <Mug x={50} y={269} />
+      <Plant x={432} y={349.6} scale={0.8} />
+      <Sparkle x={330} y={50} size={8} delay={0.2} />
+      <Sparkle x={30} y={110} size={6} color={il.primary} delay={1.1} />
     </Scene>
   );
 }
@@ -88,7 +93,7 @@ export function FooterScene() {
     <Scene
       viewBox="0 0 1200 230"
       className="h-auto w-full"
-      label="A panorama: a researcher typing at a desk, four hospitals sending encrypted updates to a locked server, a quantum atom, a plant, and the site's robot assistant waving."
+      label="A panorama: a bearded researcher with glasses typing at a laptop on his desk, four hospitals sending encrypted updates to a locked server, a quantum atom, a plant, and the site's robot assistant waving."
     >
       <defs>
         <linearGradient id="footer-ground" x1="0" x2="1">
@@ -104,21 +109,22 @@ export function FooterScene() {
         <Sparkle key={index} x={x as number} y={y as number} size={s as number} color={index % 2 ? il.cyan : il.amber} delay={index * 0.37} />
       ))}
 
-      {/* Researcher at a desk */}
-      <rect x="70" y="160" width="250" height="10" rx="4" fill={il.wood} />
-      <path d="M92 170h10l-4 36h-6ZM290 170h10l-2 36h-6Z" fill={il.wood} opacity="0.75" />
-      <Laptop x={176} y={160} width={104} />
-      <Mug x={244} y={160} />
-      <Plant x={300} y={160} scale={0.55} />
-      <Anim kind="il-breathe" origin="140 206">
-        <path d="M100 206c-2-36 6-58 40-70 34 12 42 34 40 70Z" fill={toon.coat} />
-        <path d="M128 138l12 22 12-22Z" fill={toon.shirt} />
-      </Anim>
-      <Head x={140} y={106} scale={0.78} />
-      <Anim kind="il-type" origin="160 150">
-        <path d="M156 146c10 4 18 8 26 12l-4 8c-10-2-20-6-28-12Z" fill={toon.coat2} />
-        <ellipse cx="182" cy="160" rx="7" ry="4" fill={toon.skin} />
-      </Anim>
+      {/* The researcher at his desk, typing; the laptop faces him */}
+      <g transform="translate(176 196.1) scale(0.62)">
+        <OfficeChair seat={-92} floor={16} />
+        <SeatedLegs knee={-84} floor={16} pants={toon.coat2} />
+        <Anim kind="il-breathe" origin="0 -96">
+          <Torso outfit="jacket" />
+          <Arm shoulder={SHOULDER_R} elbow={[-66, -118]} wrist={[-32, -106]} pose="none" foreKind="il-type" />
+          <Arm shoulder={SHOULDER_L} elbow={[66, -118]} wrist={[32, -106]} pose="none" foreKind="il-type-late" />
+          <Head x={0} y={-230} beard glasses look="il-screen-look" />
+        </Anim>
+      </g>
+      <rect x="70" y="131" width="250" height="10" rx="4" fill={il.wood} />
+      <path d="M92 141h10l-4 65h-6ZM290 141h10l-2 65h-6Z" fill={il.wood} opacity="0.75" />
+      <LaptopBack x={176} y={131} width={66} />
+      <Mug x={246} y={131} />
+      <Plant x={300} y={115.6} scale={0.55} />
 
       {/* Federated hospitals and the locked aggregator */}
       {hospitals.map((h, index) => {

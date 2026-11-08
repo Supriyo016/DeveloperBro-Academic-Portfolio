@@ -1,5 +1,5 @@
 import { GitFork, Star } from "lucide-react";
-import { getGithubSnapshot } from "@/lib/github";
+import { getGithubSnapshot } from "@/services/github";
 import { formatDate } from "@/lib/utils";
 
 export async function RepoStats({ name }: { name: string }) {

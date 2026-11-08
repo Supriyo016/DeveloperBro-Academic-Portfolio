@@ -1,0 +1,172 @@
+/* Character and scene keyframes. Loaded after globals.css, so rules here take precedence.
+   Every class animates only transform or opacity. Classes start with "il-" so the reduced-motion rule in
+   globals.css stops them, leaving each scene on its resting frame. */
+
+/* ------------------------------------------------------------------
+   Speech: three mouth shapes (closed smile, small "o", wide open) that
+   cut between each other like lip-sync, instead of squashing one shape.
+   ------------------------------------------------------------------ */
+
+.il-m-o,
+.il-m-wide { opacity: 0; }
+
+@keyframes il-m-smile { 0% { opacity: 1; } 62% { opacity: 0; } 72% { opacity: 1; } 75% { opacity: 0; } 92%, 100% { opacity: 1; } }
+@keyframes il-m-wide { 0% { opacity: 0; } 62% { opacity: 1; } 66% { opacity: 0; } 69% { opacity: 1; } 72% { opacity: 0; } 78% { opacity: 1; } 82% { opacity: 0; } 86% { opacity: 1; } 89%, 100% { opacity: 0; } }
+@keyframes il-m-o { 0% { opacity: 0; } 66% { opacity: 1; } 69% { opacity: 0; } 75% { opacity: 1; } 78% { opacity: 0; } 82% { opacity: 1; } 86% { opacity: 0; } 89% { opacity: 1; } 92%, 100% { opacity: 0; } }
+
+@keyframes il-c-smile { 0% { opacity: 1; } 10% { opacity: 0; } 46% { opacity: 1; } 54%, 100% { opacity: 0; } }
+@keyframes il-c-wide { 0% { opacity: 0; } 10% { opacity: 1; } 24% { opacity: 0; } 32% { opacity: 1; } 46% { opacity: 0; } 70% { opacity: 1; } 84%, 100% { opacity: 0; } }
+@keyframes il-c-o { 0% { opacity: 0; } 24% { opacity: 1; } 32% { opacity: 0; } 54% { opacity: 1; } 70% { opacity: 0; } 84%, 100% { opacity: 1; } }
+
+.il-say > .il-m-smile { animation: il-m-smile 6s steps(1, end) infinite; }
+.il-say > .il-m-o { animation: il-m-o 6s steps(1, end) infinite; }
+.il-say > .il-m-wide { animation: il-m-wide 6s steps(1, end) infinite; }
+.il-say-late > .il-m-smile { animation: il-m-smile 7.4s steps(1, end) 1.9s infinite; }
+.il-say-late > .il-m-o { animation: il-m-o 7.4s steps(1, end) 1.9s infinite; }
+.il-say-late > .il-m-wide { animation: il-m-wide 7.4s steps(1, end) 1.9s infinite; }
+.il-say-chat > .il-m-smile { animation: il-c-smile 1.5s steps(1, end) infinite; }
+.il-say-chat > .il-m-o { animation: il-c-o 1.5s steps(1, end) infinite; }
+.il-say-chat > .il-m-wide { animation: il-c-wide 1.5s steps(1, end) infinite; }
+
+/* ------------------------------------------------------------------
+   Eyes that follow what the hands are doing
+   ------------------------------------------------------------------ */
+
+@keyframes il-read-look {
+  0% { transform: translate(-2px, 2.6px); }
+  18% { transform: translate(1.8px, 2.6px); }
+  21% { transform: translate(-2px, 3px); }
+  39% { transform: translate(1.8px, 3px); }
+  42% { transform: translate(-2px, 2.6px); }
+  60% { transform: translate(1.8px, 2.6px); }
+  66%, 80% { transform: translate(0, -0.4px); }
+  86%, 100% { transform: translate(-2px, 2.6px); }
+}
+@keyframes il-write-look {
+  0%, 30% { transform: translate(1.4px, 3px); }
+  40%, 62% { transform: translate(2.2px, 3px); }
+  70%, 84% { transform: translate(0, -0.2px); }
+  92%, 100% { transform: translate(1.4px, 3px); }
+}
+@keyframes il-screen-look {
+  0%, 34% { transform: translate(-1px, 2.2px); }
+  42%, 62% { transform: translate(1.4px, 2.2px); }
+  70%, 84% { transform: translate(0, -0.3px); }
+  92%, 100% { transform: translate(-1px, 2.2px); }
+}
+.il-read-look { animation: il-read-look 7s ease-in-out infinite; }
+.il-write-look { animation: il-write-look 6.4s ease-in-out infinite; }
+.il-screen-look { animation: il-screen-look 7.6s ease-in-out infinite; }
+
+/* ------------------------------------------------------------------
+   Hands at work
+   ------------------------------------------------------------------ */
+
+/* The writing forearm pivots a hair at the elbow, so the pen tip glides along the line on the page. */
+@keyframes il-scribble {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(1.4deg); }
+  40% { transform: rotate(0.3deg); }
+  60% { transform: rotate(1.9deg); }
+  80% { transform: rotate(0.6deg); }
+}
+.il-scribble { animation: il-scribble 1.3s ease-in-out infinite; }
+
+/* A held book rises and settles a little as the reader breathes. */
+@keyframes il-bob-soft { to { transform: translateY(-2px); } }
+.il-bob-soft { animation: il-bob-soft 2.8s ease-in-out infinite alternate; }
+
+/* A page lifts over the top edge of a held book and turns from right to left. */
+.il-pageflip { opacity: 0; }
+@keyframes il-pageflip {
+  0%, 62% { opacity: 0; transform: scaleX(1); }
+  66% { opacity: 1; transform: scaleX(1); }
+  80% { opacity: 1; transform: scaleX(-1); }
+  84%, 100% { opacity: 0; transform: scaleX(-1); }
+}
+.il-pageflip { animation: il-pageflip 4.2s ease-in-out infinite; }
+
+/* An open hand waving hello from the elbow. */
+@keyframes il-hi {
+  0% { transform: rotate(-12deg); }
+  100% { transform: rotate(12deg); }
+}
+.il-hi { animation: il-hi 0.7s ease-in-out infinite alternate; }
+
+/* A raised arm cheering, gently, from the shoulder. */
+@keyframes il-cheer {
+  0% { transform: rotate(-5deg); }
+  100% { transform: rotate(5deg); }
+}
+.il-cheer { animation: il-cheer 1.6s ease-in-out infinite alternate; }
+
+/* Peering up and to the right through a magnifying glass, with a glance back at the viewer. */
+@keyframes il-peer-look {
+  0%, 56% { transform: translate(2.4px, -2px); }
+  62%, 78% { transform: translate(0, 0.4px); }
+  84%, 100% { transform: translate(2.4px, -2px); }
+}
+.il-peer-look { animation: il-peer-look 6.8s ease-in-out infinite; }
+
+/* ------------------------------------------------------------------
+   Researcher story overrides (the 28 s loop is defined in globals.css)
+   Every act switches with a hard cut: steps(1, end) holds each keyframe's
+   value until the next one, so two poses (or two copies of the book or
+   the mug) are never visible at the same moment. 0% and 100% match.
+   ------------------------------------------------------------------ */
+
+.il-story-read, .il-story-sip, .il-story-write, .il-story-wave, .il-story-rest-l, .il-story-rest-r, .il-story-desk-a,
+.il-story-mug, .il-story-hello, .il-story-think, .il-story-aha, .il-story-bye, .il-story-quiet, .il-story-talkwin,
+.il-story-chin, .il-story-idea, .il-story-carry, .il-story-stacked {
+  animation-duration: 28s;
+  animation-iteration-count: infinite;
+  animation-timing-function: steps(1, end);
+}
+
+/* Hidden in the resting (reduced motion) frame, which is the wave hello with the book on the stack. */
+.il-story-chin, .il-story-idea, .il-story-carry { opacity: 0; }
+
+.il-story-chin { animation-name: story-chin; }
+.il-story-idea { animation-name: story-idea; }
+.il-story-carry { animation-name: story-carry; }
+.il-story-stacked { animation-name: story-stacked; }
+
+@keyframes story-read { 0% { opacity: 1; } 22% { opacity: 0; } 92.5%, 100% { opacity: 1; } }
+@keyframes story-desk-a { 0% { opacity: 0; } 22% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes story-sip { 0% { opacity: 0; } 22% { opacity: 1; } 34%, 100% { opacity: 0; } }
+@keyframes story-mug { 0% { opacity: 1; } 22% { opacity: 0; } 34%, 100% { opacity: 1; } }
+@keyframes story-write { 0% { opacity: 0; } 34% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes story-carry { 0% { opacity: 0; } 50% { opacity: 1; } 54% { opacity: 0; } 90.5% { opacity: 1; } 92.5%, 100% { opacity: 0; } }
+@keyframes story-stacked { 0% { opacity: 0; } 54% { opacity: 1; } 90.5%, 100% { opacity: 0; } }
+@keyframes story-rest-l { 0% { opacity: 0; } 22% { opacity: 1; } 50% { opacity: 0; } 54% { opacity: 1; } 58%, 100% { opacity: 0; } }
+@keyframes story-rest-r { 0% { opacity: 0; } 50% { opacity: 1; } 92.5%, 100% { opacity: 0; } }
+@keyframes story-wave { 0% { opacity: 0; } 58% { opacity: 1; } 76%, 100% { opacity: 0; } }
+@keyframes story-chin { 0% { opacity: 0; } 76% { opacity: 1; } 84.5%, 100% { opacity: 0; } }
+@keyframes story-idea { 0% { opacity: 0; } 84.5% { opacity: 1; } 90.5%, 100% { opacity: 0; } }
+@keyframes story-hello { 0% { opacity: 0; } 59% { opacity: 1; } 75%, 100% { opacity: 0; } }
+@keyframes story-think { 0% { opacity: 0; } 77% { opacity: 1; } 84%, 100% { opacity: 0; } }
+@keyframes story-aha { 0% { opacity: 0; } 85% { opacity: 1; } 90.5%, 100% { opacity: 0; } }
+@keyframes story-bye { 0% { opacity: 0; } 91.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes story-talkwin { 0% { opacity: 0; } 59% { opacity: 1; } 75% { opacity: 0; } 91.5% { opacity: 1; } 98.5%, 100% { opacity: 0; } }
+@keyframes story-quiet { 0% { opacity: 1; } 59% { opacity: 0; } 75% { opacity: 1; } 91.5% { opacity: 0; } 98.5%, 100% { opacity: 1; } }
+
+/* A thin light rim around hair, beards and shoes, only in the dark theme (see RIM in base.tsx). */
+:root { --il-rim: transparent; }
+:root[data-theme="dark"] { --il-rim: rgb(196 202 255 / 0.5); }
+
+/* The robot assistant bobs gently on its legs (they stay planted on the ground). */
+@keyframes il-hover { to { transform: translateY(-3px); } }
+.il-hover { animation: il-hover 1.8s ease-in-out infinite alternate; }
+
+/* A pointing arm hovers on its target instead of swinging off it. */
+@keyframes il-aim {
+  0% { transform: rotate(-1.2deg); }
+  100% { transform: rotate(1.2deg); }
+}
+.il-aim { animation: il-aim 2.4s ease-in-out infinite alternate; }
+
+/* Line drawings are complete whenever motion is paused (reduced motion is handled in globals.css). */
+html[data-motion="paused"] .il-draw {
+  stroke-dasharray: none;
+  animation: none;
+}

@@ -1,54 +1,58 @@
 @import "tailwindcss";
 
 :root {
+  /* Light theme: academic navy, crimson, gold and teal on paper white */
   color-scheme: light;
-  --bg: #f4f5ff;
+  --bg: #f7f8fb;
   --surface: #ffffff;
-  --surface-2: #eceefb;
-  --ink: #121634;
-  --ink-2: #3b4266;
-  --muted: #586083;
-  --line: #dde1f3;
-  --line-strong: #c3c8e6;
-  --primary: #4338ca;
-  --primary-hover: #3730a3;
+  --surface-2: #eef1f7;
+  --ink: #14203b;
+  --ink-2: #374361;
+  --muted: #566079;
+  --line: #dde2ec;
+  --line-strong: #c3cad9;
+  --primary: #1d3f8f;
+  --primary-hover: #142f6c;
   --on-primary: #ffffff;
-  --primary-soft: #e6e4ff;
-  --accent: #0b6f8a;
-  --accent-soft: #d3f1f6;
-  --lavender: #cbc5ff;
-  --pink: #d9467f;
-  --pink-soft: #ffe0ec;
+  --primary-soft: #e2e9f8;
+  --accent: #a3123a;
+  --accent-soft: #fbe4ea;
+  --lavender: #cfd8f4;
+  --pink: #c8507a;
+  --pink-soft: #fde6ee;
+  --gold: #b07c00;
+  --gold-soft: #fbf0d2;
+  --teal: #0f766e;
   --warn-ink: #7a4a00;
-  --warn-soft: #fdeecb;
+  --warn-soft: #fbefd0;
   --ok-ink: #0d5f40;
-  --ok-soft: #d4f3e4;
-  --glow: rgb(67 56 202 / 0.22);
+  --ok-soft: #d6f2e4;
+  --glow: rgb(29 63 143 / 0.2);
 
   --il-skin: #d39a6e;
   --il-skin-shade: #ad7550;
   --il-hair: #1f1b2e;
-  --il-coat: #2a2f6e;
-  --il-coat-2: #4048a3;
+  --il-coat: #1d3f8f;
+  --il-coat-2: #3a62c4;
   --il-shirt: #ffffff;
   --il-paper: #ffffff;
-  --il-paper-2: #e7e8f6;
-  --il-primary: #5b55e6;
-  --il-lavender: #b9b1ff;
-  --il-cyan: #22b5c9;
-  --il-cyan-soft: #bdeef4;
-  --il-amber: #f5a524;
-  --il-wood: #c08a5a;
-  --il-ground: #dfe2f6;
+  --il-paper-2: #e6e9f2;
+  --il-primary: #2f5bd3;
+  --il-lavender: #b9c6f2;
+  --il-cyan: #149c96;
+  --il-cyan-soft: #c4ece9;
+  --il-amber: #e3a21a;
+  --il-wood: #b9875a;
+  --il-ground: #e3e7f1;
 
-  --series-1: #2a78d6;
-  --series-2: #eb6834;
-  --series-3: #1baf7a;
-  --series-4: #eda100;
-  --series-5: #8b5cf6;
-  --series-6: #e0569b;
-  --series-7: #0ea5b7;
-  --grid: #e3e6f5;
+  --series-1: #2a63c9;
+  --series-2: #d4552b;
+  --series-3: #168c62;
+  --series-4: #c99300;
+  --series-5: #7c4dde;
+  --series-6: #c2417f;
+  --series-7: #0e8fa0;
+  --grid: #e3e7ef;
 }
 
 :root[data-theme="dark"] {
@@ -98,6 +102,9 @@
   --series-7: #2cc1d2;
   --pink: #f08cb6;
   --pink-soft: #3d1a2c;
+  --gold: #f0c35a;
+  --gold-soft: #3a2c10;
+  --teal: #4fd1c5;
   --glow: rgb(165 170 255 / 0.18);
   --grid: #272e57;
 }
@@ -567,9 +574,6 @@
   }
 }
 
-.page-enter {
-  animation: page-enter 0.4s var(--ease-out-soft) backwards;
-}
 
 .fade-in {
   animation: page-enter 0.25s var(--ease-out-soft) backwards;
@@ -1316,3 +1320,104 @@ html[data-reading="true"] .reading-center {
 }
 
 :root:not([data-theme="dark"]) .ambient-aurora { opacity: 0.75; }
+
+/* ------------------------------------------------------------------
+   Page transitions and loading states
+   ------------------------------------------------------------------ */
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.995); filter: blur(3px); }
+}
+.page-transition { animation: page-in 0.55s var(--ease-out-soft) backwards; }
+
+@keyframes nav-bar {
+  0% { transform: translateX(-100%) scaleX(0.3); }
+  50% { transform: translateX(20%) scaleX(0.6); }
+  100% { transform: translateX(100%) scaleX(0.3); }
+}
+.nav-bar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 70;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--primary), var(--accent), var(--gold), transparent);
+  animation: nav-bar 1.1s ease-in-out infinite;
+}
+@keyframes nav-card { from { opacity: 0; transform: translate(-50%, -8px) scale(0.96); } }
+.nav-card { animation: nav-card 0.3s var(--ease-out-soft) both; }
+.nav-spin { transform-box: fill-box; transform-origin: center; animation: il-spin 1s linear infinite; }
+.nav-pulse { transform-box: fill-box; transform-origin: center; animation: il-pulse 0.8s ease-in-out infinite alternate; }
+@keyframes nav-dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75%, 100% { content: "..."; } }
+.nav-dots::after { content: ""; animation: nav-dots 1.2s steps(1) infinite; }
+
+.boot-loader { display: none; }
+.js:not([data-ready]) .boot-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  animation: boot-show 0.3s ease 0.9s forwards;
+}
+@keyframes boot-show { to { opacity: 1; } }
+.boot-orbit { position: relative; width: 64px; height: 64px; animation: il-spin 1.6s linear infinite; }
+.boot-orbit span {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+.boot-orbit span:nth-child(1) { top: 0; left: 24px; }
+.boot-orbit span:nth-child(2) { bottom: 4px; left: 2px; background: var(--accent); }
+.boot-orbit span:nth-child(3) { bottom: 4px; right: 2px; background: var(--gold); }
+.boot-text { font-family: var(--font-newsreader), serif; font-size: 1.15rem; color: var(--ink-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition, .nav-bar, .boot-orbit { animation: none !important; }
+}
+
+@media print {
+  .boot-loader, .nav-bar { display: none !important; }
+}
+
+.calendar-pop { animation: cookie-in 0.25s var(--ease-out-soft) both; }
+
+/* Custom CNN process diagram */
+.cnn-stage { box-shadow: inset 0 3px 0 var(--stage); }
+.cnn-arrow { position: absolute; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--surface); border: 1px solid var(--line); color: var(--primary); z-index: 1; left: 50%; bottom: -22px; transform: translateX(-50%) rotate(90deg); }
+.cnn-flow > li:last-child .cnn-arrow { display: none; }
+@media (min-width: 640px) {
+  .cnn-arrow { left: auto; right: -22px; bottom: auto; top: 50%; transform: translateY(-50%); }
+}
+@keyframes cnn-kernel {
+  0% { transform: translate(0, 0); } 8.3% { transform: translate(12px, 0); } 16.6% { transform: translate(24px, 0); }
+  25% { transform: translate(36px, 0); } 33.3% { transform: translate(48px, 0); } 41.6% { transform: translate(60px, 0); }
+  50% { transform: translate(0, 12px); } 58.3% { transform: translate(12px, 12px); } 66.6% { transform: translate(24px, 12px); }
+  75% { transform: translate(36px, 12px); } 83.3% { transform: translate(48px, 12px); } 91.6%, 100% { transform: translate(60px, 12px); }
+}
+@keyframes cnn-kernel-out {
+  0% { transform: translate(0, 0); } 8.3% { transform: translate(11px, 0); } 16.6% { transform: translate(22px, 0); }
+  25% { transform: translate(33px, 0); } 33.3% { transform: translate(44px, 0); } 41.6% { transform: translate(55px, 0); }
+  50% { transform: translate(0, 11px); } 58.3% { transform: translate(11px, 11px); } 66.6% { transform: translate(22px, 11px); }
+  75% { transform: translate(33px, 11px); } 83.3% { transform: translate(44px, 11px); } 91.6%, 100% { transform: translate(55px, 11px); }
+}
+@keyframes cnn-norm { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.6); } }
+@keyframes cnn-node { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+.cnn-kernel { animation: cnn-kernel 7s steps(1) infinite; }
+.cnn-kernel-out { animation: cnn-kernel-out 7s steps(1) infinite; }
+.cnn-norm { transform-box: fill-box; transform-origin: center bottom; animation: cnn-norm 2.4s ease-in-out infinite; }
+.cnn-node { animation: cnn-node 2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .cnn-kernel, .cnn-kernel-out, .cnn-norm, .cnn-node { animation: none !important; }
+}
+
+/* With animations paused, entrance effects are skipped so nothing is left frozen half-visible */
+html[data-motion="paused"] :is(.page-transition, .fade-in, .pop-in, .topic-chip, .cookie-in, .calendar-pop, .nav-card, .chat-pop, .bar-grow, .draw-once) {
+  animation: none !important;
+}

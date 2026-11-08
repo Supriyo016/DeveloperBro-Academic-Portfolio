@@ -33,6 +33,8 @@ test.describe("accessibility", () => {
   for (const theme of ["light", "dark"] as const) {
     for (const route of routes) {
       test(`axe ${theme} ${route}`, async ({ page }) => {
+        // Sections fade in and out as they cross the viewport; reduced motion keeps them fully visible for the contrast scan.
+        await page.emulateMedia({ reducedMotion: "reduce" });
         await page.addInitScript((value) => localStorage.setItem("theme", value), theme);
         await page.goto(route);
         await page.evaluate(() => document.querySelectorAll(".reveal").forEach((element) => element.classList.add("is-visible")));
