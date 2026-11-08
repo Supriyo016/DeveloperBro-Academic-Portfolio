@@ -43,7 +43,8 @@ export function Footer() {
       <div className="border-t border-line">
         <div className="container-page flex flex-wrap items-center justify-between gap-2 py-4 pr-20 text-sm text-muted">
           <p>
-            © {new Date().getFullYear()} {profile.name} ·{" "}
+            © {new Date().getFullYear()} {profile.name}. All rights reserved ·{" "}
+            <Link href="/license" className="hover:text-primary">License</Link> ·{" "}
             <Link href="/cookies" className="hover:text-primary">Cookie policy</Link>
           </p>
           <div className="flex flex-wrap items-center gap-2">

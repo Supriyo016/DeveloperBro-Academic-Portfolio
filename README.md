@@ -12,8 +12,13 @@ so research, projects and articles can change without touching components.
 - Bro, a chat assistant that runs entirely in the browser and answers only from the site's own content
 - Strict per-request Content Security Policy, and unit, security and browser tests including WCAG 2.2 AA scans
 
-The text, research content, illustrations and portrait are © Supriyo Sarkar. Private notes and the original CV are
-kept out of this repository.
+## License
+
+**All rights reserved.** © 2026 Supriyo Sarkar. This repository is public so the work can be read and reviewed, not
+reused. You may view the site, link to it and cite its research with attribution. Copying, modifying, redeploying or
+reusing any of its code, design, illustrations or content requires written permission. See [LICENSE](LICENSE).
+
+Private notes are kept out of this repository.
 
 ## Run it
 

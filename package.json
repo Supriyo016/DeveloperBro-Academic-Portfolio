@@ -2,6 +2,7 @@
   "name": "supriyo-academic-portfolio",
   "version": "1.0.0",
   "private": true,
+  "license": "UNLICENSED",
   "description": "Academic and research portfolio of Supriyo Sarkar",
   "engines": {
     "node": ">=20.9.0"

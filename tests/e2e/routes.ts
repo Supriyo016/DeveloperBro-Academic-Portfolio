@@ -7,6 +7,7 @@ export const routes = [
   "/research/quantum-gate-assessment",
   "/research/knowledge-distillation-ckks-federated-learning",
   "/cookies",
+  "/license",
   "/publications",
   "/projects",
   "/projects/third-hand-eye",
