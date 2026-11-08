@@ -5,7 +5,7 @@ import { getArticleMetas } from "@/lib/articles";
 import { siteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ["", "/about", "/research", "/publications", "/projects", "/education", "/skills", "/achievements", "/blogs", "/github", "/cv", "/contact", "/cookies"];
+  const pages = ["", "/about", "/research", "/publications", "/projects", "/education", "/skills", "/achievements", "/blogs", "/github", "/cv", "/contact", "/cookies", "/license"];
   return [
     ...pages.map((path) => ({ url: `${siteUrl}${path}` })),
     ...studies.map((study) => ({ url: `${siteUrl}/research/${study.slug}` })),

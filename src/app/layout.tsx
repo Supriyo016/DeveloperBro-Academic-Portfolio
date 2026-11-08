@@ -28,6 +28,7 @@ const description =
   "Academic portfolio of Supriyo Sarkar, covering federated learning, medical image analysis, homomorphic encryption and knowledge distillation.";
 
 export const metadata: Metadata = {
+  other: { copyright: "© 2026 Supriyo Sarkar. All rights reserved." },
   metadataBase: new URL(siteUrl),
   title: { default: `${profile.siteName} | ${profile.name}, ${profile.role}`, template: `%s | ${profile.siteName}` },
   description,
