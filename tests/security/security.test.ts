@@ -123,9 +123,9 @@ describe("repository hygiene", () => {
     }
   });
 
-  it("publishes only the public CV", () => {
-    expect(readdirSync("public/documents")).toEqual(["academic-cv-public.pdf"]);
-    expect(profile.cvPath).toBe("/documents/academic-cv-public.pdf");
+  it("publishes only the owner's original CV, the single file every download points to", () => {
+    expect(readdirSync("public/documents")).toEqual(["Supriyo_Sarkar_Academic_CV.pdf"]);
+    expect(profile.cvPath).toBe("/documents/Supriyo_Sarkar_Academic_CV.pdf");
   });
 
   it("lists only social accounts confirmed by the GitHub profile or CV", () => {

@@ -26,7 +26,7 @@ describe("site assistant", () => {
     expect(all("tour india")).toContain("Smart India Hackathon 2022");
     expect(all("how was this website built")).toContain("Next.js");
     expect(all("How can I contact Supriyo for a PhD position?")).toContain(kb.email);
-    expect(all("can I download the cv")).toContain("/documents/academic-cv-public.pdf");
+    expect(all("can I download the cv")).toContain("/documents/Supriyo_Sarkar_Academic_CV.pdf");
     expect(all("who supervised the dissertation")).toContain("Mandal");
   });
 

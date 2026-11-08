@@ -27,6 +27,8 @@ const nextConfig: NextConfig = {
           { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Cache-Control", value: "public, max-age=3600" },
+          // Downloadable from the site, but kept out of search results because the CV includes personal details.
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
         ],
       },
     ];

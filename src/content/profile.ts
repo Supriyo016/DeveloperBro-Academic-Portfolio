@@ -14,7 +14,7 @@ export const profile = {
     { id: "facebook", label: "Facebook", url: "https://www.facebook.com/profile.php?id=100070487584093" },
   ],
   portrait: "/images/portrait.jpg",
-  cvPath: "/documents/academic-cv-public.pdf",
+  cvPath: "/documents/Supriyo_Sarkar_Academic_CV.pdf",
   cvUpdated: "6 November 2026",
   headline: "How can hospitals learn from each other without sharing a single scan?",
   shortBio:

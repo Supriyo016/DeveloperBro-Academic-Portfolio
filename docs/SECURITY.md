@@ -44,8 +44,9 @@ the first line of defence is that no untrusted input is ever rendered as HTML.
 
 ## Personal data
 
-The public CV has the phone number, date of birth, father's name, address, marital status and signature removed from
-the file itself, and PDF metadata was cleared. The unredacted original is not in this project. Checked by reading text and raw bytes of the output. The portrait has
+On 8 November 2026 the owner chose to publish the original CV unchanged, including the mobile number, date of birth,
+father's name, address, marital status and signature. It is served with `X-Robots-Tag: noindex, nofollow` so it stays
+out of search results; anyone on the site can still download it. No personal details appear in the site's own pages. The portrait has
 no EXIF data. `tests/security` scans the source for phone patterns and private field labels without
 containing those values. The email address is public by the owner's decision.
 

@@ -19,6 +19,7 @@ Every factual claim on the site traces to one of these sources. If something can
 | Blog dates | Chosen to match when each piece of work happened | Posts were written in November 2026. See `docs/private/CONTENT_REVIEW.md` |
 | Third Hand-Eye details | Repository README, circuit diagram and source code | Pins, threshold and formula read from the code |
 | Tour India details | Repository pages and README | Features limited to what the pages show |
+| Courses and certifications | `Desktop\DevloperBro\MOOSC Completed Course List.docx` | Title, platform, credit points, duration and verification link as written. "Using and Python" corrected to the NPTEL title. NPTEL links checked (HTTP 200); Udemy blocks automated checks |
 | Social accounts | GitHub profile `social_accounts` API for Facebook, Instagram and X. CV for LinkedIn and GitHub | All belong to the verified GitHub account |
 | GitHub statistics | Live GitHub API, cached hourly | Hidden if unavailable |
 
@@ -43,5 +44,6 @@ These are hidden rather than invented. Add them to the data files if the facts e
 
 ## Corrections
 
-Corrections made during the content audit, and how the public CV was produced, are recorded in `docs/private/`, which
-is not part of the public repository. The public CV is built from the private original by a script kept in `private/`.
+Corrections made during the content audit are recorded in `docs/private/`, which is not part of the public repository.
+Since 8 November 2026 the downloadable CV is the owner's original file, unchanged, at the owner's request. Its M.Tech
+paragraph keeps the original wording about encryption, which differs from the verified wording on the research pages.

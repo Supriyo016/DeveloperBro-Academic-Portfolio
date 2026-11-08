@@ -46,7 +46,7 @@ Keep all of these in the host's secret settings. Only `NEXT_PUBLIC_SITE_URL` rea
 
 - Send a test message through the contact form.
 - Check the headers at the live URL. `Strict-Transport-Security` appears only over HTTPS.
-- Download the CV and confirm it is the public copy.
+- Download the CV and confirm it is the current original, `Supriyo_Sarkar_Academic_CV.pdf`.
 - Submit `/sitemap.xml` to Google Search Console.
 - Only add the HSTS preload list entry if you are sure every subdomain will stay on HTTPS.
 

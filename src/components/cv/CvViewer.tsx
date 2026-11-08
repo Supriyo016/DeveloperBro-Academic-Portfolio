@@ -34,7 +34,7 @@ export function CvViewer({ children }: { children: ReactNode }) {
           </ButtonAnchor>
         </div>
       </div>
-      <p className="no-print mt-3 text-sm text-muted">Public copy, last updated {profile.cvUpdated}. Private personal details are removed.</p>
+      <p className="no-print mt-3 text-sm text-muted">Original CV, last updated {profile.cvUpdated}.</p>
 
       <div className="mt-5">
         {view === "web" ? (
