@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AwardScene } from "@/components/illustrations/scenes-objects";
-import { Badge, PageHeader, Reveal } from "@/components/ui/primitives";
-import { achievements, courses } from "@/content/achievements";
-import type { Achievement, Course } from "@/types/content";
+import { PageHeader, Reveal } from "@/components/ui/primitives";
+import { CourseTable } from "@/components/shared/CourseTable";
+import { achievements } from "@/content/achievements";
+import type { Achievement } from "@/types/content";
 
 export const metadata: Metadata = {
   title: "Achievements",
@@ -12,7 +13,6 @@ export const metadata: Metadata = {
 };
 
 const groups: Achievement["group"][] = ["Academic achievements", "Competitive examinations", "Hackathons"];
-const topics: Course["topic"][] = ["Machine Learning", "Programming", "Web Development", "Professional Skills"];
 
 export default function AchievementsPage() {
   return (
@@ -44,22 +44,9 @@ export default function AchievementsPage() {
 
         <section aria-labelledby="courses">
           <h2 id="courses" className="text-3xl">Online courses and certifications</h2>
-          <div className="mt-4 grid gap-x-10 gap-y-6 md:grid-cols-2">
-            {topics.map((topic) => (
-              <div key={topic}>
-                <h3 className="eyebrow">{topic}</h3>
-                <ul className="mt-2 divide-y divide-line border-y border-line">
-                  {courses
-                    .filter((course) => course.topic === topic)
-                    .map((course) => (
-                      <li key={course.title} className="flex items-start justify-between gap-3 py-2.5">
-                        <span className="text-[0.95rem]">{course.title}</span>
-                        <Badge className="shrink-0">{course.provider}</Badge>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            ))}
+          <p className="mt-2 text-ink-2">Each certificate can be checked on the platform that issued it.</p>
+          <div className="mt-4">
+            <CourseTable />
           </div>
         </section>
       </div>

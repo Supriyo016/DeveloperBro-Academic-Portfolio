@@ -167,8 +167,14 @@ export interface Achievement {
 
 export interface Course {
   title: string;
-  provider: string;
-  topic: "Programming" | "Machine Learning" | "Web Development" | "Professional Skills";
+  platform: "NPTEL" | "Udemy";
+  /** As written on the course list, e.g. "3+1" or "1 or 2" */
+  credits: string;
+  duration: string;
+  verifyUrl: string;
+  /** Year completed */
+  year: string;
+  topic: "Programming" | "Machine Learning" | "Data Science" | "Web Development" | "Professional Skills";
 }
 
 export interface ArticleMeta {

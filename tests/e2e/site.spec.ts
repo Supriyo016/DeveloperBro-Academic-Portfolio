@@ -218,7 +218,7 @@ test.describe("home page", () => {
     for (const name of ["Two dissertations, one research path", "What I work on", "Computer science and engineering, step by step", "Built along the way", "Research notes"]) {
       await expect(page.getByRole("heading", { name })).toBeVisible();
     }
-    await expect(page.getByRole("link", { name: "Download academic CV" })).toHaveAttribute("href", "/documents/academic-cv-public.pdf");
+    await expect(page.getByRole("link", { name: "Download academic CV" })).toHaveAttribute("href", "/documents/Supriyo_Sarkar_Academic_CV.pdf");
     await expect(page.getByRole("link", { name: "Contact me" })).toBeVisible();
   });
 
@@ -344,21 +344,22 @@ test.describe("writing", () => {
 });
 
 test.describe("CV", () => {
-  test("offers web, PDF preview and download of the public copy", async ({ page, request }) => {
+  test("offers web, PDF preview and download of the original CV", async ({ page, request }) => {
     await page.goto("/cv");
     await expect(page.getByText("Last updated")).toBeVisible();
     await page.getByRole("button", { name: "PDF preview" }).click();
     await expect(page.getByTitle(/Academic CV/)).toBeVisible();
-    const pdf = await request.get("/documents/academic-cv-public.pdf");
+    const pdf = await request.get("/documents/Supriyo_Sarkar_Academic_CV.pdf");
     expect(pdf.status()).toBe(200);
     expect(pdf.headers()["content-type"]).toContain("pdf");
     expect(pdf.headers()["x-frame-options"]).toBe("SAMEORIGIN");
+    expect(pdf.headers()["x-robots-tag"]).toContain("noindex");
   });
 
   test("download button delivers the file", async ({ page }) => {
     await page.goto("/cv");
     const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("link", { name: "Download PDF" }).click()]);
-    expect(download.suggestedFilename()).toBe("academic-cv-public.pdf");
+    expect(download.suggestedFilename()).toBe("Supriyo_Sarkar_Academic_CV.pdf");
   });
 
   test("print layout keeps the name and hides site chrome, even in dark mode", async ({ page }) => {

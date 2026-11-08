@@ -75,14 +75,10 @@ repository statistics.
 
 ## Updating the CV
 
-```bash
-pip install pymupdf
-python private/scripts/build_public_cv.py <private-cv.pdf> public/documents/academic-cv-public.pdf
-```
-
-Then update `cvUpdated` in `src/content/profile.ts`. The script refuses to finish if private fields or unsupported
-claims remain. Once the source CV is corrected, remove the replacement step from the script. Never copy the original
-into `public/`.
+Since 8 November 2026 the site serves the owner's original CV unchanged, by the owner's decision. Replace
+`public/documents/Supriyo_Sarkar_Academic_CV.pdf` with the new file under the same name, then update `cvUpdated` in
+`src/content/profile.ts`. Every download link, the PDF preview and the assistant read `profile.cvPath`, so nothing
+else changes. The `/documents` path sends `X-Robots-Tag: noindex`, so search engines do not list the file.
 
 ## Rules worth keeping
 

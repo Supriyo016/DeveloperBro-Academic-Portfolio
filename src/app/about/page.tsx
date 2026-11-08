@@ -6,13 +6,14 @@ import type { ReactNode } from "react";
 import { LibraryScene } from "@/components/illustrations/scenes-research";
 import { SocialLinks } from "@/components/shared/SocialLinks";
 import { ArrowLink, Badge, ButtonAnchor, ButtonLink, Reveal } from "@/components/ui/primitives";
-import { achievements, courses } from "@/content/achievements";
+import { achievements } from "@/content/achievements";
 import { timeline } from "@/content/education";
 import { about, education, profile } from "@/content/profile";
 import { projects } from "@/content/projects";
 import { studies } from "@/content/research";
 import { evidenceLabels, researchAreas } from "@/content/research-areas";
 import { skillGroups } from "@/content/skills";
+import { CourseTable } from "@/components/shared/CourseTable";
 
 export const metadata: Metadata = {
   title: "About Me",
@@ -145,15 +146,17 @@ export default function AboutPage() {
           </Chapter>
 
           <Chapter id="skills" title="Technical skills">
-            <div className="space-y-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               {skills.map((group) => (
-                <div key={group.id}>
-                  <h3 className="mb-1.5 text-sm font-medium text-ink">{group.name}</h3>
+                <div key={group.id} className="rounded-xl border border-line bg-surface p-4">
+                  <h3 className="text-sm font-semibold text-ink">{group.name}</h3>
+                  <p className="mb-2 text-xs text-muted">{group.blurb}</p>
                   <Tags items={group.skills.map((skill) => skill.name)} />
                 </div>
               ))}
-              <div>
-                <h3 className="mb-1.5 text-sm font-medium text-ink">Soft skills</h3>
+              <div className="rounded-xl border border-line bg-surface p-4">
+                <h3 className="text-sm font-semibold text-ink">Soft skills</h3>
+                <p className="mb-2 text-xs text-muted">How I work with people.</p>
                 <Tags items={profile.softSkills} />
               </div>
             </div>
@@ -171,14 +174,7 @@ export default function AboutPage() {
           </Chapter>
 
           <Chapter id="courses" title="Courses and certifications">
-            <ul className="divide-y divide-line border-y border-line text-[0.95rem]">
-              {courses.map((course) => (
-                <li key={course.title} className="flex items-start justify-between gap-3 py-2">
-                  <span>{course.title}</span>
-                  <Badge className="shrink-0">{course.provider}</Badge>
-                </li>
-              ))}
-            </ul>
+            <CourseTable />
           </Chapter>
 
           <Chapter id="achievements" title="Achievements">

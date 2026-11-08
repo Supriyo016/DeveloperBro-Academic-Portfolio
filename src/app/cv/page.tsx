@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { CvViewer } from "@/components/cv/CvViewer";
 import { WritingScene } from "@/components/illustrations/scenes-objects";
-import { achievements, courses } from "@/content/achievements";
+import { CourseTable } from "@/components/shared/CourseTable";
+import { achievements } from "@/content/achievements";
 import { profile } from "@/content/profile";
 import { projects } from "@/content/projects";
 import { studies } from "@/content/research";
@@ -95,11 +96,7 @@ export default function CvPage() {
               </ul>
             </Section>
             <Section title="Courses and certifications">
-              <ul className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
-                {courses.map((course) => (
-                  <li key={course.title}>{course.title} ({course.provider})</li>
-                ))}
-              </ul>
+              <CourseTable compact />
             </Section>
           </div>
         </div>
