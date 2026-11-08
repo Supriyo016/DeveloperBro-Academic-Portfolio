@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       { source: "/blog", destination: "/blogs", permanent: true },
       { source: "/blog/:slug", destination: "/blogs/:slug", permanent: true },
       // Pages removed when Projects and Research Works were narrowed
+      { source: "/documents/academic-cv-public.pdf", destination: "/documents/Supriyo_Sarkar_Academic_CV.pdf", permanent: true },
       { source: "/research/federated-knowledge-distillation", destination: "/research/knowledge-distillation-ckks-federated-learning", permanent: true },
       { source: "/projects/federated-alzheimers-benchmark", destination: "/research/federated-alzheimers-detection", permanent: true },
       { source: "/projects/ibmq-gate-assessment", destination: "/research/quantum-gate-assessment", permanent: true },
