@@ -9,6 +9,26 @@ work is on privacy-preserving and federated machine learning for medical imaging
 research, projects, writing and academic background in one place, for anyone considering me for doctoral study or
 research collaboration.
 
+## Screenshots
+
+![Home page in light theme](docs/screenshots/home-light.webp)
+
+| | |
+| --- | --- |
+| ![Home page in dark theme](docs/screenshots/home-dark.webp) | ![Research Works with case study filters](docs/screenshots/research-works.webp) |
+| **Home, dark theme** | **Research Works** |
+| ![M.Tech dissertation case study](docs/screenshots/mtech-case-study.webp) | ![Custom CNN process from MRI slice to diagnosis](docs/screenshots/custom-cnn.webp) |
+| **M.Tech case study** | **Inside the Custom CNN** |
+| ![Per-model results explorer in dark theme](docs/screenshots/model-results.webp) | ![B.Tech quantum gate case study](docs/screenshots/quantum-case-study.webp) |
+| **Results explorer** | **Quantum case study** |
+| ![Blogs and research notes](docs/screenshots/blogs.webp) | ![About Me](docs/screenshots/about.webp) |
+| **Blogs** | **About Me** |
+
+<p align="center">
+  <img src="docs/screenshots/mobile-home.webp" alt="Home page on a phone" width="300"><br>
+  <b>On a phone</b>
+</p>
+
 ## What you will find
 
 - **Home**: who I am, what I am working on now, and a slideshow of my research themes.
