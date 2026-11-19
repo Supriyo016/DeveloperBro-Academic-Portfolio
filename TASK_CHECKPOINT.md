@@ -146,6 +146,14 @@ published; the IBMQ API token in the notebooks is not in the repo). Security rev
 token (`lib/security/form-token.ts`), streamed body limit, daily cap, http(s)-only URLs, consent-gated storage,
 Vercel URL fallback; cleanup moved `useWidth` to hooks, `theme.ts` to lib, `github.ts` to services.
 
+## Repository housekeeping, 20 November 2026
+
+- `main` is protected by the GitHub ruleset "Protect main": no deletion, no force push, pull requests must pass the
+  `verify` CI job. Repository admins can bypass (used for direct deploy pushes and one history rewrite).
+- History rewritten to remove co-author trailers; the owner is the sole author. The pre-rewrite history is kept on
+  the local branch `backup/before-coauthor-rewrite`. Commits carry no co-author trailers from now on.
+- README rewritten as a short description of the website.
+
 ## Next exact steps
 
 1. Owner reads `docs/private/CONTENT_REVIEW.md`, including the blog section, and removes or edits any post.
