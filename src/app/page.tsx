@@ -1,16 +1,15 @@
-import { ArrowRight, Download, Mail } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
+import { IdentityHero } from "@/components/identity-card/IdentityHero";
 import { HeroScene } from "@/components/illustrations/HeroScene";
 import { WorkbenchScene } from "@/components/illustrations/scenes-objects";
 import { QuantumScene } from "@/components/illustrations/scenes-extra";
 import { CollaborationScene, DiagramScene, MriScene, NeuralScene, PresentScene } from "@/components/illustrations/scenes-research";
 import { JsonLd } from "@/components/layout/JsonLd";
 import { ProjectCard } from "@/components/projects/ProjectCard";
-import { SocialLinks } from "@/components/shared/SocialLinks";
-import { ArrowLink, Badge, ButtonAnchor, ButtonLink, Reveal, SectionHeading } from "@/components/ui/primitives";
+import { ArrowLink, Badge, Reveal, SectionHeading } from "@/components/ui/primitives";
 import { timeline } from "@/content/education";
 import { heroSlides } from "@/content/home";
 import { profile } from "@/content/profile";
@@ -71,33 +70,12 @@ export default function HomePage() {
 
       <section className="hero-backdrop relative overflow-hidden">
         <div className="container-page pt-8 pb-12 sm:pt-10">
-          <div className="flex items-center gap-3">
-            <Image src={profile.portrait} alt={`Portrait of ${profile.name}`} width={64} height={80} priority className="size-14 rounded-full object-cover object-top ring-2 ring-line" />
-            <div>
-              <h1 className="text-xl leading-tight tracking-normal">{profile.name}</h1>
-              <p className="text-sm text-ink-2">{profile.degree}. {profile.role}.</p>
-            </div>
-          </div>
+          <IdentityHero />
 
-          <div className="mt-6">
+          <div className="mt-4 border-t border-line pt-8">
             <HeroCarousel slides={slides} labels={heroSlides.map((slide) => slide.label)} />
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <ButtonLink href="/research" data-magnetic>
-              Explore research
-              <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
-            </ButtonLink>
-            <ButtonAnchor href={profile.cvPath} download variant="secondary" data-magnetic>
-              <Download className="size-4" aria-hidden />
-              Download academic CV
-            </ButtonAnchor>
-            <ButtonLink href="/contact" variant="secondary" data-magnetic>
-              <Mail className="size-4" aria-hidden />
-              Contact me
-            </ButtonLink>
-            <SocialLinks only={["github", "linkedin"]} />
-          </div>
         </div>
       </section>
 

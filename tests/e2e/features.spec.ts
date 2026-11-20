@@ -255,3 +255,44 @@ test.describe("project visuals", () => {
     await expect(page.getByText("Research case studies")).toBeVisible();
   });
 });
+
+test.describe("identity badge", () => {
+  test("hangs in the home hero with real details and swings when dragged or nudged", async ({ page }) => {
+    await page.goto("/");
+    const badge = page.getByRole("group", { name: /Identity badge: Supriyo Sarkar/ });
+    await expect(badge).toBeVisible();
+    await expect(badge).toContainText("RESEARCH PASS");
+    await expect(badge).toContainText("M.TECH CSE · KGEC");
+    await expect(badge.getByRole("img", { name: "Photograph of Supriyo Sarkar" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Supriyo\s*Sarkar/);
+
+    // Let the entrance swing settle, then drag the badge to the left.
+    await expect(badge).toHaveAttribute("data-placed", "true");
+    await page.waitForTimeout(1500);
+    const box = (await badge.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x - 140, box.y + 20, { steps: 8 });
+    await expect.poll(async () => Math.abs((await badge.boundingBox())!.x - box.x)).toBeGreaterThan(60);
+    await page.mouse.up();
+
+    await badge.focus();
+    const before = await badge.evaluate((element) => element.style.transform);
+    await page.keyboard.press("ArrowRight");
+    await expect.poll(() => badge.evaluate((element) => element.style.transform)).not.toBe(before);
+  });
+
+  test("hangs still with reduced motion", async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: "reduce", storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
+    await page.goto("/");
+    const badge = page.getByRole("group", { name: /Identity badge/ });
+    await expect(badge).toBeVisible();
+    const first = await badge.evaluate((element) => element.style.transform);
+    await page.waitForTimeout(600);
+    expect(await badge.evaluate((element) => element.style.transform)).toBe(first);
+    // Hanging straight down, plus the small resting tilt.
+    expect(first).toMatch(/rotateZ\(3(\.0+)?deg\)/);
+    await context.close();
+  });
+});

@@ -154,6 +154,12 @@ Vercel URL fallback; cleanup moved `useWidth` to hooks, `theme.ts` to lib, `gith
   the local branch `backup/before-coauthor-rewrite`. Commits carry no co-author trailers from now on.
 - README rewritten as a short description of the website.
 
+## Identity badge, 20 November 2026
+
+Home hero rebuilt around a hanging 3D identity badge recreated from a Facebook Reel reference
+(`docs/IDENTITY_CARD_REFERENCE.md`). Components in `src/components/identity-card/`. Physics only runs while the badge
+moves and is visible; reduced motion and the pause switch keep it still. Tests: `identity badge` in features.spec.ts.
+
 ## Next exact steps
 
 1. Owner reads `docs/private/CONTENT_REVIEW.md`, including the blog section, and removes or edits any post.
