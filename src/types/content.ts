@@ -126,6 +126,8 @@ export interface Project {
   highlights?: string[];
   implementation?: string[];
   learning?: string[];
+  limitations?: string[];
+  stats?: { value: number; suffix?: string; label: string }[];
   repo?: string;
   repoName?: string;
   live?: string;

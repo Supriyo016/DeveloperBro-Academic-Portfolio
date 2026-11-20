@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { ProjectHero, ProjectStats, ProjectVisuals } from "@/components/projects/ProjectVisuals";
 import { RepoStats } from "@/components/projects/RepoStats";
 import { ArrowLink, Badge, ExternalLink } from "@/components/ui/primitives";
 import { getProject } from "@/content/projects";
@@ -22,22 +23,30 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) notFound();
 
   return (
-    <article className="container-page max-w-3xl pt-10">
+    <article className="container-page pt-10">
       <nav aria-label="Breadcrumb" className="text-sm text-muted">
         <Link href="/projects" className="hover:text-primary">Projects</Link> / <span>{project.title}</span>
       </nav>
-      <header className="mt-5">
-        <div className="flex flex-wrap gap-2">
-          {project.categories.map((category) => (
-            <Badge key={category} tone="primary">{category}</Badge>
-          ))}
-          <Badge>{project.year}</Badge>
-          <Badge tone="accent">{project.kind}</Badge>
+      <header className="mt-5 grid items-center gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <div>
+          <div className="flex flex-wrap gap-2">
+            {project.categories.map((category) => (
+              <Badge key={category} tone="primary">{category}</Badge>
+            ))}
+            <Badge>{project.year}</Badge>
+            <Badge tone="accent">{project.kind}</Badge>
+          </div>
+          <h1 className="headline mt-4 text-4xl sm:text-5xl">{project.title}</h1>
+          <p className="mt-3 font-serif text-xl text-ink-2">{project.tagline}</p>
         </div>
-        <h1 className="mt-4 text-4xl sm:text-5xl">{project.title}</h1>
-        <p className="mt-3 font-serif text-xl text-ink-2">{project.tagline}</p>
+        <ProjectHero slug={project.slug} />
       </header>
 
+      <div className="mt-10">
+        <ProjectStats project={project} />
+      </div>
+
+      <div className="max-w-3xl">
       <div className="mt-8 space-y-4 text-ink-2">
         {project.overview.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
@@ -77,6 +86,11 @@ export default async function ProjectPage({ params }: Props) {
         </section>
       )}
 
+      </div>
+
+      <ProjectVisuals slug={project.slug} />
+
+      <div className="max-w-3xl">
       {project.image && (
         <figure className="card mt-8 overflow-hidden">
           <div className="zoom-media bg-white p-2">
@@ -102,6 +116,17 @@ export default async function ProjectPage({ params }: Props) {
           <h2 id="implementation-title" className="text-2xl">Implementation details</h2>
           <ul className="mt-3 list-disc space-y-1.5 pl-5 text-ink-2 marker:text-primary">
             {project.implementation.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {project.limitations && (
+        <section className="mt-8" aria-labelledby="limitations-title">
+          <h2 id="limitations-title" className="text-2xl">Limitations and next steps</h2>
+          <ul className="mt-3 list-disc space-y-1.5 pl-5 text-ink-2 marker:text-primary">
+            {project.limitations.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
@@ -140,6 +165,7 @@ export default async function ProjectPage({ params }: Props) {
           </Suspense>
         )}
       </section>
+      </div>
     </article>
   );
 }

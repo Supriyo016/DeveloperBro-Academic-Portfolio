@@ -201,7 +201,7 @@ const topics: Topic[] = [
       return {
         text: [
           "Third Hand-Eye is an assistive device for visually impaired people.",
-          "An Arduino Uno drives an HC-SR04 ultrasonic sensor that measures the distance to obstacles, and a buzzer sounds whenever something is within about 100 cm. It's written in C/C++ in the Arduino IDE, and the repository has the circuit diagram, report and a video demo.",
+          "An Arduino Uno drives an HC-SR04 ultrasonic sensor that measures the distance to obstacles, and a buzzer beeps whenever something is within 100 cm. The firmware is C++, its distance maths is unit-tested on a PC, and CI compiles it for the Uno. The project page has a simulator you can play with.",
         ],
         links: [
           { href: "/projects/third-hand-eye", label: "Project page" },
@@ -219,8 +219,8 @@ const topics: Topic[] = [
       const project = kb.projects.find((item) => item.slug === "tour-india");
       return {
         text: [
-          "Tour India is a multi-page travel website built with HTML, CSS and JavaScript, with a destination gallery, services for hotels, food and safety, a video tour section and an enquiry form.",
-          "It was developed after selection for Smart India Hackathon 2022, and it's live on GitHub Pages.",
+          "Tour India started at Smart India Hackathon 2022 as a static travel website, and Supriyo rebuilt it in 2026 as a full guide to all 28 states and 8 Union Territories.",
+          "It has an interactive map, 52 destination guides on a 3D globe, a festival calendar and a trip planner, built with Next.js and TypeScript on Vercel.",
         ],
         links: [
           { href: "/projects/tour-india", label: "Project page" },
@@ -396,7 +396,7 @@ const topics: Topic[] = [
     id: "achievements",
     keys: ["achievement", "achievements", "award", "awards", "rank", "pget", "exam", "certificate", "certificates", "courses", "nptel"],
     answer: () => ({
-      text: ["The achievements page lists WB PGET 2025 (Rank 43), selection for Smart India Hackathon 2022, and courses from NPTEL, Coursera and Udemy, including Deep Learning and Python for Data Science."],
+      text: ["The achievements page lists WB PGET 2025 (Rank 43), selection for Smart India Hackathon 2022, and eight courses from NPTEL and Udemy, including Deep Learning and Python for Data Science, each with a verification link."],
       links: [{ href: "/achievements", label: "Achievements" }],
     }),
   },

@@ -227,3 +227,31 @@ test.describe("case studies, calendar and replayed animations", () => {
     await expect(section).toHaveClass(/is-visible/);
   });
 });
+
+test.describe("project visuals", () => {
+  test("the Third Hand-Eye simulator follows the firmware's alert rule", async ({ page }) => {
+    await page.goto("/projects/third-hand-eye");
+    await expect(page.getByRole("img", { name: /3D model of the Third Hand-Eye device/ })).toBeVisible();
+    const slider = page.getByLabel(/Obstacle distance/);
+    await slider.fill("60");
+    await expect(page.getByText("Beep 100 ms")).toBeVisible();
+    await expect(page.getByText("3,480 µs").first()).toBeVisible();
+    await slider.fill("101");
+    await expect(page.getByText("Silent", { exact: true })).toBeVisible();
+    await slider.fill("600");
+    await expect(page.getByText("timeout", { exact: true })).toBeVisible();
+  });
+
+  test("Tour India shows its globe, carousel and the live link", async ({ page }) => {
+    await page.goto("/projects/tour-india");
+    await expect(page.getByRole("img", { name: /52 Tour India destination guides/ })).toBeVisible();
+    await expect(page.getByRole("img", { name: "Trip planner" })).toBeAttached();
+    await expect(page.getByRole("link", { name: /Live site/ })).toHaveAttribute("href", "https://tour-india-pi.vercel.app");
+  });
+
+  test("the portfolio page shows its layer stack and counters", async ({ page }) => {
+    await page.goto("/projects/developerbro-academic-portfolio");
+    await expect(page.getByRole("img", { name: /3D stack of the site's layers/ })).toBeVisible();
+    await expect(page.getByText("Research case studies")).toBeVisible();
+  });
+});

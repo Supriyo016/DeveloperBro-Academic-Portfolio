@@ -276,7 +276,7 @@ test.describe("research depth", () => {
 
   test("project page shows verified implementation detail and repository stats", async ({ page }) => {
     await page.goto("/projects/third-hand-eye");
-    await expect(page.getByText("Trigger on pin 12")).toBeVisible();
+    await expect(page.getByText(/Trig on D12/)).toBeVisible();
     await expect(page.getByText(/Repository updated|Live repository data is unavailable/)).toBeVisible({ timeout: 12_000 });
   });
 });
@@ -326,6 +326,8 @@ test.describe("writing", () => {
   });
 
   test("every article renders, and its table of contents links reach their headings", async ({ page }) => {
+    // Opens all 29 articles in turn, so it needs longer than one page load.
+    test.setTimeout(150_000);
     await page.goto("/blogs");
     const slugs = [...new Set((await page.locator('main a[href^="/blogs/"]').evaluateAll((links) => links.map((link) => link.getAttribute("href") ?? ""))).map((href) => href.replace("/blogs/", "")))];
     expect(slugs.length).toBeGreaterThanOrEqual(25);

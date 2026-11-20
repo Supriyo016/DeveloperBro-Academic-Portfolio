@@ -1,0 +1,101 @@
+/* 3D and moving visuals for the project pages. CSS transforms only; paused by the motion switch and reduced motion. */
+
+/* ---------- Third Hand-Eye: the device ---------- */
+.device-stage { perspective: 900px; height: 300px; display: grid; place-items: center; }
+.device-float { position: relative; transform-style: preserve-3d; animation: device-float 5s ease-in-out infinite alternate; }
+.device-box {
+  --w: 220px; --h: 140px; --d: 46px;
+  position: relative; width: var(--w); height: var(--h);
+  transform-style: preserve-3d;
+  animation: device-turn 9s ease-in-out infinite alternate;
+}
+.device-face { position: absolute; border-radius: 10px; backface-visibility: hidden; }
+.device-front, .device-back { width: var(--w); height: var(--h); }
+.device-front { background: linear-gradient(160deg, #1593a3, #0b5f6b); transform: translateZ(calc(var(--d) / 2)); display: flex; align-items: center; justify-content: center; gap: 22px; box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.18); }
+.device-back { background: linear-gradient(160deg, #0f7d8c, #08434c); transform: rotateY(180deg) translateZ(calc(var(--d) / 2)); }
+.device-left, .device-right { width: var(--d); height: var(--h); left: calc(50% - var(--d) / 2); background: #0a5560; }
+.device-left { transform: rotateY(-90deg) translateZ(calc(var(--w) / 2)); }
+.device-right { transform: rotateY(90deg) translateZ(calc(var(--w) / 2)); }
+.device-top, .device-bottom { width: var(--w); height: var(--d); top: calc(50% - var(--d) / 2); background: #0d6a76; }
+.device-top { transform: rotateX(90deg) translateZ(calc(var(--h) / 2)); display: grid; place-items: center; }
+.device-bottom { transform: rotateX(-90deg) translateZ(calc(var(--h) / 2)); background: #062f35; }
+.sensor-eye { position: relative; width: 58px; height: 58px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #f4f7fb, #b8c1d4 55%, #6b7790); box-shadow: 0 0 0 5px #2a3346, inset 0 0 0 9px #8a95ab; }
+.sensor-eye::after { content: ""; position: absolute; inset: 20px; border-radius: 50%; background: repeating-radial-gradient(circle, #59647b 0 2px, #9aa4b8 2px 4px); }
+.sensor-label { position: absolute; bottom: 8px; font: 600 10px/1 var(--font-geist-mono), monospace; color: #d7f6f8; letter-spacing: 0.1em; }
+.board-label { position: absolute; top: 14px; left: 16px; font: 700 12px/1 var(--font-geist-mono), monospace; color: #e5fbff; letter-spacing: 0.12em; }
+.board-chip { position: absolute; right: 28px; bottom: 26px; width: 64px; height: 26px; border-radius: 3px; background: #10141f; box-shadow: 0 0 0 3px #3a4256; }
+.buzzer { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #3b3f55, #11131d); box-shadow: 0 0 0 3px #555b73; }
+.sonar-ring { position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px; border: 3px solid var(--accent); border-radius: 50%; opacity: 0; transform: translateZ(4px); animation: sonar-ring 2.1s ease-out infinite; }
+.device-shadow { position: absolute; left: 50%; top: 100%; width: 200px; height: 26px; margin: 40px 0 0 -100px; border-radius: 50%; background: radial-gradient(closest-side, rgb(0 0 0 / 0.28), transparent); animation: shadow-breathe 5s ease-in-out infinite alternate; }
+
+@keyframes device-turn { from { transform: rotateX(-14deg) rotateY(-38deg); } to { transform: rotateX(-8deg) rotateY(32deg); } }
+@keyframes device-float { from { transform: translateY(0); } to { transform: translateY(-12px); } }
+@keyframes shadow-breathe { from { transform: scale(1); opacity: 1; } to { transform: scale(0.85); opacity: 0.7; } }
+@keyframes sonar-ring { 0% { opacity: 0.9; transform: translateZ(4px) scale(0.6); } 100% { opacity: 0; transform: translateZ(60px) scale(3.4); } }
+
+/* ---------- Third Hand-Eye: sonar simulator and loop ---------- */
+.sonar-out { animation: sonar-out var(--t, 1.2s) linear infinite; }
+.sonar-back { opacity: 0; animation: sonar-back var(--t, 1.2s) linear infinite; animation-delay: var(--t, 1.2s); }
+@keyframes sonar-out { from { transform: translateX(0); opacity: 1; } 90% { opacity: 0.8; } to { transform: translateX(var(--dx, 200px)); opacity: 0; } }
+@keyframes sonar-back { from { transform: translateX(0); opacity: 1; } to { transform: translateX(calc(-1 * var(--dx, 200px))); opacity: 0; } }
+.buzz { transform-box: fill-box; transform-origin: center; animation: buzz 0.25s ease-in-out infinite alternate; }
+.buzz-wave { animation: buzz-wave 0.8s ease-out infinite; }
+@keyframes buzz { from { transform: scale(1); } to { transform: scale(1.18); } }
+@keyframes buzz-wave { from { opacity: 1; } to { opacity: 0; } }
+.loop-step { animation: loop-glow 4.8s ease-in-out infinite; }
+@keyframes loop-glow {
+  0%, 16%, 100% { box-shadow: 0 1px 2px rgb(18 22 52 / 0.04); border-color: var(--line); transform: translateY(0); }
+  4%, 12% { box-shadow: 0 10px 24px -12px var(--glow), 0 0 0 2px var(--primary); border-color: var(--primary); transform: translateY(-4px); }
+}
+
+/* ---------- Tour India: 3D carousel ---------- */
+.carousel3d { --r: clamp(170px, 34vw, 360px); --w: clamp(220px, 44vw, 430px); perspective: 1400px; height: calc(var(--w) * 0.95 + 60px); display: grid; place-items: center; overflow-x: clip; overflow-y: visible; }
+.carousel3d-ring { position: relative; width: var(--w); height: calc(var(--w) * 0.62); transform-style: preserve-3d; animation: ring-turn 24s linear infinite; }
+.carousel3d:hover .carousel3d-ring { animation-play-state: paused; }
+.carousel3d-panel { position: absolute; inset: 0; transform: rotateY(calc(var(--i) * 90deg)) translateZ(var(--r)); backface-visibility: hidden; background: var(--surface); padding: 6px; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 20px 40px -24px rgb(0 0 0 / 0.5); }
+@keyframes ring-turn { from { transform: rotateX(-6deg) rotateY(0); } to { transform: rotateX(-6deg) rotateY(-360deg); } }
+.globe-ping { transform-box: fill-box; transform-origin: center; animation: globe-ping 1.6s ease-out infinite; }
+@keyframes globe-ping { from { transform: scale(0.6); opacity: 1; } to { transform: scale(2.4); opacity: 0; } }
+.evolution-card { animation: evo-rise 4s ease-in-out infinite alternate; }
+@keyframes evo-rise { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+
+/* ---------- Portfolio: layer stack and orbit ---------- */
+.stack-stage { perspective: 1000px; height: 330px; display: grid; place-items: center; }
+.stack-scene { position: relative; width: 240px; height: 240px; transform-style: preserve-3d; animation: stack-turn 14s ease-in-out infinite alternate; }
+.stack-layer {
+  position: absolute; inset: 0; border-radius: 18px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--layer) 85%, #fff), var(--layer));
+  opacity: 0.88; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.35) inset, 0 18px 30px -18px rgb(0 0 0 / 0.5);
+  transform: translateZ(calc(var(--level) * 44px - 88px));
+  animation: layer-breathe 4s ease-in-out infinite alternate;
+  animation-delay: calc(var(--level) * -0.6s);
+}
+.stack-name { position: absolute; left: 14px; bottom: 10px; font: 600 13px/1 var(--font-geist), sans-serif; color: #fff; text-shadow: 0 1px 2px rgb(0 0 0 / 0.4); }
+.stack-packet { position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px; border-radius: 50%; background: #fff; box-shadow: 0 0 14px 4px var(--gold); animation: packet-rise 3.3s ease-in-out infinite; }
+@keyframes stack-turn { from { transform: rotateX(58deg) rotateZ(-38deg); } to { transform: rotateX(52deg) rotateZ(-16deg); } }
+@keyframes layer-breathe { from { transform: translateZ(calc(var(--level) * 44px - 88px)); } to { transform: translateZ(calc(var(--level) * 50px - 100px)); } }
+@keyframes packet-rise { from { transform: translateZ(-100px); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } to { transform: translateZ(110px); opacity: 0; } }
+
+.orbit-stage { --r: clamp(120px, 26vw, 190px); perspective: 900px; height: calc(var(--r) * 2 + 40px); display: grid; place-items: center; position: relative; }
+.orbit-core { position: absolute; display: grid; place-items: center; width: 84px; height: 84px; border-radius: 22px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; font: 600 30px/1 var(--font-newsreader), serif; box-shadow: 0 0 40px var(--glow); animation: il-pulse 2s ease-in-out infinite alternate; }
+.orbit-ring { position: relative; width: 0; height: 0; transform-style: preserve-3d; animation: orbit-ring 26s linear infinite; }
+.orbit-item { position: absolute; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--r)); }
+/* Each chip is turned back by its slot angle and spun against the ring, so its label always faces the viewer. */
+.orbit-face { display: block; transform-style: preserve-3d; transform: rotateY(calc(var(--i) * -360deg / var(--n))); }
+.orbit-chip { display: block; animation: orbit-counter 26s linear infinite; translate: -50% -50%; white-space: nowrap; padding: 4px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line-strong); font-size: 12px; color: var(--ink); box-shadow: 0 8px 18px -12px rgb(0 0 0 / 0.5); }
+@keyframes orbit-ring { from { transform: rotateX(-16deg) rotateY(0); } to { transform: rotateX(-16deg) rotateY(360deg); } }
+@keyframes orbit-counter { from { transform: rotateY(0) rotateX(16deg); } to { transform: rotateY(-360deg) rotateX(16deg); } }
+
+.stat-card { animation: evo-rise 3.6s ease-in-out infinite alternate; }
+.tilt-card { will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .device-float, .device-box, .sonar-ring, .device-shadow, .sonar-out, .sonar-back, .buzz, .buzz-wave, .loop-step,
+  .carousel3d-ring, .globe-ping, .evolution-card, .stack-scene, .stack-layer, .stack-packet, .orbit-core, .orbit-ring, .orbit-chip, .stat-card {
+    animation: none !important;
+  }
+  .sonar-ring, .stack-packet { display: none; }
+}
+
+/* Keep 3D scenes from widening the page on narrow phones */
+.device-stage, .stack-stage, .orbit-stage { overflow-x: clip; }

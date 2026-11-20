@@ -77,7 +77,7 @@ describe("site assistant", () => {
   });
 
   it("only links to the site, verified accounts or email", () => {
-    const allowed = [/^\//, /^mailto:/, /^https:\/\/(github\.com\/Supriyo016|www\.linkedin\.com|x\.com|www\.instagram\.com|www\.facebook\.com|www\.youtube\.com|supriyo016\.github\.io)/];
+    const allowed = [/^\//, /^mailto:/, /^https:\/\/(github\.com\/Supriyo016|www\.linkedin\.com|x\.com|www\.instagram\.com|www\.facebook\.com|www\.youtube\.com|supriyo016\.github\.io|tour-india-pi\.vercel\.app)/];
     const questions = ["hello", "projects", "contact", "social links", "third hand eye", "tour india", "this website", "research", "cv", "blog", "what is ckks", "cost of encryption"];
     for (const question of questions) {
       for (const link of ask(question).reply.links ?? []) {
