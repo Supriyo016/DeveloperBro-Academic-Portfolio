@@ -95,7 +95,7 @@ DeveloperBro. is designed to make academic and technical content easy to navigat
 
 <div align="center">
 
-<img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,python,pytorch,tensorflow,git,github,vscode&perline=10" alt="DeveloperBro technology logos: Next.js, React, TypeScript, Tailwind CSS, Python, PyTorch, TensorFlow, Git, GitHub and Visual Studio Code">
+<img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,css,html,md,mdx,katex,shiki,zod,resend,lucide,npm,nodejs,eslint,vitest,playwright,githubactions,vercel,git,github,vscode&perline=8" alt="DeveloperBro project tools: Next.js, React, TypeScript, Tailwind CSS, CSS, HTML, Markdown, MDX, KaTeX, Shiki, Zod, Resend, Lucide, npm, Node.js, ESLint, Vitest, Playwright, GitHub Actions, Vercel, Git, GitHub and Visual Studio Code">
 
 </div>
 
