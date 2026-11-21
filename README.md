@@ -93,49 +93,82 @@ DeveloperBro. is designed to make academic and technical content easy to navigat
 
 ## 🧰 5. Technology and Tools
 
+The main stack is grouped by role, with each category's icons arranged in a consistent row. This makes the tools easier to scan than a single mixed icon grid.
+
+### 1. Frontend
+
 <div align="center">
-
-<img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,css,html,md,mdx&perline=8" alt="Frontend and content tools: Next.js, React, TypeScript, Tailwind CSS, CSS, HTML, Markdown and MDX">
-
-<img src="https://skillicons.dev/icons?i=katex,nodejs,npm,zod,resend,lucide,eslint,git&perline=8" alt="Application and development tools: KaTeX, Node.js, npm, Zod, Resend, Lucide, ESLint and Git">
-
-<img src="https://skillicons.dev/icons?i=vitest,playwright,githubactions,github,vercel,vscode&perline=8" alt="Testing and delivery tools: Vitest, Playwright, GitHub Actions, GitHub, Vercel and Visual Studio Code">
-
+  <img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,css,html&perline=6" alt="Frontend: Next.js, React, TypeScript, Tailwind CSS, CSS and HTML">
 </div>
 
-The icons are arranged in **three consistent rows**—application stack, supporting tools, and testing/deployment—so every skill is easy to scan without uneven gaps.
-
-### ⚙️ Core Application Stack
-
-| Layer | Technology |
+| Technology | Purpose |
 |---|---|
-| Framework | Next.js 16 |
-| UI library | React 19 |
-| Language | TypeScript 6 |
-| Styling | Tailwind CSS 4 and CSS variables |
-| Content | MDX, `next-mdx-remote`, `gray-matter` |
-| Mathematical typesetting | KaTeX |
-| Code highlighting | Shiki / rehype-pretty-code |
-| Validation | Zod |
-| Email delivery | Resend |
-| Icons | Lucide React |
+| Next.js 16 | App Router, page routing and server rendering |
+| React 19 | Component-based user interface |
+| TypeScript 6 | Typed application logic |
+| Tailwind CSS 4 | Responsive styling and design consistency |
+| CSS | Layout, themes, animation and visual effects |
+| HTML | Semantic page structure |
 
-### 🧪 Development, Testing and Delivery
+### 2. Backend and Application Services
 
-| Purpose | Technology |
+<div align="center">
+  <img src="https://skillicons.dev/icons?i=nodejs,npm,zod,resend,lucide&perline=5" alt="Backend and application services: Node.js, npm, Zod, Resend and Lucide">
+</div>
+
+| Technology | Purpose |
 |---|---|
-| Package management | npm |
-| Linting | ESLint 9 |
-| Static type checking | TypeScript compiler |
-| Unit and integration tests | Vitest 5 |
-| Browser automation | Playwright |
-| Accessibility checks | axe-core with Playwright |
-| Continuous integration | GitHub Actions |
-| Deployment | Vercel |
-| Version control | Git and GitHub |
+| Node.js | JavaScript runtime for development and server-side tooling |
+| npm | Package management and project scripts |
+| Zod | Runtime validation for structured data and contact input |
+| Resend | Contact-form email delivery |
+| Lucide React | Consistent icon components |
+
+### 3. Content, Documentation and Rendering
+
+<div align="center">
+  <img src="https://skillicons.dev/icons?i=md,mdx&perline=2" alt="Content formats: Markdown and MDX">
+</div>
+
+| Technology | Purpose |
+|---|---|
+| Markdown | Structured technical writing |
+| MDX | Content pages with embedded components |
+| KaTeX | Mathematical equation rendering |
+| Shiki | Syntax highlighting for code examples |
+| rehype-pretty-code | Code-block formatting |
+| gray-matter | Frontmatter parsing |
+
+### 4. Testing and Quality Assurance
+
+<div align="center">
+  <img src="https://skillicons.dev/icons?i=vitest,playwright,eslint&perline=3" alt="Testing and quality tools: Vitest, Playwright and ESLint">
+</div>
+
+| Technology | Purpose |
+|---|---|
+| Vitest | Unit and integration tests |
+| Playwright | Browser-based end-to-end tests |
+| axe-core | Automated accessibility checks with Playwright |
+| ESLint | Code-quality and lint checks |
+| TypeScript compiler | Static type checking |
+
+### 5. Version Control, CI/CD and Deployment
+
+<div align="center">
+  <img src="https://skillicons.dev/icons?i=git,github,githubactions,vercel,vscode&perline=5" alt="Development and delivery: Git, GitHub, GitHub Actions, Vercel and Visual Studio Code">
+</div>
+
+| Technology | Purpose |
+|---|---|
+| Git | Version control |
+| GitHub | Source hosting and collaboration |
+| GitHub Actions | Automated CI checks |
+| Vercel | Production hosting and deployment |
+| Visual Studio Code | Development environment |
 
 > [!NOTE]
-> The icon rows are a visual index; the tables below identify each tool's actual role in this repository. DeveloperBro does not currently use a database, an authentication provider, Redux, or a separate backend service.
+> This list reflects the current DeveloperBro repository. It does **not** use a database, authentication provider, Redux, or a separate backend service. The tables distinguish application technologies from supporting development and deployment tools.
 
 ## 🏛️ 6. Application Architecture
 
