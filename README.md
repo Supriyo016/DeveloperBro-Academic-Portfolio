@@ -93,6 +93,12 @@ DeveloperBro. is designed to make academic and technical content easy to navigat
 
 ## 🧰 5. Technology and Tools
 
+<div align="center">
+
+<img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,python,pytorch,tensorflow,git,github,vscode&perline=10" alt="DeveloperBro technology logos: Next.js, React, TypeScript, Tailwind CSS, Python, PyTorch, TensorFlow, Git, GitHub and Visual Studio Code">
+
+</div>
+
 The stack is selected to support a fast, accessible, research-focused portfolio, with strong typing, structured content, readable technical articles and reliable delivery.
 
 ### Core application stack
