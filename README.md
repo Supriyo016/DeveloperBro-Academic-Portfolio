@@ -143,8 +143,6 @@ The stack is selected to support a fast, accessible, research-focused portfolio,
 
 ## 🏛️ 6. Application Architecture
 
-## 🏛️ 6. Application Architecture
-
 The application follows a **server-first rendering model** using the Next.js App Router. Server Components handle the majority of page rendering, while Client Components are introduced only for interactions that require browser state or APIs. The contact endpoint validates submitted data before forwarding messages to Resend.
 
 ```mermaid
