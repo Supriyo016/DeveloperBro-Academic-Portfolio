@@ -91,6 +91,145 @@ DeveloperBro. is designed to make academic and technical content easy to navigat
   <sub>Mobile interface</sub>
 </div>
 
+## 🧰 5. Technology and Tools
+
+The stack is selected to support a fast, accessible, research-focused portfolio, with strong typing, structured content, readable technical articles and reliable delivery.
+
+### Core application stack
+
+| Area | Technology | Role in DeveloperBro |
+|---|---|---|
+| Application framework | **Next.js 16** | App Router, server rendering, routing, metadata and API endpoints |
+| UI library | **React 19** | Reusable interface components and interactive client-side features |
+| Language | **TypeScript 6** | Typed application logic and safer component contracts |
+| Styling | **Tailwind CSS 4** | Utility-first styling, responsive layouts and design consistency |
+| Content | **MDX**, `next-mdx-remote`, `gray-matter` | Structured research notes and content pages |
+| Markdown extensions | `remark-gfm`, `remark-math`, `rehype-slug` | Tables, task lists, mathematical notation and heading anchors |
+| Mathematics | **KaTeX**, `rehype-katex` | Rendering inline and display equations |
+| Code highlighting | **Shiki**, `rehype-pretty-code` | Syntax-highlighted code examples in technical articles |
+| Validation | **Zod** | Runtime validation of contact-form input and structured data |
+| Email delivery | **Resend** | Contact-form message delivery |
+| Icons | **Lucide React** | Consistent interface icons |
+
+### Development, testing and delivery
+
+| Purpose | Technology | How it is used |
+|---|---|---|
+| Package management | **npm** | Dependency installation and project scripts |
+| Linting | **ESLint 9** | Code-quality and lint checks |
+| Static type checking | **TypeScript compiler** | `tsc --noEmit` validation |
+| Unit and integration tests | **Vitest 5** | Automated application and utility tests |
+| Browser automation | **Playwright** | End-to-end browser tests |
+| Accessibility checks | **axe-core + Playwright** | Automated accessibility assertions in browser tests |
+| CI | **GitHub Actions** | Automated quality checks on repository changes |
+| Deployment | **Vercel** | Production hosting and Next.js deployment |
+| Version control | **Git and GitHub** | Source history, collaboration and issue tracking |
+
+### Supporting platform capabilities
+
+- **RSS:** exposes the research notes feed for readers and feed aggregators.
+- **Search and metadata:** uses generated page metadata, sitemap and robots rules to support discovery.
+- **Responsive imagery:** Next.js image optimisation outputs modern AVIF and WebP formats where supported.
+- **Contact configuration:** environment variables keep the Resend key, recipient address and optional signing secret outside source control.
+
+> [!NOTE]
+> This project does **not** currently use a database, authentication provider, Redux, a dedicated animation framework or a separate backend service. The website is implemented with Next.js and its API route for the contact workflow. The technology list above reflects the repository's current `package.json` and configuration rather than a generic skills list.
+
+## 🏛️ 6. Application Architecture
+
+<!-- DeveloperBro. | Project documentation -->
+
+<div align="center">
+
+<a href="https://developerbro.vercel.app">
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=230&color=0:0B1220,28:312E81,62:0E7490,100:0F766E&text=DeveloperBro.&fontColor=F8FAFC&fontSize=66&fontAlignY=36&desc=RESEARCH%20%E2%80%A2%20DESIGN%20%E2%80%A2%20DEVELOP%20%E2%80%A2%20SHARE&descAlignY=61&descSize=17&animation=fadeIn" width="100%" alt="DeveloperBro. — Design, Develop, Deploy">
+</a>
+
+# DeveloperBro.
+
+### 🎓 A Research-Driven Academic & Developer Portfolio
+
+<p>
+  <a href="https://developerbro.vercel.app">
+    <img src="https://img.shields.io/badge/Live%20Website-Visit%20DeveloperBro-3730A3?style=for-the-badge&logo=vercel&logoColor=white" alt="Visit live website">
+  </a>
+  <a href="https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio">
+    <img src="https://img.shields.io/badge/Source-GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="Source repository">
+  </a>
+</p>
+
+<p>
+  <img src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs" alt="Next.js 16">
+  <img src="https://img.shields.io/badge/React-19-149ECA?logo=react" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss" alt="Tailwind CSS 4">
+  <img src="https://img.shields.io/badge/Deployment-Vercel-000000?logo=vercel" alt="Vercel deployment">
+  <img src="https://img.shields.io/github/actions/workflow/status/Supriyo016/DeveloperBro-Academic-Portfolio/ci.yml?branch=main&label=CI&logo=githubactions" alt="Continuous integration">
+</p>
+
+**Explore research. Understand the engineering. Discover the ideas behind every project.**
+
+</div>
+
+---
+
+## 🌐 1. Project Overview
+
+**DeveloperBro.** is a research-focused academic portfolio created to present academic work, technical projects, professional interests and research writing through one consistent digital experience.
+
+The project focuses on three goals:
+
+- 🎓 **Present academic work** — communicate research interests, methodology, technical contributions and project outcomes.
+- 🧩 **Explain implementation** — make software work, engineering choices and supporting technologies easier to understand.
+- ✍️ **Share knowledge** — publish technical notes with equations, code examples, diagrams and references.
+
+The website is built with a responsive interface, accessible interactions and a maintainable **Next.js App Router** architecture. This README explains its features, implementation, local setup and development workflow.
+
+| 🔎 Resource | 🔗 Destination |
+|---|---|
+| 🌐 Live portfolio | [developerbro.vercel.app](https://developerbro.vercel.app) |
+| 💻 Source repository | [GitHub · DeveloperBro-Academic-Portfolio](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio) |
+| ☁️ Hosting platform | Vercel |
+| 🌿 Default branch | `main` |
+
+## 🖥️ 2. Interface Preview
+
+<div align="center">
+  <img src="docs/screenshots/home-light.webp" width="92%" alt="DeveloperBro website homepage in light theme">
+  <br>
+  <sub>Responsive homepage · Light theme</sub>
+</div>
+
+## ✨ 3. Core Features
+
+The main experience is organised around clarity, responsive behaviour and focused interaction.
+
+DeveloperBro. is designed to make academic and technical content easy to navigate without sacrificing visual detail.
+
+| ✨ Feature | 📝 What it provides |
+|---|---|
+| 📱 Responsive layouts | Interfaces adapted for desktop, tablet and mobile screens |
+| 🌗 Theme controls | Light and dark appearance with theme-aware components |
+| 🎨 Custom visual system | SVG illustrations, icons and reusable UI elements |
+| 🎞️ Motion and interaction | CSS-led animation with reduced-motion support and focused client-side behaviour |
+| 🧭 Clear navigation | Structured routes, consistent page layouts and intuitive content hierarchy |
+| 📚 Rich content | Typed content and MDX-based pages for technical writing |
+| ✉️ Contact form | Validated form input with server-side email handling |
+| ♿ Accessibility | Semantic structure, keyboard-conscious interactions and motion preferences |
+| 🔎 Search discoverability | Metadata, sitemap, robots rules and structured profile information |
+
+## 📸 4. Selected Screenshots
+
+<div align="center">
+  <img src="docs/screenshots/mtech-case-study.webp" width="88%" alt="DeveloperBro interior page layout">
+  <br>
+  <sub>Interior page · Responsive content layout</sub>
+  <br><br>
+  <img src="docs/screenshots/mobile-home.webp" width="34%" alt="DeveloperBro mobile website layout">
+  <br>
+  <sub>Mobile interface</sub>
+</div>
+
 ## 🧰 5. Technology Stack
 
 The technology choices prioritise **type safety, maintainable components, efficient rendering and a strong writing experience**.
