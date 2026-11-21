@@ -93,48 +93,77 @@ DeveloperBro. is designed to make academic and technical content easy to navigat
 
 ## 🧰 5. Technology and Tools
 
+The stack is grouped by role so the main application technologies, content tooling and development workflow are easy to scan.
+
+### 🖥️ Application and UI
+
 <div align="center">
 
-<img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,css,html,md,mdx,katex,shiki,zod,resend,lucide,npm,nodejs,eslint,vitest,playwright,githubactions,vercel,git,github,vscode&perline=8" alt="DeveloperBro project tools: Next.js, React, TypeScript, Tailwind CSS, CSS, HTML, Markdown, MDX, KaTeX, Shiki, Zod, Resend, Lucide, npm, Node.js, ESLint, Vitest, Playwright, GitHub Actions, Vercel, Git, GitHub and Visual Studio Code">
+<img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,css,html&perline=6" alt="Next.js, React, TypeScript, Tailwind CSS, CSS and HTML">
 
 </div>
 
-The stack is selected to support a fast, accessible, research-focused portfolio, with strong typing, structured content, readable technical articles and reliable delivery.
+| Technology | Role |
+|---|---|
+| **Next.js 16** | App Router, server rendering, routing, metadata and API endpoints |
+| **React 19** | Reusable UI and interactive client-side components |
+| **TypeScript 6** | Typed application logic and safer component contracts |
+| **Tailwind CSS 4** | Responsive styling and design consistency |
 
-### Core application stack
+### ✍️ Content, rendering and validation
 
-| Area | Technology | Role in DeveloperBro |
-|---|---|---|
-| Application framework | **Next.js 16** | App Router, server rendering, routing, metadata and API endpoints |
-| UI library | **React 19** | Reusable interface components and interactive client-side features |
-| Language | **TypeScript 6** | Typed application logic and safer component contracts |
-| Styling | **Tailwind CSS 4** | Utility-first styling, responsive layouts and design consistency |
-| Content | **MDX**, `next-mdx-remote`, `gray-matter` | Structured research notes and content pages |
-| Markdown extensions | `remark-gfm`, `remark-math`, `rehype-slug` | Tables, task lists, mathematical notation and heading anchors |
-| Mathematics | **KaTeX**, `rehype-katex` | Rendering inline and display equations |
-| Code highlighting | **Shiki**, `rehype-pretty-code` | Syntax-highlighted code examples in technical articles |
-| Validation | **Zod** | Runtime validation of contact-form input and structured data |
-| Email delivery | **Resend** | Contact-form message delivery |
-| Icons | **Lucide React** | Consistent interface icons |
+<div align="center">
 
-### Development, testing and delivery
+<img src="https://skillicons.dev/icons?i=md,mdx,nodejs&perline=3" alt="Markdown, MDX and Node.js">
 
-| Purpose | Technology | How it is used |
-|---|---|---|
-| Package management | **npm** | Dependency installation and project scripts |
-| Linting | **ESLint 9** | Code-quality and lint checks |
-| Static type checking | **TypeScript compiler** | `tsc --noEmit` validation |
-| Unit and integration tests | **Vitest 5** | Automated application and utility tests |
-| Browser automation | **Playwright** | End-to-end browser tests |
-| Accessibility checks | **axe-core + Playwright** | Automated accessibility assertions in browser tests |
-| CI | **GitHub Actions** | Automated quality checks on repository changes |
-| Deployment | **Vercel** | Production hosting and Next.js deployment |
-| Version control | **Git and GitHub** | Source history, collaboration and issue tracking |
+</div>
+
+| Technology | Role |
+|---|---|
+| **MDX** · `next-mdx-remote` · `gray-matter` | Structured research notes and content pages |
+| **remark-gfm** · **remark-math** · **rehype-slug** | Tables, task lists, mathematical notation and heading anchors |
+| **KaTeX** · **rehype-katex** | Inline and display equations |
+| **Shiki** · **rehype-pretty-code** | Syntax-highlighted code examples |
+| **Zod** | Runtime validation of contact-form input and structured data |
+| **Resend** | Contact-form email delivery |
+| **Lucide React** | Consistent interface icons |
+
+### 🧪 Development and quality assurance
+
+<div align="center">
+
+<img src="https://skillicons.dev/icons?i=npm,nodejs,eslint,vitest,playwright&perline=5" alt="npm, Node.js, ESLint, Vitest and Playwright">
+
+</div>
+
+| Tool | Role |
+|---|---|
+| **npm** | Dependency installation and project scripts |
+| **ESLint 9** | Code-quality and lint checks |
+| **TypeScript compiler** | Static type checking with `tsc --noEmit` |
+| **Vitest 5** | Unit and integration tests |
+| **Playwright** | End-to-end browser tests |
+| **axe-core + Playwright** | Automated accessibility assertions |
+
+### 🚀 CI, deployment and source control
+
+<div align="center">
+
+<img src="https://skillicons.dev/icons?i=githubactions,vercel,git,github,vscode&perline=5" alt="GitHub Actions, Vercel, Git, GitHub and Visual Studio Code">
+
+</div>
+
+| Tool | Role |
+|---|---|
+| **GitHub Actions** | Automated quality checks on repository changes |
+| **Vercel** | Production hosting and Next.js deployment |
+| **Git and GitHub** | Version control, source history and collaboration |
+| **Visual Studio Code** | Development environment |
 
 ### Supporting platform capabilities
 
 - **RSS:** exposes the research notes feed for readers and feed aggregators.
-- **Search and metadata:** uses generated page metadata, sitemap and robots rules to support discovery.
+- **Search and metadata:** generated page metadata, sitemap and robots rules support discovery.
 - **Responsive imagery:** Next.js image optimisation outputs modern AVIF and WebP formats where supported.
 - **Contact configuration:** environment variables keep the Resend key, recipient address and optional signing secret outside source control.
 
