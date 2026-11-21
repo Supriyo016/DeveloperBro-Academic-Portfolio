@@ -28,24 +28,26 @@
   <img src="https://img.shields.io/github/actions/workflow/status/Supriyo016/DeveloperBro-Academic-Portfolio/ci.yml?branch=main&label=CI&logo=githubactions" alt="Continuous integration">
 </p>
 
-**A focused digital experience built with thoughtful design, clean engineering and attention to detail.**
+**A research-first digital portfolio for presenting academic work, technical projects and ideas with clarity.**
 
 </div>
 
 ---
 
-## Overview
+## 🌟 Overview
 
-**DeveloperBro.** is a modern portfolio website designed to deliver a polished, accessible and responsive experience across desktop, tablet and mobile devices.
+**DeveloperBro.** is a research-focused academic portfolio built to present academic background, research work, technical projects and writing in one organised place.
 
-The project combines a custom visual identity with a maintainable application architecture, purposeful interactions and performance-conscious implementation. Its interface is designed to remain clear and consistent while supporting both static pages and interactive components.
+The website combines a responsive interface, accessible interactions and a maintainable Next.js architecture. The README describes the application and the way to run, test and contribute to it.
 
-- **Live website:** [developerbro.vercel.app](https://developerbro.vercel.app)
-- **Source code:** [GitHub repository](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio)
-- **Production hosting:** Vercel
-- **Default branch:** `main`
+| 🌐 Project link | Details |
+|---|---|
+| **Live website** | [developerbro.vercel.app](https://developerbro.vercel.app) |
+| **Source code** | [GitHub repository](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio) |
+| **Hosting** | Vercel |
+| **Default branch** | `main` |
 
-## Interface preview
+## 🖼️ Interface preview
 
 <div align="center">
   <img src="docs/screenshots/home-light.webp" width="92%" alt="DeveloperBro website homepage in light theme">
@@ -53,7 +55,9 @@ The project combines a custom visual identity with a maintainable application ar
   <sub>Responsive homepage · Light theme</sub>
 </div>
 
-## Product highlights
+## ✨ Product highlights
+
+The main experience is organised around clarity, responsive behaviour and focused interaction.
 
 | Area | Implementation |
 |---|---|
@@ -68,7 +72,7 @@ The project combines a custom visual identity with a maintainable application ar
 | Accessibility | Semantic structure, keyboard-aware interactions and motion preferences |
 | Search visibility | Metadata, sitemap, robots rules and structured profile data |
 
-## Screenshots
+## 📸 Screenshots
 
 <div align="center">
   <img src="docs/screenshots/mtech-case-study.webp" width="88%" alt="DeveloperBro interior page layout">
@@ -80,9 +84,11 @@ The project combines a custom visual identity with a maintainable application ar
   <sub>Mobile interface</sub>
 </div>
 
-## Technology stack
+## 🧰 Technology stack
 
-### Application
+The stack is selected to keep the application type-safe, content-friendly and straightforward to maintain.
+
+### ⚙️ Application
 
 | Layer | Technology |
 |---|---|
@@ -97,7 +103,7 @@ The project combines a custom visual identity with a maintainable application ar
 | Email delivery | Resend |
 | Icons | Lucide React |
 
-### Quality and delivery
+### 🧪 Quality and delivery
 
 | Purpose | Tool |
 |---|---|
@@ -109,9 +115,9 @@ The project combines a custom visual identity with a maintainable application ar
 | CI | GitHub Actions |
 | Hosting | Vercel |
 
-## Architecture
+## 🏗️ Architecture
 
-DeveloperBro. uses the Next.js App Router. Server Components are the default; Client Components are used only where browser interaction is required.
+DeveloperBro. uses the Next.js App Router. Server Components are the default; Client Components are used only where browser interaction is required. This keeps most page rendering on the server while reserving client-side code for interactions that need it.
 
 ```mermaid
 flowchart TB
@@ -137,7 +143,7 @@ flowchart TB
     CI --> Checks --> Deploy
 ```
 
-### Design and engineering decisions
+### 💡 Design and engineering decisions
 
 - **Server-first rendering:** keep the client bundle focused and use server rendering for pages.
 - **No database:** the current site does not require persistent visitor-generated content.
@@ -149,7 +155,7 @@ flowchart TB
 
 For a deeper technical description, see [Architecture](docs/ARCHITECTURE.md).
 
-## Repository structure
+## 🗂️ Repository structure
 
 ```text
 DeveloperBro-Academic-Portfolio/
@@ -188,15 +194,17 @@ DeveloperBro-Academic-Portfolio/
 └── README.md
 ```
 
-## Getting started
+## 🚀 Getting started
 
-### Requirements
+Follow these steps to run the portfolio locally.
+
+### 📋 Requirements
 
 - Node.js **20.9 or later**
 - npm
 - Git
 
-### Installation
+### 📦 Installation
 
 ```bash
 git clone https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio.git
@@ -224,7 +232,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-### Available scripts
+### 🛠️ Available scripts
 
 | Command | Description |
 |---|---|
@@ -237,7 +245,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run test:e2e` | Run Playwright browser tests |
 | `npm run audit:deps` | Audit production dependencies |
 
-### Quality checks
+### ✅ Quality checks
 
 Run the main checks before submitting changes:
 
@@ -249,9 +257,9 @@ npm run build
 npm run test:e2e
 ```
 
-## Environment configuration
+## 🔐 Environment configuration
 
-Copy `.env.example` to `.env.local` and configure the values needed for your local environment.
+The application reads optional contact and site configuration from environment variables. Copy `.env.example` to `.env.local` and configure the values needed for your local environment.
 
 | Variable | Purpose |
 |---|---|
@@ -265,7 +273,7 @@ Keep credentials in local environment files or the deployment provider's secret 
 
 See [`.env.example`](.env.example) for the current variable template and [Deployment](docs/DEPLOYMENT.md) for deployment-specific notes.
 
-## Deployment
+## ☁️ Deployment
 
 The production website is hosted on **Vercel**:
 
@@ -275,9 +283,9 @@ The repository is connected to the Vercel project. Pushes to `main` are used for
 
 For deployment configuration and post-deployment checks, see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
-## Continuous integration
+## 🔄 Continuous integration
 
-GitHub Actions runs the repository verification workflow on pushes and pull requests.
+GitHub Actions runs the repository verification workflow on pushes and pull requests. The checks help catch common issues before deployment.
 
 The workflow includes:
 
@@ -290,7 +298,7 @@ The workflow includes:
 
 [View GitHub Actions](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio/actions)
 
-## Project documentation
+## 📚 Project documentation
 
 | Document | Description |
 |---|---|
@@ -301,9 +309,9 @@ The workflow includes:
 | [Security](docs/SECURITY.md) | Security controls and known considerations |
 | [Content sources](docs/CONTENT_SOURCES.md) | Content-source documentation |
 
-## Contributing
+## 🤝 Contributing
 
-Suggestions, bug reports and improvements are welcome.
+Suggestions, bug reports and improvements are welcome. Please keep proposed changes focused, explain the reason for the change and include evidence for visible UI updates.
 
 1. Fork the repository.
 2. Create a focused branch for your change.
@@ -313,11 +321,11 @@ Suggestions, bug reports and improvements are welcome.
 
 Please avoid committing secrets, private files, generated build output or unrelated changes.
 
-## Licence
+## 📄 Licence
 
 See the repository's [LICENSE](LICENSE) file for licensing terms.
 
-## Links
+## 🔗 Project links
 
 <div align="center">
 
