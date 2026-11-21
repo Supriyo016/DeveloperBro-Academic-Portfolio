@@ -27,22 +27,6 @@
 
 ---
 
-## 🧭 The project ecosystem
-
-This portfolio is the central place to explore my academic work, software projects and technical writing.
-
-| Project | What it is | Repository / Demo |
-|---|---|---|
-| **DeveloperBro.** | Academic portfolio, research case studies and technical notes | [Live site](https://developerbro.vercel.app) · [Source](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio) |
-| **Tour India** | Travel discovery and itinerary-planning platform for India | [Live site](https://tour-india-pi.vercel.app) · [Current source branch](https://github.com/Supriyo016/TourIndia/tree/rebuild/nextjs) |
-| **Third Hand-Eye** | Arduino-based ultrasonic obstacle-alert prototype | [Source](https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals) |
-
-<div align="center">
-<a href="https://tour-india-pi.vercel.app"><img src="https://raw.githubusercontent.com/Supriyo016/TourIndia/rebuild/nextjs/docs/assets/screenshot-home.webp" width="46%" alt="Tour India travel platform"></a>
-<a href="https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals"><img src="https://raw.githubusercontent.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals/master/assets/circuit-diagram.png" width="46%" alt="Third Hand-Eye Arduino circuit"></a>
-<br><sub>Tour India · Travel platform &nbsp;&nbsp;|&nbsp;&nbsp; Third Hand-Eye · Embedded prototype</sub>
-</div>
-
 ## ✨ About
 
 I am **Supriyo Sarkar**, an M.Tech graduate in Computer Science and Engineering from **Kalyani Government Engineering College**. My interests span machine learning, deep learning, privacy-preserving computation, medical image analysis, quantum computing and full-stack development.
@@ -85,47 +69,21 @@ Ongoing development explores **knowledge distillation for CKKS-secured federated
 > Research results shown on the website belong to their stated datasets and experimental protocols. They are not clinical validation, medical advice or proof of hospital deployment. The portfolio distinguishes completed work, ongoing work and proposed directions.
 
 <div align="center">
-<table>
-<tr>
-<td width="50%"><img src="docs/screenshots/research-works.webp" alt="Research works explorer" width="100%"><p align="center"><sub>Research case studies</sub></p></td>
-<td width="50%"><img src="docs/screenshots/mtech-case-study.webp" alt="M.Tech research case study" width="100%"><p align="center"><sub>Federated learning dissertation</sub></p></td>
-</tr>
-<tr>
-<td><img src="docs/screenshots/custom-cnn.webp" alt="Custom CNN visual explanation" width="100%"><p align="center"><sub>Model architecture explanation</sub></p></td>
-<td><img src="docs/screenshots/quantum-case-study.webp" alt="Quantum computing case study" width="100%"><p align="center"><sub>Quantum computing study</sub></p></td>
-</tr>
-</table>
+<img src="docs/screenshots/mtech-case-study.webp" width="88%" alt="DeveloperBro M.Tech federated learning research case study">
+<br><sub>Research case study · Federated learning dissertation</sub>
 </div>
 
-## 🚀 Selected projects
+## 🧑‍💻 About this portfolio
 
-### [Tour India](https://github.com/Supriyo016/TourIndia)
+**DeveloperBro.** is the portfolio website documented by this repository. It brings together academic background, research case studies, software development work, technical writing and contact information in one place.
 
-**Travel discovery and itinerary planning platform**
+The site is designed to make technical work easier to explore and evaluate through:
 
-An independent India travel guide with interactive state and destination discovery, culture information, calendars, an interactive globe and an editable trip planner.
-
-- Current application source: **[`rebuild/nextjs`](https://github.com/Supriyo016/TourIndia/tree/rebuild/nextjs)**
-- Live experience: [tour-india-pi.vercel.app](https://tour-india-pi.vercel.app)
-- Stack: Next.js 16 · React 19 · TypeScript · Tailwind CSS · MongoDB (optional)
-
-### [Third Hand-Eye](https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals)
-
-**Arduino-based ultrasonic obstacle-alert prototype**
-
-An educational assistive-technology prototype using an HC-SR04 ultrasonic sensor and an active buzzer to detect nearby obstacles and provide audible alerts.
-
-- Stack: Arduino Uno · C++ · HC-SR04 · Embedded Systems
-- Includes firmware, circuit diagram, host-side C++ tests and a project demonstration.
-- It is a prototype, not a certified mobility aid or a replacement for established mobility tools.
-
-### [DeveloperBro. Academic Portfolio](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio)
-
-**This portfolio website**
-
-A research-first, server-rendered academic portfolio with interactive case studies, technical notes, custom SVG illustrations, theme controls and accessibility-aware motion.
-
-- Stack: Next.js · React · TypeScript · MDX · KaTeX · Shiki
+- Research case studies with methodology, experiment design, metrics, references and limitations.
+- Project pages that explain the problem, implementation choices and technology stack.
+- Technical notes with mathematical notation, code examples and supporting references.
+- Responsive layouts, theme controls, SVG illustrations and reduced-motion support.
+- A validated contact form and clear links to academic and professional profiles.
 
 ## 📝 Research notes and writing
 
@@ -136,10 +94,7 @@ Technical articles and research notes cover topics such as federated learning, h
 - Charts, diagrams, citations and further reading
 - RSS feed: [developerbro.vercel.app/feed.xml](https://developerbro.vercel.app/feed.xml)
 
-<div align="center">
-<img src="docs/screenshots/blogs.webp" width="90%" alt="DeveloperBro research notes and blog page">
-<br><sub>Technical writing and research notes</sub>
-</div>
+Research notes include mathematical expressions, syntax-highlighted code, diagrams, citations and further reading. The RSS feed is available at [developerbro.vercel.app/feed.xml](https://developerbro.vercel.app/feed.xml).
 
 ## 🎨 Interface and experience
 
@@ -152,14 +107,8 @@ Technical articles and research notes cover topics such as federated learning, h
 - Search and filters across work and writing
 - Metadata, sitemap, robots rules and structured profile data
 
-<table>
-<tr>
-<td width="50%"><img src="docs/screenshots/home-dark.webp" alt="Dark theme homepage" width="100%"><p align="center"><sub>Dark theme</sub></p></td>
-<td width="50%"><img src="docs/screenshots/about.webp" alt="About page" width="100%"><p align="center"><sub>About and academic background</sub></p></td>
-</tr>
-</table>
 <div align="center">
-<img src="docs/screenshots/mobile-home.webp" width="32%" alt="DeveloperBro mobile layout">
+<img src="docs/screenshots/mobile-home.webp" width="34%" alt="DeveloperBro responsive mobile experience">
 <br><sub>Responsive mobile experience</sub>
 </div>
 
@@ -275,5 +224,5 @@ This is a personal academic portfolio. Corrections, technical feedback, accessib
 <div align="center">
 <sub>Copyright © 2026 Supriyo Sarkar · See <a href="LICENSE">LICENSE</a></sub>
 <br><br>
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F766E,50:312E81,100:111827&height=105&section=footer" width="100%" alt="">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F766E,50:312E81,100:111827&height=150&section=footer&text=Research%20%E2%80%A2%20Build%20%E2%80%A2%20Share%20Knowledge&fontColor=F8FAFC&fontSize=24&fontAlignY=65" width="100%" alt="Research, Build, Share Knowledge">
 </div>
