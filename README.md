@@ -1,178 +1,245 @@
-<!-- DeveloperBro. | Academic portfolio of Supriyo Sarkar -->
+<!-- DeveloperBro. | Project documentation -->
 
 <div align="center">
 
-<a href="https://developerbro.vercel.app"><img src="https://capsule-render.vercel.app/api?type=waving&height=245&color=0:0B1220,28:312E81,62:0E7490,100:0F766E&text=DeveloperBro.&fontColor=F8FAFC&fontSize=66&fontAlignY=35&desc=RESEARCH%20%E2%80%A2%20ENGINEERING%20%E2%80%A2%20IDEAS&descAlignY=59&descSize=18&animation=fadeIn" width="100%" alt="DeveloperBro — Research, Engineering and Ideas"></a>
+<a href="https://developerbro.vercel.app">
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=230&color=0:0B1220,28:312E81,62:0E7490,100:0F766E&text=DeveloperBro.&fontColor=F8FAFC&fontSize=66&fontAlignY=36&desc=DESIGN%20%E2%80%A2%20DEVELOP%20%E2%80%A2%20DEPLOY&descAlignY=61&descSize=17&animation=fadeIn" width="100%" alt="DeveloperBro. — Design, Develop, Deploy">
+</a>
 
-# Supriyo Sarkar
+# DeveloperBro.
 
-**Computer Science & Engineering · Research · Software Development**
-
-<a href="https://developerbro.vercel.app"><img src="https://img.shields.io/badge/Live%20Portfolio-Explore%20DeveloperBro-3730A3?style=for-the-badge&logo=vercel&logoColor=white" alt="Live portfolio"></a>
-<a href="https://github.com/Supriyo016"><img src="https://img.shields.io/badge/GitHub-Supriyo016-181717?style=for-the-badge&logo=github" alt="GitHub profile"></a>
-<a href="mailto:supriyo.sarkar016@gmail.com"><img src="https://img.shields.io/badge/Contact-Email-0F766E?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"></a>
+### A modern, responsive portfolio website
 
 <p>
-<img src="https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs" alt="Next.js 16">
-<img src="https://img.shields.io/badge/React-19-149ECA?logo=react" alt="React 19">
-<img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript" alt="TypeScript">
-<img src="https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss" alt="Tailwind CSS">
-<img src="https://img.shields.io/badge/Vercel-Deployed-000?logo=vercel" alt="Vercel">
-<img src="https://img.shields.io/github/actions/workflow/status/Supriyo016/DeveloperBro-Academic-Portfolio/ci.yml?branch=main&label=CI&logo=githubactions" alt="CI">
+  <a href="https://developerbro.vercel.app">
+    <img src="https://img.shields.io/badge/Live%20Website-Visit%20DeveloperBro-3730A3?style=for-the-badge&logo=vercel&logoColor=white" alt="Visit live website">
+  </a>
+  <a href="https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio">
+    <img src="https://img.shields.io/badge/Source-GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="Source repository">
+  </a>
 </p>
 
-*An evidence-led academic portfolio — built to communicate research, show implementation details and make technical work easier to evaluate.*
+<p>
+  <img src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs" alt="Next.js 16">
+  <img src="https://img.shields.io/badge/React-19-149ECA?logo=react" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss" alt="Tailwind CSS 4">
+  <img src="https://img.shields.io/badge/Deployment-Vercel-000000?logo=vercel" alt="Vercel deployment">
+  <img src="https://img.shields.io/github/actions/workflow/status/Supriyo016/DeveloperBro-Academic-Portfolio/ci.yml?branch=main&label=CI&logo=githubactions" alt="Continuous integration">
+</p>
+
+**A focused digital experience built with thoughtful design, clean engineering and attention to detail.**
 
 </div>
 
 ---
 
-## ✨ About
+## Overview
 
-I am **Supriyo Sarkar**, an M.Tech graduate in Computer Science and Engineering from **Kalyani Government Engineering College**. My interests span machine learning, deep learning, privacy-preserving computation, medical image analysis, quantum computing and full-stack development.
+**DeveloperBro.** is a modern portfolio website designed to deliver a polished, accessible and responsive experience across desktop, tablet and mobile devices.
 
-My academic work has explored how machine learning can be trained across distributed data holders, how privacy mechanisms affect model workflows, and how experimental protocols shape reported results. Alongside research, I build practical software and embedded-system projects.
+The project combines a custom visual identity with a maintainable application architecture, purposeful interactions and performance-conscious implementation. Its interface is designed to remain clear and consistent while supporting both static pages and interactive components.
 
-- 🎓 **M.Tech, Computer Science & Engineering** — Kalyani Government Engineering College (2024–2026)
-- 🎓 **B.Tech, Computer Science & Engineering** — Regent Education & Research Foundation (2020–2024)
-- 🔬 Research interests: Federated Learning, Privacy-Preserving ML, Medical Image Analysis, Deep Learning and Knowledge Distillation
-- 🧩 Engineering interests: Web Applications, Data Science, Embedded Systems and Developer Tooling
-- 🤝 Open to doctoral research opportunities and meaningful academic collaboration
+- **Live website:** [developerbro.vercel.app](https://developerbro.vercel.app)
+- **Source code:** [GitHub repository](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio)
+- **Production hosting:** Vercel
+- **Default branch:** `main`
 
-<div align="center">
-<img src="docs/screenshots/home-light.webp" width="94%" alt="DeveloperBro portfolio homepage in light theme">
-<br><sub>DeveloperBro. · Academic portfolio homepage</sub>
-</div>
-
-## 🔬 Research focus
-
-The portfolio presents research as detailed case studies, including research questions, data protocol, methodology, experiment design, results, references and limitations.
-
-### Privacy-preserving Alzheimer's disease detection from MRI
-
-M.Tech dissertation comparing convolutional backbones and federated optimisation methods for four-class Alzheimer's MRI classification under simulated non-IID client data.
-
-- **Backbones:** Custom CNN, MobileNetV2 and EfficientNetB0
-- **Federated algorithms:** FedAvg, FedProx and FedDyn
-- **Privacy component:** CKKS Fully Homomorphic Encryption prototype using TenSEAL
-- **Evaluation:** held-out test results, macro metrics, class-wise performance and comparison across configurations
-
-### Quantum gate performance on superposition states
-
-B.Tech dissertation work exploring quantum gate behaviour on IBM Quantum hardware, with an emphasis on gate performance and noise-related effects.
-
-### Current research direction
-
-Ongoing development explores **knowledge distillation for CKKS-secured federated learning**. This is presented as work in progress, not as a completed publication.
-
-> [!IMPORTANT]
-> Research results shown on the website belong to their stated datasets and experimental protocols. They are not clinical validation, medical advice or proof of hospital deployment. The portfolio distinguishes completed work, ongoing work and proposed directions.
+## Interface preview
 
 <div align="center">
-<img src="docs/screenshots/mtech-case-study.webp" width="88%" alt="DeveloperBro M.Tech federated learning research case study">
-<br><sub>Research case study · Federated learning dissertation</sub>
+  <img src="docs/screenshots/home-light.webp" width="92%" alt="DeveloperBro website homepage in light theme">
+  <br>
+  <sub>Responsive homepage · Light theme</sub>
 </div>
 
-## 🧑‍💻 About this portfolio
+## Product highlights
 
-**DeveloperBro.** is the portfolio website documented by this repository. It brings together academic background, research case studies, software development work, technical writing and contact information in one place.
-
-The site is designed to make technical work easier to explore and evaluate through:
-
-- Research case studies with methodology, experiment design, metrics, references and limitations.
-- Project pages that explain the problem, implementation choices and technology stack.
-- Technical notes with mathematical notation, code examples and supporting references.
-- Responsive layouts, theme controls, SVG illustrations and reduced-motion support.
-- A validated contact form and clear links to academic and professional profiles.
-
-## 📝 Research notes and writing
-
-Technical articles and research notes cover topics such as federated learning, homomorphic encryption, deep learning, model evaluation and related computer-science concepts.
-
-- Mathematical expressions rendered with **KaTeX**
-- Syntax-highlighted code through **Shiki**
-- Charts, diagrams, citations and further reading
-- RSS feed: [developerbro.vercel.app/feed.xml](https://developerbro.vercel.app/feed.xml)
-
-Research notes include mathematical expressions, syntax-highlighted code, diagrams, citations and further reading. The RSS feed is available at [developerbro.vercel.app/feed.xml](https://developerbro.vercel.app/feed.xml).
-
-## 🎨 Interface and experience
-
-- Light, dark and theme-aware UI
-- Hand-built SVG scenes and illustrations
-- CSS-based motion with reduced-motion support
-- Animation pause control
-- Interactive research diagrams, model explorers and comparison visualisations
-- Responsive layouts and keyboard-conscious interactions
-- Search and filters across work and writing
-- Metadata, sitemap, robots rules and structured profile data
-
-<div align="center">
-<img src="docs/screenshots/mobile-home.webp" width="34%" alt="DeveloperBro responsive mobile experience">
-<br><sub>Responsive mobile experience</sub>
-</div>
-
-## 🧰 Technology
-
-<div align="center">
-<img src="https://skillicons.dev/icons?i=python,cpp,c,js,ts,react,nextjs,html,css,tailwind,pytorch,tensorflow,mongodb,mysql,postgres,git,github,vscode,arduino&perline=10" alt="Technology stack icons">
-</div>
-
-| Focus | Tools and technologies |
+| Area | Implementation |
 |---|---|
-| Programming | Python · C · C++ · JavaScript · TypeScript |
-| Machine Learning | PyTorch · TensorFlow · Keras · scikit-learn · OpenCV |
-| Web | Next.js · React · Node.js · Tailwind CSS |
-| Data | NumPy · Pandas · Matplotlib |
-| Storage | MongoDB · MySQL · PostgreSQL |
-| Research tooling | Flower · TenSEAL · IBM Quantum tooling |
-| Engineering | Git · GitHub · Arduino · VS Code |
+| Responsive interface | Layouts designed for desktop, tablet and mobile |
+| Theme system | Light and dark appearance with theme-aware components |
+| Visual design | Custom SVG illustrations, icons and reusable interface elements |
+| Motion | CSS transitions and animation with reduced-motion support |
+| Navigation | Structured routes, clear hierarchy and consistent page layouts |
+| Interactive UI | Client-side components only where browser interaction is required |
+| Content rendering | Typed content and MDX-based rendering |
+| Contact experience | Validated contact form with server-side handling |
+| Accessibility | Semantic structure, keyboard-aware interactions and motion preferences |
+| Search visibility | Metadata, sitemap, robots rules and structured profile data |
 
-### Website implementation
+## Screenshots
 
-Next.js 16, React 19, TypeScript, Tailwind CSS 4, MDX, KaTeX, Shiki, Zod, Resend, Vitest, Playwright and Vercel.
+<div align="center">
+  <img src="docs/screenshots/mtech-case-study.webp" width="88%" alt="DeveloperBro interior page layout">
+  <br>
+  <sub>Interior page · Responsive content layout</sub>
+  <br><br>
+  <img src="docs/screenshots/mobile-home.webp" width="34%" alt="DeveloperBro mobile website layout">
+  <br>
+  <sub>Mobile interface</sub>
+</div>
 
-**Architecture notes:** server components are the default, portfolio content is maintained in typed data and MDX, and no database is used because the current website does not require one. Motion is implemented with CSS rather than a heavy animation runtime.
+## Technology stack
 
-## 🏛️ Website architecture
+### Application
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 |
+| UI library | React 19 |
+| Language | TypeScript |
+| Styling | Tailwind CSS 4 and CSS variables |
+| Content rendering | MDX |
+| Mathematical typesetting | KaTeX |
+| Code presentation | Shiki / rehype-pretty-code |
+| Validation | Zod |
+| Email delivery | Resend |
+| Icons | Lucide React |
+
+### Quality and delivery
+
+| Purpose | Tool |
+|---|---|
+| Linting | ESLint |
+| Static checks | TypeScript |
+| Unit and integration tests | Vitest |
+| Browser testing | Playwright |
+| Accessibility testing | axe-core with Playwright |
+| CI | GitHub Actions |
+| Hosting | Vercel |
+
+## Architecture
+
+DeveloperBro. uses the Next.js App Router. Server Components are the default; Client Components are used only where browser interaction is required.
 
 ```mermaid
-flowchart TD
-    Visitor --> Next[Next.js App Router]
-    Next --> Pages[Server-rendered pages]
-    Next --> Interactive[Interactive client components]
-    Pages --> Content[Typed data and MDX]
-    Interactive --> Visuals[Research visualisations and SVG scenes]
-    Next --> Contact[Validated contact API]
-    Contact --> Mail[Resend email service]
-    Repo[GitHub repository] --> CI[GitHub Actions]
-    CI --> Quality[Typecheck, lint, tests and build]
-    Quality --> Deploy[Vercel deployment]
+flowchart TB
+    Browser["Browser"]
+    Next["Next.js App Router"]
+    Server["Server-rendered pages"]
+    Client["Interactive client components"]
+    Content["Typed content and MDX"]
+    UI["Shared UI, illustrations and styles"]
+    API["Validated contact API"]
+    Mail["Resend email service"]
+    CI["GitHub Actions"]
+    Checks["Lint · Typecheck · Tests · Build"]
+    Deploy["Vercel deployment"]
+
+    Browser --> Next
+    Next --> Server
+    Next --> Client
+    Server --> Content
+    Client --> UI
+    Browser --> API
+    API --> Mail
+    CI --> Checks --> Deploy
 ```
 
-## 💻 Run locally
+### Design and engineering decisions
 
-### Prerequisites
+- **Server-first rendering:** keep the client bundle focused and use server rendering for pages.
+- **No database:** the current site does not require persistent visitor-generated content.
+- **CSS-led motion:** use CSS transitions and a small amount of browser-side logic instead of a heavy animation runtime.
+- **Theme-aware SVG:** reuse vector illustrations across themes through design tokens.
+- **Validation at boundaries:** validate contact-form input before sending it to the email service.
+- **Security-conscious delivery:** use request-level security headers and a restrictive Content Security Policy.
+- **Reduced-motion support:** respect the user's operating-system motion preference.
 
-- Node.js 20.9 or later
-- npm and Git
+For a deeper technical description, see [Architecture](docs/ARCHITECTURE.md).
 
-### Setup
+## Repository structure
+
+```text
+DeveloperBro-Academic-Portfolio/
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── docs/
+│   ├── screenshots/
+│   ├── ARCHITECTURE.md
+│   ├── CONTENT_SOURCES.md
+│   ├── DEPLOYMENT.md
+│   ├── DEVELOPMENT_GUIDE.md
+│   ├── SECURITY.md
+│   └── TESTING.md
+│
+├── public/
+├── scripts/
+├── src/
+│   ├── app/
+│   ├── components/
+│   ├── content/
+│   ├── hooks/
+│   ├── lib/
+│   ├── services/
+│   ├── types/
+│   └── proxy.ts
+│
+├── tests/
+├── .env.example
+├── package.json
+├── next.config.ts
+├── playwright.config.ts
+├── tsconfig.json
+└── README.md
+```
+
+## Getting started
+
+### Requirements
+
+- Node.js **20.9 or later**
+- npm
+- Git
+
+### Installation
 
 ```bash
 git clone https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio.git
 cd DeveloperBro-Academic-Portfolio
 npm install
+```
+
+Install the Playwright Chromium browser for end-to-end testing:
+
+```bash
 npx playwright install chromium
+```
+
+Create a local environment file:
+
+```bash
 cp .env.example .env.local
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-For the environment-variable reference and contact-form configuration, see [`.env.example`](.env.example) and [Deployment](docs/DEPLOYMENT.md).
+### Available scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the local development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Run the production server |
+| `npm run lint` | Run ESLint |
+| `npm run typecheck` | Run TypeScript validation |
+| `npm test` | Run Vitest tests |
+| `npm run test:e2e` | Run Playwright browser tests |
+| `npm run audit:deps` | Audit production dependencies |
 
 ### Quality checks
+
+Run the main checks before submitting changes:
 
 ```bash
 npm run lint
@@ -182,47 +249,101 @@ npm run build
 npm run test:e2e
 ```
 
-| Command | Purpose |
+## Environment configuration
+
+Copy `.env.example` to `.env.local` and configure the values needed for your local environment.
+
+| Variable | Purpose |
 |---|---|
-| `npm run dev` | Development server |
-| `npm run lint` | ESLint |
-| `npm run typecheck` | TypeScript validation |
-| `npm test` | Unit, integration and security tests |
-| `npm run test:e2e` | Playwright browser tests |
-| `npm run build` | Production build |
+| `NEXT_PUBLIC_SITE_URL` | Canonical website URL and sitemap generation |
+| `RESEND_API_KEY` | API key for contact-form email delivery |
+| `CONTACT_TO_EMAIL` | Destination address for contact messages |
+| `CONTACT_FROM_EMAIL` | Verified sender address for email delivery |
+| `GITHUB_TOKEN` | Optional token for GitHub API requests with higher rate limits |
 
-## 📚 Project documentation
+Keep credentials in local environment files or the deployment provider's secret settings. Do not commit real keys or private environment values.
 
-| Guide | Description |
+See [`.env.example`](.env.example) for the current variable template and [Deployment](docs/DEPLOYMENT.md) for deployment-specific notes.
+
+## Deployment
+
+The production website is hosted on **Vercel**:
+
+[https://developerbro.vercel.app](https://developerbro.vercel.app)
+
+The repository is connected to the Vercel project. Pushes to `main` are used for production deployments, while other branches can be used for previews.
+
+For deployment configuration and post-deployment checks, see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
+## Continuous integration
+
+GitHub Actions runs the repository verification workflow on pushes and pull requests.
+
+The workflow includes:
+
+1. Install dependencies with `npm ci`.
+2. Audit production dependencies.
+3. Run TypeScript checks.
+4. Run ESLint.
+5. Execute the test suite.
+6. Create a production build.
+
+[View GitHub Actions](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio/actions)
+
+## Project documentation
+
+| Document | Description |
 |---|---|
-| [Architecture](docs/ARCHITECTURE.md) | Rendering approach and technical decisions |
-| [Development Guide](docs/DEVELOPMENT_GUIDE.md) | Local setup and content editing |
-| [Deployment](docs/DEPLOYMENT.md) | Vercel and environment settings |
-| [Testing](docs/TESTING.md) | Test strategy and browser coverage |
-| [Security](docs/SECURITY.md) | Security controls and limitations |
-| [Content Sources](docs/CONTENT_SOURCES.md) | Sources behind factual claims |
+| [Architecture](docs/ARCHITECTURE.md) | Application structure and engineering decisions |
+| [Development guide](docs/DEVELOPMENT_GUIDE.md) | Local setup and development workflow |
+| [Deployment](docs/DEPLOYMENT.md) | Hosting and environment configuration |
+| [Testing](docs/TESTING.md) | Test strategy and execution |
+| [Security](docs/SECURITY.md) | Security controls and known considerations |
+| [Content sources](docs/CONTENT_SOURCES.md) | Content-source documentation |
 
-## 🤝 Feedback and collaboration
+## Contributing
 
-This is a personal academic portfolio. Corrections, technical feedback, accessibility suggestions and thoughtful discussion are welcome. Academic claims, results and publication status must remain verifiable.
+Suggestions, bug reports and improvements are welcome.
 
-## 📬 Connect
+1. Fork the repository.
+2. Create a focused branch for your change.
+3. Install dependencies and run the relevant checks.
+4. Keep changes consistent with the existing architecture and design system.
+5. Submit a pull request with a clear description and screenshots for visible UI changes.
+
+Please avoid committing secrets, private files, generated build output or unrelated changes.
+
+## Licence
+
+See the repository's [LICENSE](LICENSE) file for licensing terms.
+
+## Links
 
 <div align="center">
-<a href="https://www.linkedin.com/in/supriyo-sarkar/"><img src="https://img.shields.io/badge/LinkedIn-Supriyo%20Sarkar-0A66C2?style=for-the-badge&logo=linkedin" alt="LinkedIn"></a>
-<a href="https://github.com/Supriyo016"><img src="https://img.shields.io/badge/GitHub-Supriyo016-181717?style=for-the-badge&logo=github" alt="GitHub"></a>
-<a href="https://x.com/Supriyo016"><img src="https://img.shields.io/badge/X-@Supriyo016-000000?style=for-the-badge&logo=x" alt="X"></a>
-<a href="mailto:supriyo.sarkar016@gmail.com"><img src="https://img.shields.io/badge/Email-Contact%20me-EA4335?style=for-the-badge&logo=gmail" alt="Email"></a>
 
-**Open to doctoral research opportunities and academic collaboration.**
+<a href="https://developerbro.vercel.app">
+  <img src="https://img.shields.io/badge/Website-DeveloperBro-3730A3?style=for-the-badge&logo=vercel&logoColor=white" alt="DeveloperBro website">
+</a>
+<a href="https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio">
+  <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" alt="GitHub repository">
+</a>
 
-<a href="https://developerbro.vercel.app/contact">Contact through DeveloperBro ↗</a>
+<br>
+
+<sub>Project maintainer: <a href="https://github.com/Supriyo016">Supriyo Sarkar</a></sub>
+
 </div>
 
 ---
 
 <div align="center">
-<sub>Copyright © 2026 Supriyo Sarkar · See <a href="LICENSE">LICENSE</a></sub>
+
+**DeveloperBro. — Design • Develop • Deploy**
+
+<sub>Built with care. Designed for clarity. Engineered for the web.</sub>
+
 <br><br>
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F766E,50:312E81,100:111827&height=150&section=footer&text=Research%20%E2%80%A2%20Build%20%E2%80%A2%20Share%20Knowledge&fontColor=F8FAFC&fontSize=24&fontAlignY=65" width="100%" alt="Research, Build, Share Knowledge">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F766E,50:312E81,100:0B1220&height=150&section=footer&text=DESIGN%20%E2%80%A2%20DEVELOP%20%E2%80%A2%20DEPLOY&fontColor=F8FAFC&fontSize=23&fontAlignY=65" width="100%" alt="DeveloperBro footer — Design, Develop, Deploy">
+
 </div>
