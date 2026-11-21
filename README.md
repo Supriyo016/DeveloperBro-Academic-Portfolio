@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<a href="https://developerbro.vercel.app"><img src="https://capsule-render.vercel.app/api?type=waving&height=230&color=0:111827,38:312E81,72:0E7490,100:0F766E&text=DeveloperBro.&fontColor=F8FAFC&fontSize=64&fontAlignY=36&desc=RESEARCH%20%E2%80%A2%20ENGINEERING%20%E2%80%A2%20IDEAS&descAlignY=59&descSize=17&animation=fadeIn" width="100%" alt="DeveloperBro — Research, Engineering and Ideas"></a>
+<a href="https://developerbro.vercel.app"><img src="https://capsule-render.vercel.app/api?type=waving&height=245&color=0:0B1220,28:312E81,62:0E7490,100:0F766E&text=DeveloperBro.&fontColor=F8FAFC&fontSize=66&fontAlignY=35&desc=RESEARCH%20%E2%80%A2%20ENGINEERING%20%E2%80%A2%20IDEAS&descAlignY=59&descSize=18&animation=fadeIn" width="100%" alt="DeveloperBro — Research, Engineering and Ideas"></a>
 
 # Supriyo Sarkar
 
@@ -27,10 +27,21 @@
 
 ---
 
-## 🧭 Explore
+## 🧭 The project ecosystem
 
-| [About](#-about) | [Research](#-research-focus) | [Projects](#-selected-projects) | [Technology](#-technology) | [Run locally](#-run-locally) |
-|---|---|---|---|---|
+This portfolio is the central place to explore my academic work, software projects and technical writing.
+
+| Project | What it is | Repository / Demo |
+|---|---|---|
+| **DeveloperBro.** | Academic portfolio, research case studies and technical notes | [Live site](https://developerbro.vercel.app) · [Source](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio) |
+| **Tour India** | Travel discovery and itinerary-planning platform for India | [Live site](https://tour-india-pi.vercel.app) · [Current source branch](https://github.com/Supriyo016/TourIndia/tree/rebuild/nextjs) |
+| **Third Hand-Eye** | Arduino-based ultrasonic obstacle-alert prototype | [Source](https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals) |
+
+<div align="center">
+<a href="https://tour-india-pi.vercel.app"><img src="https://raw.githubusercontent.com/Supriyo016/TourIndia/rebuild/nextjs/docs/assets/screenshot-home.webp" width="46%" alt="Tour India travel platform"></a>
+<a href="https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals"><img src="https://raw.githubusercontent.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals/master/assets/circuit-diagram.png" width="46%" alt="Third Hand-Eye Arduino circuit"></a>
+<br><sub>Tour India · Travel platform &nbsp;&nbsp;|&nbsp;&nbsp; Third Hand-Eye · Embedded prototype</sub>
+</div>
 
 ## ✨ About
 
@@ -88,37 +99,33 @@ Ongoing development explores **knowledge distillation for CKKS-secured federated
 
 ## 🚀 Selected projects
 
-The portfolio links to implementation repositories, not just project summaries.
+### [Tour India](https://github.com/Supriyo016/TourIndia)
 
-<table>
-<tr>
-<td width="28%"><img src="https://raw.githubusercontent.com/Supriyo016/TourIndia/rebuild/nextjs/docs/assets/screenshot-home.webp" alt="Tour India travel platform homepage" width="100%"></td>
-<td>
-<h3><a href="https://github.com/Supriyo016/TourIndia">Tour India</a></h3>
-<strong>Travel discovery and itinerary planning platform</strong><br>
-An independent India travel guide with state and destination exploration, culture information, calendar tools, an interactive globe and an editable trip planner. The current Next.js implementation lives on the <code>rebuild/nextjs</code> branch.
-<br><sub>Next.js · React · TypeScript · Tailwind CSS · MongoDB (optional)</sub>
-</td>
-</tr>
-<tr>
-<td><img src="https://raw.githubusercontent.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals/master/assets/circuit-diagram.png" alt="Third Hand-Eye Arduino circuit" width="100%"></td>
-<td>
-<h3><a href="https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals">Third Hand-Eye</a></h3>
-<strong>Arduino-based obstacle-alert prototype</strong><br>
+**Travel discovery and itinerary planning platform**
+
+An independent India travel guide with interactive state and destination discovery, culture information, calendars, an interactive globe and an editable trip planner.
+
+- Current application source: **[`rebuild/nextjs`](https://github.com/Supriyo016/TourIndia/tree/rebuild/nextjs)**
+- Live experience: [tour-india-pi.vercel.app](https://tour-india-pi.vercel.app)
+- Stack: Next.js 16 · React 19 · TypeScript · Tailwind CSS · MongoDB (optional)
+
+### [Third Hand-Eye](https://github.com/Supriyo016/Arduino-Uno-Third-Hand-Eye-Project-for-Visually-Impaired-Individuals)
+
+**Arduino-based ultrasonic obstacle-alert prototype**
+
 An educational assistive-technology prototype using an HC-SR04 ultrasonic sensor and an active buzzer to detect nearby obstacles and provide audible alerts.
-<br><sub>Arduino Uno · C++ · HC-SR04 · Embedded Systems</sub>
-</td>
-</tr>
-<tr>
-<td><img src="docs/screenshots/home-dark.webp" alt="DeveloperBro portfolio in dark theme" width="100%"></td>
-<td>
-<h3><a href="https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio">DeveloperBro. Academic Portfolio</a></h3>
-<strong>This portfolio website</strong><br>
+
+- Stack: Arduino Uno · C++ · HC-SR04 · Embedded Systems
+- Includes firmware, circuit diagram, host-side C++ tests and a project demonstration.
+- It is a prototype, not a certified mobility aid or a replacement for established mobility tools.
+
+### [DeveloperBro. Academic Portfolio](https://github.com/Supriyo016/DeveloperBro-Academic-Portfolio)
+
+**This portfolio website**
+
 A research-first, server-rendered academic portfolio with interactive case studies, technical notes, custom SVG illustrations, theme controls and accessibility-aware motion.
-<br><sub>Next.js · React · TypeScript · MDX · KaTeX · Shiki</sub>
-</td>
-</tr>
-</table>
+
+- Stack: Next.js · React · TypeScript · MDX · KaTeX · Shiki
 
 ## 📝 Research notes and writing
 
